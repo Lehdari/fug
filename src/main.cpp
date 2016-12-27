@@ -1,18 +1,11 @@
-#include "Scene.hpp"
-#include "TestVisitors.hpp"
-#include "TestComponents.hpp"
-
-#include <tuple>
+#include "UnitTests.hpp"
 
 
 using namespace fug;
 
 
 int main(void) {
-    FUG_SCENE.addNode();
-    FUG_SCENE.addNode(TestComponent1(),
-                      TestComponent2(),
-                      TestComponent3());
+    unitTest1();
 
     return 0;
 }

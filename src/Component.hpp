@@ -3,6 +3,7 @@
 
 
 #include "Types.hpp"
+#include "Scene.hpp"
 
 
 namespace fug {
@@ -10,10 +11,10 @@ namespace fug {
 
     class Component {
     public:
-        friend class Scene;
+        friend SceneImplementation;
 
     protected:
-        CId  _id;
+        NId  _nodeId;;
     };
 
 
