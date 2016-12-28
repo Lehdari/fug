@@ -14,6 +14,11 @@ namespace fug {
         void operator()(TestComponent1& component);
     };
 
+    class TestVisitor2 : public Visitor<TestVisitor1, TestComponent1, TestComponent2> {
+    public:
+        void operator()(TestComponent1& component1, TestComponent2& component2);
+    };
+
 
 }
 

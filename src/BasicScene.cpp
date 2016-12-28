@@ -19,6 +19,21 @@ NId BasicScene::addNode(void)
     return _nodeId;
 }
 
+NId BasicScene::addChildNode(const NId& parent)
+{
+    auto parentIt = _nodes.begin();
+    findNode(parent, parentIt, _nodes.end());
+    if (parentIt == _nodes.end())
+        return NId();
+
+    increaseNodeSize(parentIt);
+    auto it = parentIt + (parentIt->size-1);
+    _nodes.emplace(it, ++_nodeId, parentIt->id);
+
+    return _nodeId;
+}
+#endif
+
 int BasicScene::findNode(const NId& nodeId, NodeIterator& it, const NodeIterator& endIt)
 {
     if (it->id == nodeId)
@@ -31,24 +46,12 @@ int BasicScene::findNode(const NId& nodeId, NodeIterator& it, const NodeIterator
             return 1;
         if (findNode(nodeId, it, it+it->size) == 0)
             return 0;
-
-        /*
-        if (it->id == nodeId)
-            return it;
-
-        if (it+it->size >= _nodes.end())
-            break;
-
-        if ((it+it->size)->id >= nodeId)
-            ++it;
-        else
-            it+=it->size;
-        */
     }
     return 1;
 }
 
-void BasicScene::increaseNodeSize(NodeIterator& it) {
+void BasicScene::increaseNodeSize(NodeIterator& it)
+{
     ++it->size;
     if (it->parent == 0)
         return;
@@ -56,6 +59,3 @@ void BasicScene::increaseNodeSize(NodeIterator& it) {
     findNode(it->parent, parentIt);
     increaseNodeSize(parentIt);
 }
-
-
-#endif

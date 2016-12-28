@@ -3,7 +3,8 @@
 
 
 //  Development macros
-//#define FUG_DEV
+#define FUG_DEV
+#define FUG_DEBUG
 
 //  Convenience macros
 #define FUG_SCENE fug::Scene::instance()

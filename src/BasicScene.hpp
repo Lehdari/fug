@@ -38,6 +38,8 @@ namespace fug {
                     T_Components&&... components);
 
         NId addNode(void);
+
+        NId addChildNode(const NId& parent);
         #endif
 
         template<typename... T_Components>
@@ -105,15 +107,14 @@ namespace fug {
     }
     #endif
 
+    #if __cplusplus > 201402L
+    #ifdef FUG_DEV
+    #warning "C++17 supported, cleanup possible"
+    #endif // FUG_DEV
+
     template <typename... T_Components>
     NId BasicScene::addChildNode(const NId& parent, T_Components&&... components)
     {
-        printf("%llu ", parent);
-        for (auto& n : _nodes) {
-            printf("[%llu, %llu] ", n.id, n.size);
-        }
-        printf("\n");
-
         auto parentIt = _nodes.begin();
         findNode(parent, parentIt, _nodes.end());
         if (parentIt == _nodes.end())
@@ -122,8 +123,29 @@ namespace fug {
         increaseNodeSize(parentIt);
         auto it = parentIt + (parentIt->size-1);
         _nodes.emplace(it, ++_nodeId, parentIt->id);
+
+        if constexpr (sizeof...(T_Components) > 0)
+        addComponents<T_Components...>(std::forward<T_Components>(components)...);
         return _nodeId;
     }
+    #else
+    template <typename... T_Components>
+    NId BasicScene::addChildNode(const NId& parent, T_Components&&... components)
+    {
+        auto parentIt = _nodes.begin();
+        findNode(parent, parentIt, _nodes.end());
+        if (parentIt == _nodes.end())
+            return NId();
+
+        increaseNodeSize(parentIt);
+        auto it = parentIt + (parentIt->size-1);
+        _nodes.emplace(it, ++_nodeId, parentIt->id);
+
+        if (sizeof...(T_Components) > 0)
+        addComponents<T_Components...>(std::forward<T_Components>(components)...);
+        return _nodeId;
+    }
+    #endif
 
     template <typename T_Visitor, typename... T_Components>
     void BasicScene::accept(T_Visitor& visitor)
