@@ -33,4 +33,12 @@ void fug::unitTest1(void) {
 
     FUG_SCENE.print();
 
+    TestVisitor1 visitor1;
+    TestVisitor2 visitor2;
+    TestVisitor3 visitor3;
+
+    //FUG_SCENE.accept(visitor1);
+    //FUG_SCENE.accept(visitor2);
+    FUG_SCENE.accept(visitor3);
+
 }

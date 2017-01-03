@@ -3,10 +3,11 @@
 
 
 #include <vector>
-#include <cstdio>
+#include <tuple>
 
 #include "Scene.hpp"
 #include "Macros.hpp"
+#include "TemplateUtils.hpp"
 
 
 namespace fug {
@@ -36,8 +37,7 @@ namespace fug {
         NId addNode(T_Components&&... components);
         #else
         template<typename T_FirstComponent, typename... T_Components>
-        NId addNode(T_FirstComponent&& firstComponent,
-                    T_Components&&... components);
+        NId addNode(T_FirstComponent&& firstComponent, T_Components&&... components);
 
         NId addNode(void);
 
@@ -50,7 +50,7 @@ namespace fug {
         void removeNode(const NodeId& id);
 
         template<typename T_Visitor, typename... T_Components>
-        void accept(T_Visitor& visitor);
+        void accept(Visitor<T_Visitor, T_Components...>& visitor);
 
         #ifdef FUG_DEBUG
         void print(const NodeIterator& beginIt = _nodes.begin(),
@@ -87,6 +87,20 @@ namespace fug {
         template <typename T_Component>
         void addComponents(T_Component&& component);
         #endif
+
+        //  utility functions for accepting visitors
+        template <typename... T_Components>
+        std::tuple<std::vector<T_Components>&...> accessCollection(void);
+
+        template <typename T_FirstComponent, typename... T_Components>
+        inline static void initIterators(std::vector<T_FirstComponent>& firstVector,
+                                         std::vector<T_Components>&... restVectors,
+                                         typename std::vector<T_FirstComponent>::iterator& firstIter,
+                                         typename std::vector<T_Components>::iterator&... restIters);
+
+        template <typename T_Component>
+        inline static void initIterators(std::vector<T_Component>& vector,
+                                         typename std::vector<T_Component>::iterator& iter);
     };
 
 
@@ -158,9 +172,24 @@ namespace fug {
     #endif
 
     template <typename T_Visitor, typename... T_Components>
-    void BasicScene::accept(T_Visitor& visitor)
+    void BasicScene::accept(Visitor<T_Visitor, T_Components...>& visitor)
     {
+        constexpr uint64_t nComponents = sizeof...(T_Components);
+        printf("nComponents: %llu\n", nComponents);
 
+        static auto collection = accessCollection<T_Components...>();
+        static auto sequence = typename GenSequence<nComponents>::type();
+
+        std::tuple<typename std::vector<T_Components>::iterator...> iters;
+
+        initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                       std::get<typename std::vector<T_Components>::iterator>(iters)...);
+
+        if (std::get<0>(iters) == std::get<0>(collection).begin() &&
+            std::get<1>(iters) == std::get<1>(collection).begin() &&
+            std::get<2>(iters) == std::get<2>(collection).begin()) {
+            printf("works\n");
+        }
     }
 
     template <typename T_Component>
@@ -186,8 +215,7 @@ namespace fug {
     }
     #else
     template <typename T_FirstComponent, typename... T_Components>
-    void BasicScene::addComponents(T_FirstComponent&& firstComponent,
-                                   T_Components&&... components)
+    void BasicScene::addComponents(T_FirstComponent&& firstComponent, T_Components&&... components)
     {
         auto& v1 = accessComponents<T_FirstComponent>();
         v1.push_back(std::forward<T_FirstComponent>(firstComponent));
@@ -205,8 +233,31 @@ namespace fug {
     }
     #endif
 
+    template <typename... T_Components>
+    std::tuple<std::vector<T_Components>&...> BasicScene::accessCollection(void)
+    {
+        return std::tie(accessComponents<T_Components>()...);
+    }
 
-}
+    template <typename T_FirstComponent, typename... T_Components>
+    void BasicScene::initIterators(std::vector<T_FirstComponent>& firstVector,
+                                   std::vector<T_Components>&... restVectors,
+                                   typename std::vector<T_FirstComponent>::iterator& firstIter,
+                                   typename std::vector<T_Components>::iterator&... restIters)
+    {
+        firstIter = firstVector.begin();
+        initIterators<T_Components...>(restVectors..., restIters...);
+    }
+
+    template <typename T_Component>
+    void BasicScene::initIterators(std::vector<T_Component>& vector,
+                                   typename std::vector<T_Component>::iterator& iter)
+    {
+        iter = vector.begin();
+    }
+
+
+}   //  namespace fug
 
 
 #endif // FUG_BASIC_SCENE_HPP
