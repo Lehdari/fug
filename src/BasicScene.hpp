@@ -25,6 +25,8 @@ namespace fug {
                 id(id), parent(parent), size(1) {}
         };
 
+        using NodeIterator  = std::vector<Node>::iterator;
+
         #if __cplusplus > 201402L
         #ifdef FUG_DEV
         #warning "C++17 supported, cleanup possible"
@@ -45,18 +47,26 @@ namespace fug {
         template<typename... T_Components>
         NId addChildNode(const NId& parent, T_Components&&... components);
 
+        void removeNode(const NodeId& id);
+
         template<typename T_Visitor, typename... T_Components>
         void accept(T_Visitor& visitor);
+
+        #ifdef FUG_DEBUG
+        void print(const NodeIterator& beginIt = _nodes.begin(),
+                   const NodeIterator& endIt = _nodes.end(),
+                   uint32_t level = 0);
+        #endif
 
     private:
         static NId                  _nodeId;
         static std::vector<Node>    _nodes;
 
-        using NodeIterator  = std::vector<Node>::iterator;
         //  Find node by id
         int findNode(const NId& nodeId, NodeIterator& it, const NodeIterator& endIt = _nodes.end());
-        //  Increase size of a node and its parents
+        //  Increase/decrease size of a node and its ancestors
         void increaseNodeSize(NodeIterator& it);
+        void decreaseNodeSize(NodeIterator& it);
 
         template <typename T_Component>
         std::vector<T_Component>& accessComponents(void);
@@ -70,9 +80,8 @@ namespace fug {
         void addComponents(T_FirstComponent&& firstComponent,
                            T_Components&&... components);
         #else
-        template <typename T_FirstComponent, typename T_SecondComponent, typename... T_Components>
+        template <typename T_FirstComponent, typename... T_Components>
         void addComponents(T_FirstComponent&& firstComponent,
-                           T_SecondComponent&& secondComponent,
                            T_Components&&... components);
 
         template <typename T_Component>
@@ -138,8 +147,9 @@ namespace fug {
             return NId();
 
         increaseNodeSize(parentIt);
+        parentIt->children.push_back(++_nodeId);
         auto it = parentIt + (parentIt->size-1);
-        _nodes.emplace(it, ++_nodeId, parentIt->id);
+        _nodes.emplace(it, _nodeId, parentIt->id);
 
         if (sizeof...(T_Components) > 0)
         addComponents<T_Components...>(std::forward<T_Components>(components)...);
@@ -167,26 +177,21 @@ namespace fug {
 
     template <typename T_FirstComponent, typename... T_Components>
     void BasicScene::addComponents(T_FirstComponent&& firstComponent,
-                              T_Components&&... components)
+                                   T_Components&&... components)
     {
         accessComponents<T_FirstComponent>().push_back(firstComponent);
 
-        if constexpr (sizeof...(T_Components))
+        if constexpr (sizeof...(T_Components) > 0)
             addComponents<T_Components...>(std::forward<T_Components>(components)...);
     }
     #else
-    template <typename T_FirstComponent, typename T_SecondComponent, typename... T_Components>
+    template <typename T_FirstComponent, typename... T_Components>
     void BasicScene::addComponents(T_FirstComponent&& firstComponent,
-                                   T_SecondComponent&& secondComponent,
                                    T_Components&&... components)
     {
         auto& v1 = accessComponents<T_FirstComponent>();
         v1.push_back(std::forward<T_FirstComponent>(firstComponent));
         v1.back()._nodeId = _nodeId;
-
-        auto& v2 = accessComponents<T_SecondComponent>();
-        v2.push_back(std::forward<T_SecondComponent>(secondComponent));
-        v2.back()._nodeId = _nodeId;
 
         addComponents<T_Components...>(std::forward<T_Components>(components)...);
     }

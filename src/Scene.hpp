@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Types.hpp"
+#include "Macros.hpp"
 #include "Visitor.hpp"
 
 
@@ -34,6 +35,10 @@ namespace fug {
         //  Accept a visitor
         template<typename T_Visitor, typename... T_Components>
         void accept(Visitor<T_Visitor, T_Components...>& visitor);
+
+        #ifdef FUG_DEBUG
+        void print(void);
+        #endif
     };
 
 
@@ -68,6 +73,13 @@ namespace fug {
     void SceneBase<T_Implementation>::accept(Visitor<T_Visitor, T_Components...>& visitor) {
         return static_cast<T_Implementation*>(this)->accept(visitor);
     }
+
+    #ifdef FUG_DEBUG
+    template <typename T_Implementation>
+    void SceneBase<T_Implementation>::print(void) {
+        return static_cast<T_Implementation*>(this)->print();
+    }
+    #endif
 
 
     //  List of implementation class forward declarations

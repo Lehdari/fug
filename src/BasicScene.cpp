@@ -1,5 +1,7 @@
 #include "BasicScene.hpp"
 
+#include <iostream>
+
 
 using namespace fug;
 
@@ -27,10 +29,61 @@ NId BasicScene::addChildNode(const NId& parent)
         return NId();
 
     increaseNodeSize(parentIt);
+    parentIt->children.push_back(++_nodeId);
     auto it = parentIt + (parentIt->size-1);
-    _nodes.emplace(it, ++_nodeId, parentIt->id);
+    _nodes.emplace(it, _nodeId, parentIt->id);
 
     return _nodeId;
+}
+#endif
+
+void BasicScene::removeNode(const NodeId& id)
+{
+    auto it = _nodes.begin();
+    findNode(id, it);
+    if (it == _nodes.end())
+        return;
+
+    auto parentId = it->parent;
+    std::vector<NId> children = it->children;
+
+    for (auto& childId : children)
+        removeNode(childId);
+
+    it = _nodes.begin();
+    findNode(id, it);
+
+    auto parentIt = _nodes.begin();
+    findNode(it->parent, parentIt);
+    decreaseNodeSize(parentIt);
+
+    _nodes.erase(it);
+}
+
+#ifdef FUG_DEBUG
+void BasicScene::print(const NodeIterator& beginIt, const NodeIterator& endIt, uint32_t level) {
+    NodeIterator it = beginIt;
+    for (;it<endIt;) {
+        for (auto i=0u; i<level; ++i)
+            std::cout << "  ";
+        std::cout << "Id: " << it->id << ", Size: " << it->size;
+
+
+        if (it->children.size() > 0) {
+            std::cout << ", Children: ";
+            for (auto& childId : it->children)
+                std::cout << childId << ", ";
+            std::cout << std::endl;
+
+            auto endIt2 = it+it->size;
+            print(++it, endIt2, level+1);
+            it = endIt2;
+        }
+        else {
+            std::cout << std::endl;
+            ++it;
+        }
+    }
 }
 #endif
 
@@ -39,12 +92,8 @@ int BasicScene::findNode(const NId& nodeId, NodeIterator& it, const NodeIterator
     if (it->id == nodeId)
         return 0;
 
-    for (++it; it<endIt;) {
+    for (++it; it<endIt; ++it) {
         if (it->id == nodeId)
-            return 0;
-        else if (it->id > nodeId)
-            return 1;
-        if (findNode(nodeId, it, it+it->size) == 0)
             return 0;
     }
     return 1;
@@ -53,6 +102,16 @@ int BasicScene::findNode(const NId& nodeId, NodeIterator& it, const NodeIterator
 void BasicScene::increaseNodeSize(NodeIterator& it)
 {
     ++it->size;
+    if (it->parent == 0)
+        return;
+    auto parentIt = _nodes.begin();
+    findNode(it->parent, parentIt);
+    increaseNodeSize(parentIt);
+}
+
+void BasicScene::decreaseNodeSize(NodeIterator& it)
+{
+    --it->size;
     if (it->parent == 0)
         return;
     auto parentIt = _nodes.begin();
