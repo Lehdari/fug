@@ -88,19 +88,34 @@ namespace fug {
         void addComponents(T_Component&& component);
         #endif
 
-        //  utility functions for accepting visitors
+        //  utilities for accepting visitors
         template <typename... T_Components>
         std::tuple<std::vector<T_Components>&...> accessCollection(void);
+
+        template <typename T_Component>
+        using CIter = typename std::vector<T_Component>::iterator;
 
         template <typename T_FirstComponent, typename... T_Components>
         inline static void initIterators(std::vector<T_FirstComponent>& firstVector,
                                          std::vector<T_Components>&... restVectors,
-                                         typename std::vector<T_FirstComponent>::iterator& firstIter,
-                                         typename std::vector<T_Components>::iterator&... restIters);
+                                         CIter<T_FirstComponent>& firstIter,
+                                         CIter<T_Components>&... restIters);
 
         template <typename T_Component>
         inline static void initIterators(std::vector<T_Component>& vector,
-                                         typename std::vector<T_Component>::iterator& iter);
+                                         CIter<T_Component>& iter);
+
+        template <typename T_FirstComponent, typename... T_Components>
+        inline static bool iterate(std::vector<T_FirstComponent>& firstVector,
+                                   std::vector<T_Components>&... restVectors,
+                                   CIter<T_FirstComponent>& firstIter,
+                                   CIter<T_Components>&... restIters,
+                                   NId& maxId);
+
+        template <typename T_Component>
+        inline static bool iterate(std::vector<T_Component>& vector,
+                                   CIter<T_Component>& iter,
+                                   NId& maxId);
     };
 
 
@@ -174,21 +189,32 @@ namespace fug {
     template <typename T_Visitor, typename... T_Components>
     void BasicScene::accept(Visitor<T_Visitor, T_Components...>& visitor)
     {
-        constexpr uint64_t nComponents = sizeof...(T_Components);
-        printf("nComponents: %llu\n", nComponents);
+        //constexpr uint64_t nComponents = sizeof...(T_Components);
+        //printf("nComponents: %llu\n", nComponents);
+        //static auto sequence = typename GenSequence<nComponents>::type();
 
         static auto collection = accessCollection<T_Components...>();
-        static auto sequence = typename GenSequence<nComponents>::type();
 
-        std::tuple<typename std::vector<T_Components>::iterator...> iters;
+        std::tuple<CIter<T_Components>...> iters;
 
         initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
                                        std::get<typename std::vector<T_Components>::iterator>(iters)...);
 
-        if (std::get<0>(iters) == std::get<0>(collection).begin() &&
-            std::get<1>(iters) == std::get<1>(collection).begin() &&
-            std::get<2>(iters) == std::get<2>(collection).begin()) {
-            printf("works\n");
+        auto maxNodeId = NId();
+        ++maxNodeId;
+        if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                      std::get<typename std::vector<T_Components>::iterator>(iters)...,
+                                      maxNodeId))
+            return;
+
+        //printf("nodeId: %llu\n", maxNodeId);
+        visitor(*std::get<typename std::vector<T_Components>::iterator>(iters)...);
+
+        while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                       ++std::get<typename std::vector<T_Components>::iterator>(iters)...,
+                                       maxNodeId)) {
+            //printf("nodeId: %llu\n", maxNodeId);
+            visitor(*std::get<typename std::vector<T_Components>::iterator>(iters)...);
         }
     }
 
@@ -242,8 +268,8 @@ namespace fug {
     template <typename T_FirstComponent, typename... T_Components>
     void BasicScene::initIterators(std::vector<T_FirstComponent>& firstVector,
                                    std::vector<T_Components>&... restVectors,
-                                   typename std::vector<T_FirstComponent>::iterator& firstIter,
-                                   typename std::vector<T_Components>::iterator&... restIters)
+                                   CIter<T_FirstComponent>& firstIter,
+                                   CIter<T_Components>&... restIters)
     {
         firstIter = firstVector.begin();
         initIterators<T_Components...>(restVectors..., restIters...);
@@ -251,9 +277,42 @@ namespace fug {
 
     template <typename T_Component>
     void BasicScene::initIterators(std::vector<T_Component>& vector,
-                                   typename std::vector<T_Component>::iterator& iter)
+                                   CIter<T_Component>& iter)
     {
         iter = vector.begin();
+    }
+
+    template <typename T_FirstComponent, typename... T_Components>
+    bool BasicScene::iterate(std::vector<T_FirstComponent>& firstVector,
+                             std::vector<T_Components>&... restVectors,
+                             CIter<T_FirstComponent>& firstIter,
+                             CIter<T_Components>&... restIters,
+                             NId& maxId)
+    {
+
+        //for (;maxId > firstIter->_nodeId && firstIter != firstVector.end();) {
+        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
+        maxId = firstIter->_nodeId;
+
+        if (!iterate<T_Components...>(restVectors..., restIters..., maxId))
+            return false;
+        //}
+
+        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
+        maxId = firstIter->_nodeId;
+        return true;
+    }
+
+    template <typename T_Component>
+    bool BasicScene::iterate(std::vector<T_Component>& vector,
+                             CIter<T_Component>& iter,
+                             NId& maxId)
+    {
+        for (;maxId > iter->_nodeId && iter != vector.end(); ++iter);
+        maxId = iter->_nodeId;
+        if (iter == vector.end())
+            return false;
+        return true;
     }
 
 

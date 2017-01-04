@@ -15,7 +15,7 @@ void fug::unitTest1(void) {
     std::default_random_engine r(956137926);
 
     //for (auto )
-
+/*
     auto id1 = FUG_SCENE.addNode();
     auto id2 = FUG_SCENE.addNode(TestComponent1(),
                                  TestComponent2(),
@@ -30,6 +30,17 @@ void fug::unitTest1(void) {
     auto id10 = FUG_SCENE.addChildNode(id4);
     auto id11 = FUG_SCENE.addChildNode(id10, TestComponent1(), TestComponent2());
     auto id12 = FUG_SCENE.addChildNode(id11, TestComponent3());
+*/
+
+    FUG_SCENE.addNode(TestComponent1(), TestComponent2());
+    FUG_SCENE.addNode();
+    FUG_SCENE.addNode(TestComponent2());
+    FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
+    FUG_SCENE.addNode(TestComponent1(), TestComponent3());
+    FUG_SCENE.addNode(TestComponent1());
+    FUG_SCENE.addNode(TestComponent1());
+    FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
+
 
     FUG_SCENE.print();
 
@@ -37,8 +48,8 @@ void fug::unitTest1(void) {
     TestVisitor2 visitor2;
     TestVisitor3 visitor3;
 
-    //FUG_SCENE.accept(visitor1);
-    //FUG_SCENE.accept(visitor2);
+    FUG_SCENE.accept(visitor1);
+    FUG_SCENE.accept(visitor2);
     FUG_SCENE.accept(visitor3);
 
 }
