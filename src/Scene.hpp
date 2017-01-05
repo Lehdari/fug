@@ -87,6 +87,7 @@ namespace fug {
 
     //  Chosen implementation
     using SceneImplementation   = BasicScene;
+
     using Scene                 = SceneBase<SceneImplementation>;
 
 

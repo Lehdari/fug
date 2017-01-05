@@ -3,6 +3,7 @@
 
 
 #include "Types.hpp"
+#include "Macros.hpp"
 #include "Scene.hpp"
 
 
@@ -13,9 +14,24 @@ namespace fug {
     public:
         friend SceneImplementation;
 
+        template <typename T_Component>
+        static const CId& typeId(void);
+
+    #ifndef FUG_DEBUG
     protected:
-        NId  _nodeId;;
+    #endif
+        NId  _nodeId;
+
+    private:
+        static CId  _typeId;
     };
+
+
+    template <typename T_Component>
+    const CId& Component::typeId(void) {
+        static CId typeId = _typeId++;
+        return typeId;
+    }
 
 
 }

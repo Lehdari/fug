@@ -12,16 +12,20 @@ namespace fug {
     public:
         //  Functor operator taking components as a reference
         //  is implemented in derived classes.
-        //  Components are being provided by cene when
+        //  Components are being provided by scene when
         //  the visitor is accepted.
-        void operator()(T_Components&... components);
+        //  The operator returns a boolean indicating whether
+        //  descendants of the node should be visited
+        //  true: descendants will be visited
+        //  false: descendants will be skipped
+        bool operator()(T_Components&... components);
     };
 
 
     template <typename T_Visitor, typename... T_Components>
-    void Visitor<T_Visitor, T_Components...>::operator()(T_Components&... components)
+    bool Visitor<T_Visitor, T_Components...>::operator()(T_Components&... components)
     {
-        (*static_cast<T_Visitor*>(this))(components...);
+        return (*static_cast<T_Visitor*>(this))(components...);
     }
 
 
