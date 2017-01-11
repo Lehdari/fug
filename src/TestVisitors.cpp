@@ -1,5 +1,7 @@
 #include "TestVisitors.hpp"
 
+#include <cstdio> // TEMP
+
 
 using namespace fug;
 

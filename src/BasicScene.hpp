@@ -8,6 +8,7 @@
 #include "Scene.hpp"
 #include "Macros.hpp"
 #include "TemplateUtils.hpp"
+#include "Component.hpp"
 
 
 namespace fug {
@@ -17,10 +18,11 @@ namespace fug {
     class BasicScene : public SceneBase<BasicScene> {
     public:
         struct Node {
-            NId                 id;
-            NId                 parent;
-            uint64_t            size;
-            std::vector<NId>    children;
+            NId                                     id;
+            NId                                     parent;
+            uint64_t                                size;
+            std::vector<NId>                        children;
+            std::vector<std::pair<CId, uint64_t>>   components;
 
             Node(const NId& id, const NId& parent = NId()) :
                 id(id), parent(parent), size(1) {}
@@ -71,6 +73,11 @@ namespace fug {
         template <typename T_Component>
         std::vector<T_Component>& accessComponents(void);
 
+
+
+        template <typename T_Component>
+        using CIter = typename std::vector<T_Component>::iterator;
+
         #if __cplusplus > 201402L   //  TODO_CPP_VERSION
         #ifdef FUG_DEV
         #warning "C++17 supported, cleanup possible"
@@ -88,12 +95,22 @@ namespace fug {
         void addComponents(T_Component&& component);
         #endif
 
-        //  utilities for accepting visitors
+        template <typename T_FirstComponent, typename... T_Components>
+        void addChildComponents(T_FirstComponent&& firstComponent,
+                                T_Components&&... components,
+                                NodeIterator& parentIter);
+
+        template <typename T_Component>
+        void addChildComponents(T_Component&& component,
+                                NodeIterator& parentIter);
+
+        template <typename T_Component>
+        inline CIter<T_Component> findComponent(const NodeIterator& nodeIter);
+
+
         template <typename... T_Components>
         std::tuple<std::vector<T_Components>&...> accessCollection(void);
 
-        template <typename T_Component>
-        using CIter = typename std::vector<T_Component>::iterator;
 
         template <typename T_FirstComponent, typename... T_Components>
         inline static void initIterators(std::vector<T_FirstComponent>& firstVector,
@@ -139,6 +156,7 @@ namespace fug {
                             T_Components&&... components)
     {
         _nodes.emplace_back(++_nodeId);
+
         addComponents<T_FirstComponent, T_Components...>(std::forward<T_FirstComponent>(firstComponent),
                                                          std::forward<T_Components>(components)...);
         return _nodeId;
@@ -175,13 +193,13 @@ namespace fug {
         if (parentIt == _nodes.end())
             return NId();
 
+        addChildComponents<T_Components...>(std::forward<T_Components>(components)..., parentIt);
+
         increaseNodeSize(parentIt);
         parentIt->children.push_back(++_nodeId);
         auto it = parentIt + (parentIt->size-1);
         _nodes.emplace(it, _nodeId, parentIt->id);
 
-        if (sizeof...(T_Components) > 0)
-        addComponents<T_Components...>(std::forward<T_Components>(components)...);
         return _nodeId;
     }
     #endif
@@ -189,32 +207,29 @@ namespace fug {
     template <typename T_Visitor, typename... T_Components>
     void BasicScene::accept(Visitor<T_Visitor, T_Components...>& visitor)
     {
-        //constexpr uint64_t nComponents = sizeof...(T_Components);
-        //printf("nComponents: %llu\n", nComponents);
-        //static auto sequence = typename GenSequence<nComponents>::type();
-
         static auto collection = accessCollection<T_Components...>();
 
         std::tuple<CIter<T_Components>...> iters;
 
         initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                       std::get<typename std::vector<T_Components>::iterator>(iters)...);
+                                       std::get<CIter<T_Components>>(iters)...);
 
-        auto maxNodeId = NId();
-        ++maxNodeId;
+        auto nodeId = NId();
+        ++nodeId;
         if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                      std::get<typename std::vector<T_Components>::iterator>(iters)...,
-                                      maxNodeId))
+                                      std::get<CIter<T_Components>>(iters)...,
+                                      nodeId))
             return;
 
-        //printf("nodeId: %llu\n", maxNodeId);
-        visitor(*std::get<typename std::vector<T_Components>::iterator>(iters)...);
+        if (!visitor(*std::get<CIter<T_Components>>(iters)...))
+            nodeId += _nodes[nodeId].size;
+
 
         while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                       ++std::get<typename std::vector<T_Components>::iterator>(iters)...,
-                                       maxNodeId)) {
-            //printf("nodeId: %llu\n", maxNodeId);
-            visitor(*std::get<typename std::vector<T_Components>::iterator>(iters)...);
+                                       ++std::get<CIter<T_Components>>(iters)...,
+                                       nodeId)) {
+            if (!visitor(*std::get<CIter<T_Components>>(iters)...))
+                nodeId += _nodes[nodeId].size;
         }
     }
 
@@ -243,9 +258,9 @@ namespace fug {
     template <typename T_FirstComponent, typename... T_Components>
     void BasicScene::addComponents(T_FirstComponent&& firstComponent, T_Components&&... components)
     {
-        auto& v1 = accessComponents<T_FirstComponent>();
-        v1.push_back(std::forward<T_FirstComponent>(firstComponent));
-        v1.back()._nodeId = _nodeId;
+        auto& v = accessComponents<T_FirstComponent>();
+        v.push_back(std::forward<T_FirstComponent>(firstComponent));
+        v.back()._nodeId = _nodeId;
 
         addComponents<T_Components...>(std::forward<T_Components>(components)...);
     }
@@ -258,6 +273,61 @@ namespace fug {
         v.back()._nodeId = _nodeId;
     }
     #endif
+
+    template <typename T_FirstComponent, typename... T_Components>
+    void BasicScene::addChildComponents(T_FirstComponent&& firstComponent,
+                                        T_Components&&... components,
+                                        NodeIterator& parentIter)
+    {
+        auto& v = accessComponents<T_FirstComponent>();
+        auto iter = findComponent<T_FirstComponent>(parentIter);
+        ++iter;
+        auto nIter = v.insert(iter, std::forward<T_FirstComponent>(firstComponent));
+        nIter->_nodeId = _nodeId;
+
+        CId id = Component::typeId<T_FirstComponent>();
+        for (auto pIter2 = parentIter; pIter2 != _nodes.end(); ++pIter2)
+            for (auto& e : pIter2->components)
+                if (e.first == id)
+                    ++e.second;
+
+        addChildComponents<T_Components...>(std::forward<T_Components>(components)..., parentIter);
+    }
+
+    template <typename T_Component>
+    void BasicScene::addChildComponents(T_Component&& component,
+                                        NodeIterator& parentIter)
+    {
+        auto& v = accessComponents<T_Component>();
+        auto iter = findComponent<T_Component>(parentIter);
+        ++iter;
+        auto nIter = v.insert(iter, std::forward<T_Component>(component));
+        nIter->_nodeId = _nodeId;
+
+        CId id = Component::typeId<T_Component>();
+        for (auto pIter2 = parentIter; pIter2 != _nodes.end(); ++pIter2)
+            for (auto& e : pIter2->components)
+                if (e.first == id)
+                    ++e.second;
+    }
+
+    //  returns component pointed by the node or any node before it containing component of correct type
+    template <typename T_Component>
+    BasicScene::CIter<T_Component> BasicScene::findComponent(const NodeIterator& nodeIter)
+    {
+        auto& v = accessComponents<T_Component>();
+        CId id = Component::typeId<T_Component>();
+
+        auto cIter = v.begin();
+        for (auto iter = _nodes.begin(); iter < nodeIter; ++iter) {
+            for (auto& e : nodeIter->components) {
+                if (e.first == id)
+                    cIter = v.begin() + e.second;
+            }
+        }
+        return cIter;
+    }
+
 
     template <typename... T_Components>
     std::tuple<std::vector<T_Components>&...> BasicScene::accessCollection(void)
@@ -290,16 +360,20 @@ namespace fug {
                              NId& maxId)
     {
 
-        //for (;maxId > firstIter->_nodeId && firstIter != firstVector.end();) {
         for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
         maxId = firstIter->_nodeId;
 
-        if (!iterate<T_Components...>(restVectors..., restIters..., maxId))
+        if (firstIter == firstVector.end() || !iterate<T_Components...>(restVectors..., restIters..., maxId))
             return false;
-        //}
 
-        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
-        maxId = firstIter->_nodeId;
+        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end();) {
+            for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
+            maxId = firstIter->_nodeId;
+
+            if (firstIter == firstVector.end() || !iterate<T_Components...>(restVectors..., restIters..., maxId))
+                return false;
+        }
+
         return true;
     }
 

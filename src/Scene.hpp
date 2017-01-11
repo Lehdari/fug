@@ -1,5 +1,5 @@
-#ifndef FUG_SCENE_HPP
-#define FUG_SCENE_HPP
+#ifndef FUG_BASE_HPP
+#define FUG_BASE_HPP
 
 
 #include <vector>
@@ -7,6 +7,7 @@
 #include "Types.hpp"
 #include "Macros.hpp"
 #include "Visitor.hpp"
+#include "SceneImplementation.hpp"
 
 
 namespace fug {
@@ -82,19 +83,10 @@ namespace fug {
     #endif
 
 
-    //  List of implementation class forward declarations
-    class BasicScene;
-
-    //  Chosen implementation
-    using SceneImplementation   = BasicScene;
-
     using Scene                 = SceneBase<SceneImplementation>;
 
-
 }
-
-//  Implementation header files
-#include "BasicScene.hpp"
+    #include "BasicScene.hpp"
 
 
-#endif // FUG_SCENE_HPP
+#endif // FUG_BASE_HPP

@@ -15,7 +15,6 @@ namespace fug {
     using   CId = ComponentId;
     using   NId = NodeId;
 
-
 }
 
 
