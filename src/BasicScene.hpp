@@ -360,18 +360,21 @@ namespace fug {
                              NId& maxId)
     {
 
-        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
-        maxId = firstIter->_nodeId;
+        for (;firstIter != firstVector.end() && maxId > firstIter->_nodeId; ++firstIter);
 
-        if (firstIter == firstVector.end() || !iterate<T_Components...>(restVectors..., restIters..., maxId))
+        if (firstIter == firstVector.end())
             return false;
 
-        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end();) {
-            for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
-            maxId = firstIter->_nodeId;
+        maxId = firstIter->_nodeId;
 
+        if (!iterate<T_Components...>(restVectors..., restIters..., maxId))
+            return false;
+
+        for (;firstIter != firstVector.end() && maxId > firstIter->_nodeId;) {
+            for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
             if (firstIter == firstVector.end() || !iterate<T_Components...>(restVectors..., restIters..., maxId))
                 return false;
+            maxId = firstIter->_nodeId;
         }
 
         return true;
@@ -382,10 +385,10 @@ namespace fug {
                              CIter<T_Component>& iter,
                              NId& maxId)
     {
-        for (;maxId > iter->_nodeId && iter != vector.end(); ++iter);
-        maxId = iter->_nodeId;
+        for (;iter != vector.end() && maxId > iter->_nodeId; ++iter);
         if (iter == vector.end())
             return false;
+        maxId = iter->_nodeId;
         return true;
     }
 

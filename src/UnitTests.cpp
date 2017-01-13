@@ -8,6 +8,7 @@
 
 
 void fug::unitTest1(void) {
+    /*
     auto id1 = FUG_SCENE.addNode(               TestComponent1(), TestComponent2());
     auto id2 = FUG_SCENE.addNode(               TestComponent1());
     auto id3 = FUG_SCENE.addNode(               TestComponent2());
@@ -20,18 +21,17 @@ void fug::unitTest1(void) {
     auto id10 = FUG_SCENE.addChildNode( id4);
     auto id11 = FUG_SCENE.addChildNode( id10,   TestComponent1(), TestComponent2());
     auto id12 = FUG_SCENE.addChildNode( id11,   TestComponent1(), TestComponent2(), TestComponent3());
+    */
+
+    //FUG_SCENE.print();
+
+
+    auto id1 = FUG_SCENE.addNode();
+    auto id2 = FUG_SCENE.addNode();
+    //auto id3 = FUG_SCENE.addChildNode(id1);
 
     FUG_SCENE.print();
 
-/*
-    FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
-    FUG_SCENE.addNode(TestComponent1(), TestComponent3());
-    FUG_SCENE.addNode(TestComponent2());
-    FUG_SCENE.addNode(TestComponent1());
-    FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
-
-    FUG_SCENE.print();
-*/
     TestVisitor1 visitor1;
     TestVisitor2 visitor2;
     TestVisitor3 visitor3;

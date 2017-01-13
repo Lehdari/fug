@@ -83,7 +83,7 @@ namespace fug {
     #endif
 
 
-    using Scene                 = SceneBase<SceneImplementation>;
+    using Scene = SceneBase<SceneImplementation>;
 
 }
     #include "BasicScene.hpp"
