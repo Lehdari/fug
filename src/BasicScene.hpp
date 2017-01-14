@@ -89,10 +89,12 @@ namespace fug {
         #else
         template <typename T_FirstComponent, typename... T_Components>
         void addComponents(T_FirstComponent&& firstComponent,
-                           T_Components&&... components);
+                           T_Components&&... components,
+                           const NodeIterator& nodeIter);
 
         template <typename T_Component>
-        void addComponents(T_Component&& component);
+        void addComponents(T_Component&& component,
+                           const NodeIterator& nodeIter);
         #endif
 
         template <typename T_FirstComponent, typename... T_Components>
@@ -158,7 +160,8 @@ namespace fug {
         _nodes.emplace_back(++_nodeId);
 
         addComponents<T_FirstComponent, T_Components...>(std::forward<T_FirstComponent>(firstComponent),
-                                                         std::forward<T_Components>(components)...);
+                                                         std::forward<T_Components>(components)...,
+                                                         _nodes.end()-1);
         return _nodeId;
     }
     #endif
@@ -193,7 +196,7 @@ namespace fug {
         if (parentIt == _nodes.end())
             return NId();
 
-        addChildComponents<T_Components...>(std::forward<T_Components>(components)..., parentIt);
+        addComponents<T_Components...>(std::forward<T_Components>(components)..., parentIt);
 
         increaseNodeSize(parentIt);
         parentIt->children.push_back(++_nodeId);
@@ -256,24 +259,62 @@ namespace fug {
     }
     #else
     template <typename T_FirstComponent, typename... T_Components>
-    void BasicScene::addComponents(T_FirstComponent&& firstComponent, T_Components&&... components)
+    void BasicScene::addComponents(T_FirstComponent&& firstComponent,
+                                   T_Components&&... components,
+                                   const NodeIterator& nodeIter)
     {
         auto& v = accessComponents<T_FirstComponent>();
-        v.push_back(std::forward<T_FirstComponent>(firstComponent));
-        v.back()._nodeId = _nodeId;
 
-        addComponents<T_Components...>(std::forward<T_Components>(components)...);
+        //  find iterator for component position
+        auto cIter = findComponent<T_FirstComponent>(nodeIter);
+        printf("cIter nodeId: ", cIter->_nodeId);
+        ++cIter;    //  because insert adds in front of given iterator
+
+        auto ncIter = v.insert(cIter, std::forward<T_FirstComponent>(firstComponent));
+        ncIter->_nodeId = _nodeId;
+
+        //  add component id to the node
+        nodeIter->components.push_back(std::make_pair(Component::typeId<T_FirstComponent>(),
+                                                      v.size()-1));
+
+        //  increase all component ids in nodes after the parent node
+        CId id = Component::typeId<T_FirstComponent>();
+        for (auto pIter2 = nodeIter+1; pIter2 != _nodes.end(); ++pIter2)
+            for (auto& e : pIter2->components)
+                if (e.first == id)
+                    ++e.second;
+
+        //  add rest of the components
+        addComponents<T_Components...>(std::forward<T_Components>(components)...,
+                                       nodeIter);
     }
 
     template <typename T_Component>
-    void BasicScene::addComponents(T_Component&& component)
+    void BasicScene::addComponents(T_Component&& component,
+                                   const NodeIterator& nodeIter)
     {
         auto& v = accessComponents<T_Component>();
-        v.push_back(std::forward<T_Component>(component));
-        v.back()._nodeId = _nodeId;
+
+        //  find iterator for component position
+        auto cIter = findComponent<T_Component>(nodeIter);
+        ++cIter;    //  because insert adds in front of given iterator
+
+        auto ncIter = v.insert(cIter, std::forward<T_Component>(component));
+        ncIter->_nodeId = _nodeId;
+
+        //  add component id to the node
+        nodeIter->components.push_back(std::make_pair(Component::typeId<T_Component>(),
+                                                      v.size()-1));
+
+        //  increase all component ids in nodes after the parent node
+        CId id = Component::typeId<T_Component>();
+        for (auto pIter2 = nodeIter+1; pIter2 != _nodes.end(); ++pIter2)
+            for (auto& e : pIter2->components)
+                if (e.first == id)
+                    ++e.second;
     }
     #endif
-
+/*
     template <typename T_FirstComponent, typename... T_Components>
     void BasicScene::addChildComponents(T_FirstComponent&& firstComponent,
                                         T_Components&&... components,
@@ -284,6 +325,9 @@ namespace fug {
         ++iter;
         auto nIter = v.insert(iter, std::forward<T_FirstComponent>(firstComponent));
         nIter->_nodeId = _nodeId;
+
+        nodeIter->components.push_back(std::make_pair(Component::typeId<T_Component>(),
+                                                      v.size()-1));
 
         CId id = Component::typeId<T_FirstComponent>();
         for (auto pIter2 = parentIter; pIter2 != _nodes.end(); ++pIter2)
@@ -310,7 +354,7 @@ namespace fug {
                 if (e.first == id)
                     ++e.second;
     }
-
+*/
     //  returns component pointed by the node or any node before it containing component of correct type
     template <typename T_Component>
     BasicScene::CIter<T_Component> BasicScene::findComponent(const NodeIterator& nodeIter)
@@ -319,8 +363,8 @@ namespace fug {
         CId id = Component::typeId<T_Component>();
 
         auto cIter = v.begin();
-        for (auto iter = _nodes.begin(); iter < nodeIter; ++iter) {
-            for (auto& e : nodeIter->components) {
+        for (auto nIter = _nodes.begin(); nIter < nodeIter; ++nIter) {
+            for (auto& e : nIter->components) {
                 if (e.first == id)
                     cIter = v.begin() + e.second;
             }

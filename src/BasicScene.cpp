@@ -68,6 +68,11 @@ void BasicScene::print(const NodeIterator& beginIt, const NodeIterator& endIt, u
             std::cout << "  ";
         std::cout << "Id: " << it->id << ", Size: " << it->size;
 
+        if (it->components.size() > 0) {
+            std::cout << " Comp: ";
+            for (auto& c : it->components)
+                std::cout << "[" << c.first << ", " << c.second << "] ";
+        }
 
         if (it->children.size() > 0) {
             std::cout << ", Children: ";
