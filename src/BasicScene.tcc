@@ -195,7 +195,7 @@ void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
     auto nIt = v.insert(v.begin()+pos, T_FirstComponent());
-    nIt->_nodeId = _nodeId;
+    nIt->_nodeId = NId();
     addComponents<T_SecondComponent, T_Components...>(pos);
 }
 
@@ -205,7 +205,7 @@ void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_Component>&>(_components);
     auto nIt = v.insert(v.begin()+pos, T_Component());
-    nIt->_nodeId = _nodeId;
+    nIt->_nodeId = NId();
 }
 
 template <typename... T_SceneComponents>
@@ -215,9 +215,8 @@ void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos,
                                                      T_Components&&... components)
 {
     auto& c = *(accessComponents<T_FirstComponent>().begin() + pos);
-    NId nodeId = c._nodeId;
     c = std::forward<T_FirstComponent>(firstComponent);
-    c._nodeId = nodeId;
+    c._nodeId = _nodeId;
 
     //  set rest of the components
     setComponents(pos, std::forward<T_Components>(components)...);
@@ -228,9 +227,8 @@ template <typename T_Component>
 void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos, T_Component&& component)
 {
     auto& c = *(accessComponents<T_Component>().begin() + pos);
-    NId nodeId = c._nodeId;
     c = std::forward<T_Component>(component);
-    c._nodeId = nodeId;
+    c._nodeId = _nodeId;
 }
 
 template <typename... T_SceneComponents>
