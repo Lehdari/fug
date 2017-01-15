@@ -1,4 +1,5 @@
 #include "BasicScene.hpp"
+#include "TestComponents.hpp"   //  TEMP
 
 #include <iostream>
 
@@ -88,6 +89,15 @@ void BasicScene::print(const NodeIterator& beginIt, const NodeIterator& endIt, u
             std::cout << std::endl;
             ++it;
         }
+    }
+
+    if (level == 0) {
+        auto& v = accessComponents<TestComponent1>();
+
+        for (auto& c : v) {
+            printf("%llu ", c._nodeId);
+        }
+        printf("\n");
     }
 }
 #endif

@@ -29,13 +29,13 @@ void fug::unitTest1(void) {
     uint64_t i = 0;
 
     nid[i++] = FUG_SCENE.addNode();
-    nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
+    nid[i++] = FUG_SCENE.addNode(TestComponent1());//, TestComponent2(), TestComponent3());
     nid[i++] = FUG_SCENE.addNode();
-    nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
-    nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent3());
-    nid[i++] = FUG_SCENE.addNode(TestComponent2());
+    nid[i++] = FUG_SCENE.addNode(TestComponent1());//, TestComponent2(), TestComponent3());
+    nid[i++] = FUG_SCENE.addNode(TestComponent1());//, TestComponent3());
+    nid[i++] = FUG_SCENE.addNode();//TestComponent2());
 
-    nid[i++] = FUG_SCENE.addChildNode(nid[0], TestComponent1());
+    //nid[i++] = FUG_SCENE.addChildNode(nid[3], TestComponent1());
 
     FUG_SCENE.print();
 

@@ -196,12 +196,17 @@ namespace fug {
         if (parentIt == _nodes.end())
             return NId();
 
-        addComponents<T_Components...>(std::forward<T_Components>(components)..., parentIt);
-
         increaseNodeSize(parentIt);
         parentIt->children.push_back(++_nodeId);
         auto it = parentIt + (parentIt->size-1);
         _nodes.emplace(it, _nodeId, parentIt->id);
+
+        auto nnIter = _nodes.begin();
+        findNode(_nodeId, nnIter, _nodes.end());
+        if (nnIter == _nodes.end())
+            return NId();
+
+        addComponents<T_Components...>(std::forward<T_Components>(components)..., nnIter);
 
         return _nodeId;
     }
@@ -266,9 +271,16 @@ namespace fug {
         auto& v = accessComponents<T_FirstComponent>();
 
         //  find iterator for component position
-        auto cIter = findComponent<T_FirstComponent>(nodeIter);
-        printf("cIter nodeId: ", cIter->_nodeId);
-        ++cIter;    //  because insert adds in front of given iterator
+        CId id = Component::typeId<T_FirstComponent>();
+        auto cIter = v.end();
+        for (auto nIter = nodeIter; nIter < _nodes.end(); ++nIter) {
+            for (auto& e : nIter->components) {
+                if (e.first == id) {
+                    cIter = v.begin() + e.second;
+                    break;
+                }
+            }
+        }
 
         auto ncIter = v.insert(cIter, std::forward<T_FirstComponent>(firstComponent));
         ncIter->_nodeId = _nodeId;
@@ -278,7 +290,6 @@ namespace fug {
                                                       v.size()-1));
 
         //  increase all component ids in nodes after the parent node
-        CId id = Component::typeId<T_FirstComponent>();
         for (auto pIter2 = nodeIter+1; pIter2 != _nodes.end(); ++pIter2)
             for (auto& e : pIter2->components)
                 if (e.first == id)
@@ -296,8 +307,22 @@ namespace fug {
         auto& v = accessComponents<T_Component>();
 
         //  find iterator for component position
-        auto cIter = findComponent<T_Component>(nodeIter);
-        ++cIter;    //  because insert adds in front of given iterator
+        CId id = Component::typeId<T_Component>();
+        auto cIter = v.end();
+        for (auto nIter = nodeIter; nIter < _nodes.end(); ++nIter) {
+            for (auto& e : nIter->components) {
+                if (e.first == id) {
+                    cIter = v.begin() + e.second;
+                    break;
+                }
+            }
+        }
+
+        printf("Component position: %llu\n", cIter-v.begin());
+
+        //auto cIter = findComponent<T_Component>(nodeIter);
+        //if (cIter != v.end())
+            //++cIter;    //  because insert adds in front of given iterator
 
         auto ncIter = v.insert(cIter, std::forward<T_Component>(component));
         ncIter->_nodeId = _nodeId;
@@ -307,7 +332,6 @@ namespace fug {
                                                       v.size()-1));
 
         //  increase all component ids in nodes after the parent node
-        CId id = Component::typeId<T_Component>();
         for (auto pIter2 = nodeIter+1; pIter2 != _nodes.end(); ++pIter2)
             for (auto& e : pIter2->components)
                 if (e.first == id)
