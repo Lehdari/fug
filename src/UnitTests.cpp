@@ -28,14 +28,20 @@ void fug::unitTest1(void) {
     NId nid[10] = {0};
     uint64_t i = 0;
 
+    TestComponent1 tc11; tc11.a = 3; tc11.b = 4;
+    TestComponent1 tc12; tc12.a = 5; tc12.b = 6;
+
     nid[i++] = FUG_SCENE.addNode();
     nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
     nid[i++] = FUG_SCENE.addNode();
-    nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent2(), TestComponent3());
+    nid[i++] = FUG_SCENE.addNode(std::move(tc11), TestComponent2(), TestComponent3());
     nid[i++] = FUG_SCENE.addNode(TestComponent1(), TestComponent3());
     nid[i++] = FUG_SCENE.addNode(TestComponent2());
 
     nid[i++] = FUG_SCENE.addChildNode(nid[0], TestComponent1());
+    nid[i++] = FUG_SCENE.addChildNode(nid[0], std::move(tc12));
+    nid[i++] = FUG_SCENE.addChildNode(nid[5]);
+    nid[i++] = FUG_SCENE.addChildNode(nid[5]);
 
     FUG_SCENE.print();
 
