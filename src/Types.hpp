@@ -9,11 +9,11 @@ namespace fug {
 
 
     using   ComponentId = uint64_t;
-    using   NodeId      = uint64_t;
+    using   EntityId    = uint64_t;
 
     /// Shortening typedefs
     using   CId = ComponentId;
-    using   NId = NodeId;
+    using   EId = EntityId;
 
 }
 

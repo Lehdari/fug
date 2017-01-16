@@ -22,50 +22,36 @@ namespace fug {
     template <typename... T_SceneComponents>
     class BasicScene : public SceneBase<SceneImplementation> {
     public:
-        struct Node {
-            NId                 id;
-            NId                 parent;
-            uint64_t            size;
-            std::vector<NId>    children;
-
-            Node(const NId& id, const NId& parent = NId()) :
-                id(id), parent(parent), size(1) {}
+        struct Entity {
+            EId id;
+            Entity(const EId& id) :
+                id(id) {}
         };
 
-        using NodeIterator  = typename std::vector<Node>::iterator;
+        using EntityIterator  = typename std::vector<Entity>::iterator;
 
 
         template<typename T_FirstComponent, typename... T_Components>
-        NId addNode(T_FirstComponent&& firstComponent, T_Components&&... components);
+        EId addEntity(T_FirstComponent&& firstComponent, T_Components&&... components);
 
-        NId addNode(void);
+        EId addEntity(void);
 
-        NId addChildNode(const NId& parent);
-
-        template<typename... T_Components>
-        NId addChildNode(const NId& parent, T_Components&&... components);
-
-        void removeNode(const NodeId& id);
+        void removeEntity(const EntityId& id);
 
         template<typename T_Visitor, typename... T_Components>
         void accept(Visitor<T_Visitor, T_Components...>& visitor);
 
         #ifdef FUG_DEBUG
-        void print(const NodeIterator& beginIt = _nodes.begin(),
-                   const NodeIterator& endIt = _nodes.end(),
-                   uint32_t level = 0);
+        void print(void);
         #endif
 
     private:
-        static NId                  _nodeId;    //  running node id, should last to end of the known universe
-        static std::vector<Node>    _nodes;     //  vector for nodes
+        static EId                  _entityId;    //  running entity id, should last to end of the known universe
+        static std::vector<Entity>  _entities;     //  vector for entitys
 
-        //  Find node by id
-        int findNode(const NId& nodeId, NodeIterator& it,
-                     const NodeIterator& endIt = _nodes.end());
-        //  Increase/decrease size of a node and its ancestors
-        void increaseNodeSize(NodeIterator& it);
-        void decreaseNodeSize(NodeIterator& it, uint64_t amount = 1);
+        //  Find entity by id
+        int findEntity(const EId& entityId, EntityIterator& it,
+                     const EntityIterator& endIt = _entities.end());
 
         template <typename T_Component>
         static std::vector<T_Component>& accessComponents(void);
@@ -94,15 +80,15 @@ namespace fug {
         template <typename T_Component>
         void setComponents(uint64_t pos, T_Component&& component);
 
-        void removeComponents(uint64_t begin, uint64_t end);
+        void removeComponents(uint64_t pos);
 
         template <typename T_FirstComponent,
                   typename T_SecondComponent,
                   typename... T_Components>
-        void removeComponents(uint64_t begin, uint64_t end);
+        void removeComponents(uint64_t pos);
 
         template <typename T_Component>
-        void removeComponents(uint64_t begin, uint64_t end);
+        void removeComponents(uint64_t pos);
 
 
         template <typename... T_Components>

@@ -15,7 +15,7 @@ namespace fug {
         //  Components are being provided by scene when
         //  the visitor is accepted.
         //  The operator returns a boolean indicating whether
-        //  descendants of the node should be visited
+        //  descendants of the entity should be visited
         //  true: descendants will be visited
         //  false: descendants will be skipped
         bool operator()(T_Components&... components);
