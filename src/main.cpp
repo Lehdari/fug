@@ -5,7 +5,10 @@ using namespace fug;
 
 
 int main(void) {
-    unitTest1();
+
+    #ifdef FUG_UNIT_TEST
+    unitTest();
+    #endif
 
     return 0;
 }

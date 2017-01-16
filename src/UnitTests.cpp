@@ -6,8 +6,8 @@
 #include <cstdio>
 
 
-
-void fug::unitTest1(void) {
+#if FUG_UNIT_TEST == 1
+void fug::unitTest(void) {
     EId nid[10] = {0};
     uint64_t i = 0;
 
@@ -41,3 +41,4 @@ void fug::unitTest1(void) {
     FUG_SCENE.print();
 
 }
+#endif  //  FUG_UNIT_TEST == 1

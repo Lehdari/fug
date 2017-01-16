@@ -2,10 +2,13 @@
 #define FUG_UNIT_TESTS_HPP
 
 
+#include "Macros.hpp"
+
+
 namespace fug {
 
 
-    void unitTest1(void);
+    void unitTest(void);
 
 
 }

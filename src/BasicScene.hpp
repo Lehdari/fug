@@ -5,9 +5,9 @@
 #include <vector>
 #include <tuple>
 #include <unordered_map>
-//#ifdef FUG_DEBUG
+#ifdef FUG_DEBUG
 #include <iostream>
-//#endif
+#endif
 
 #include "Scene.hpp"
 #include "Macros.hpp"

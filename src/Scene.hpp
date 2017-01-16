@@ -7,7 +7,7 @@
 #include "Types.hpp"
 #include "Macros.hpp"
 #include "Visitor.hpp"
-#include "SceneImplementation.hpp"
+#include "Implementation.hpp"
 
 
 namespace fug {
