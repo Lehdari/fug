@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <tuple>
+#include <unordered_map>
 //#ifdef FUG_DEBUG
 #include <iostream>
 //#endif
@@ -113,12 +114,14 @@ namespace fug {
                                    std::vector<T_Components>&... restVectors,
                                    CIter<T_FirstComponent>& firstIter,
                                    CIter<T_Components>&... restIters,
-                                   NId& maxId);
+                                   std::unordered_map<CId, uint64_t>& nIterations,
+                                   uint64_t& maxIterations);
 
         template <typename T_Component>
         inline static bool iterate(std::vector<T_Component>& vector,
                                    CIter<T_Component>& iter,
-                                   NId& maxId);
+                                   std::unordered_map<CId, uint64_t>& nIterations,
+                                   uint64_t& maxIterations);
     };
 
 

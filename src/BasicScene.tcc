@@ -103,6 +103,44 @@ template <typename... T_SceneComponents>
 template <typename T_Visitor, typename... T_Components>
 void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...>& visitor)
 {
+    static auto collection = accessCollection<T_Components...>();
+
+    std::tuple<CIter<T_Components>...> iters;
+
+    initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                   std::get<CIter<T_Components>>(iters)...);
+
+    std::unordered_map<CId, uint64_t> nIterations;
+    uint64_t maxIterations = 0;
+
+    NodeIterator nodeIt = _nodes.begin();
+
+    if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                  std::get<CIter<T_Components>>(iters)...,
+                                  nIterations, maxIterations))
+        return;
+    nodeIt += maxIterations;
+    for (auto& nit : nIterations)
+        nit.second = 0;
+
+    if (!visitor(*std::get<CIter<T_Components>>(iters)...))
+        maxIterations = nodeIt->size;
+    else
+        maxIterations = 1;
+
+
+    while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                   std::get<CIter<T_Components>>(iters)...,
+                                   nIterations, maxIterations)) {
+        nodeIt += maxIterations;
+        for (auto& nit : nIterations)
+            nit.second = 0;
+
+        if (!visitor(*std::get<CIter<T_Components>>(iters)...))
+            maxIterations = nodeIt->size;
+        else
+            maxIterations = 1;
+    }
 }
 
 #ifdef FUG_DEBUG
@@ -264,25 +302,30 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& fi
                                                std::vector<T_Components>&... restVectors,
                                                CIter<T_FirstComponent>& firstIter,
                                                CIter<T_Components>&... restIters,
-                                               NId& maxId)
+                                               std::unordered_map<CId, uint64_t>& nIterations,
+                                               uint64_t& maxIterations)
 {
+    uint64_t& nit = nIterations[Component::typeId<T_FirstComponent>()];
 
-    for (;firstIter != firstVector.end() && maxId > firstIter->_nodeId; ++firstIter);
+    firstIter += maxIterations-nit;
+    nit = maxIterations;
+    for (;firstIter != firstVector.end() && firstIter->_nodeId == NId(); ++firstIter, ++nit);
 
     if (firstIter == firstVector.end())
         return false;
 
-    maxId = firstIter->_nodeId;
-
-    if (!iterate<T_Components...>(restVectors..., restIters..., maxId))
-        return false;
-
-    for (;firstIter != firstVector.end() && maxId > firstIter->_nodeId;) {
-        for (;maxId > firstIter->_nodeId && firstIter != firstVector.end(); ++firstIter);
-        if (firstIter == firstVector.end() || !iterate<T_Components...>(restVectors..., restIters..., maxId))
+    do {
+        maxIterations = nit;
+        if (!iterate<T_Components...>(restVectors..., restIters..., nIterations, maxIterations))
             return false;
-        maxId = firstIter->_nodeId;
-    }
+
+        firstIter += maxIterations-nit;
+        nit = maxIterations;
+        for (;firstIter != firstVector.end() && firstIter->_nodeId == NId(); ++firstIter, ++nit);
+
+        if (firstIter == firstVector.end())
+            return false;
+    } while (maxIterations > nit);
 
     return true;
 }
@@ -290,12 +333,19 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& fi
 template <typename... T_SceneComponents>
 template <typename T_Component>
 bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_Component>& vector,
-                         CIter<T_Component>& iter,
-                         NId& maxId)
+                                               CIter<T_Component>& iter,
+                                               std::unordered_map<CId, uint64_t>& nIterations,
+                                               uint64_t& maxIterations)
 {
-    for (;iter != vector.end() && maxId > iter->_nodeId; ++iter);
+    uint64_t& nit = nIterations[Component::typeId<T_Component>()];
+
+    iter += maxIterations-nit;
+    nit = maxIterations;
+    for (;iter != vector.end() && iter->_nodeId == NId(); ++iter, ++nit);
+
     if (iter == vector.end())
         return false;
-    maxId = iter->_nodeId;
+
+    maxIterations = nit;
     return true;
 }
