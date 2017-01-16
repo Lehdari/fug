@@ -65,7 +65,7 @@ namespace fug {
                      const NodeIterator& endIt = _nodes.end());
         //  Increase/decrease size of a node and its ancestors
         void increaseNodeSize(NodeIterator& it);
-        void decreaseNodeSize(NodeIterator& it);
+        void decreaseNodeSize(NodeIterator& it, uint64_t amount = 1);
 
         template <typename T_Component>
         static std::vector<T_Component>& accessComponents(void);
@@ -93,6 +93,16 @@ namespace fug {
 
         template <typename T_Component>
         void setComponents(uint64_t pos, T_Component&& component);
+
+        void removeComponents(uint64_t begin, uint64_t end);
+
+        template <typename T_FirstComponent,
+                  typename T_SecondComponent,
+                  typename... T_Components>
+        void removeComponents(uint64_t begin, uint64_t end);
+
+        template <typename T_Component>
+        void removeComponents(uint64_t begin, uint64_t end);
 
 
         template <typename... T_Components>

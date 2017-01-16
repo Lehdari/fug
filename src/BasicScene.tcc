@@ -83,20 +83,21 @@ void BasicScene<T_SceneComponents...>::removeNode(const NodeId& id)
     if (it == _nodes.end())
         return;
 
-    auto parentId = it->parent;
-    std::vector<NId> children = it->children;
+    auto nodeSize = it->size;
 
-    for (auto& childId : children)
-        removeNode(childId);
-
-    it = _nodes.begin();
-    findNode(id, it);
+    removeComponents(it-_nodes.begin(), it-_nodes.begin()+nodeSize);
 
     auto parentIt = _nodes.begin();
     findNode(it->parent, parentIt);
-    decreaseNodeSize(parentIt);
+    decreaseNodeSize(parentIt, nodeSize);
 
-    _nodes.erase(it);
+    for (auto pcIt = parentIt->children.begin(); pcIt != parentIt->children.end(); ++pcIt)
+        if (*pcIt == id) {
+            parentIt->children.erase(pcIt);
+            break;
+        }
+
+    _nodes.erase(it, it+nodeSize);
 }
 
 template <typename... T_SceneComponents>
@@ -201,14 +202,14 @@ void BasicScene<T_SceneComponents...>::increaseNodeSize(NodeIterator& it)
 }
 
 template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::decreaseNodeSize(NodeIterator& it)
+void BasicScene<T_SceneComponents...>::decreaseNodeSize(NodeIterator& it, uint64_t amount)
 {
-    --it->size;
+    it->size-=amount;
     if (it->parent == 0)
         return;
     auto parentIt = _nodes.begin();
     findNode(it->parent, parentIt);
-    increaseNodeSize(parentIt);
+    decreaseNodeSize(parentIt, amount);
 }
 
 template <typename... T_SceneComponents>
@@ -267,6 +268,31 @@ void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos, T_Component&&
     auto& c = *(accessComponents<T_Component>().begin() + pos);
     c = std::forward<T_Component>(component);
     c._nodeId = _nodeId;
+}
+
+template <typename... T_SceneComponents>
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+{
+    removeComponents<T_SceneComponents...>(begin, end);
+}
+
+template <typename... T_SceneComponents>
+template <typename T_FirstComponent,
+          typename T_SecondComponent,
+          typename... T_Components>
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+{
+    auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
+    v.erase(v.begin()+begin, v.begin()+end);
+    removeComponents<T_SecondComponent, T_Components...>(begin, end);
+}
+
+template <typename... T_SceneComponents>
+template <typename T_Component>
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+{
+    auto& v = std::get<std::vector<T_Component>&>(_components);
+    v.erase(v.begin()+begin, v.begin()+end);
 }
 
 template <typename... T_SceneComponents>

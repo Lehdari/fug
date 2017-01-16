@@ -56,4 +56,10 @@ void fug::unitTest1(void) {
     printf("Visiting with TestVisitor3:\n");
     FUG_SCENE.accept(visitor3);
 
+
+    FUG_SCENE.removeNode(nid[2]);
+    FUG_SCENE.removeNode(nid[5]);
+
+    FUG_SCENE.print();
+
 }
