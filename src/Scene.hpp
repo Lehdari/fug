@@ -21,17 +21,12 @@ namespace fug {
         //  Get the singleton instance handle
         static SceneBase<T_Implementation>& instance(void);
 
-        //  Add a node to root
+        //  Add an entity to root
         template<typename... T_Components>
-        NId addNode(T_Components&&... components);
+        EId addEntity(T_Components&&... components);
 
-        //  Add a node as child of another node
-        template<typename... T_Components>
-        NId addChildNode(const NId& parent, T_Components&&... components);
-
-        //  Remove a node and its children alongside with all the
-        //  contained components
-        void removeNode(const NId& node);
+        //  Remove an entity
+        void removeEntity(const EId& entity);
 
         //  Accept a visitor
         template<typename T_Visitor, typename... T_Components>
@@ -52,21 +47,14 @@ namespace fug {
 
     template <typename T_Implementation>
     template <typename... T_Components>
-    NId SceneBase<T_Implementation>::addNode(T_Components&&... components) {
+    EId SceneBase<T_Implementation>::addEntity(T_Components&&... components) {
         return static_cast<T_Implementation*>(this)->
-               addNode(std::forward<T_Components>(components)...);
+               addEntity(std::forward<T_Components>(components)...);
     }
 
     template <typename T_Implementation>
-    template <typename... T_Components>
-    NId SceneBase<T_Implementation>::addChildNode(const NId& parent, T_Components&&... components) {
-        return static_cast<T_Implementation*>(this)->
-               addChildNode(parent, std::forward<T_Components>(components)...);
-    }
-
-    template <typename T_Implementation>
-    void SceneBase<T_Implementation>::removeNode(const NId& node) {
-        return static_cast<T_Implementation*>(this)->removeNode(node);
+    void SceneBase<T_Implementation>::removeEntity(const EId& entity) {
+        return static_cast<T_Implementation*>(this)->removeEntity(entity);
     }
 
     template <typename T_Implementation>

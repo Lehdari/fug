@@ -20,7 +20,7 @@ namespace fug {
     #ifndef FUG_DEBUG
     protected:
     #endif
-        NId  _nodeId;
+        EId  _entityId;
 
     private:
         static CId  _typeId;

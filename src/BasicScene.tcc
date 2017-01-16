@@ -1,9 +1,9 @@
 template <typename... T_SceneComponents>
-NId BasicScene<T_SceneComponents...>::_nodeId;
+EId BasicScene<T_SceneComponents...>::_entityId;
 
 template <typename... T_SceneComponents>
-std::vector<typename BasicScene<T_SceneComponents...>::Node>
-    BasicScene<T_SceneComponents...>::_nodes;
+std::vector<typename BasicScene<T_SceneComponents...>::Entity>
+    BasicScene<T_SceneComponents...>::_entities;
 
 template <typename... T_SceneComponents>
 std::tuple<std::vector<T_SceneComponents>&...>
@@ -12,92 +12,39 @@ std::tuple<std::vector<T_SceneComponents>&...>
 
 
 template <typename... T_SceneComponents>
-NId BasicScene<T_SceneComponents...>::addNode(void)
+EId BasicScene<T_SceneComponents...>::addEntity(void)
 {
-    _nodes.emplace_back(++_nodeId);
-    addComponents(_nodes.size()-1);
+    _entities.emplace_back(++_entityId);
+    addComponents(_entities.size()-1);
 
-    return _nodeId;
+    return _entityId;
 }
 
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent, typename... T_Components>
-NId BasicScene<T_SceneComponents...>::addNode(T_FirstComponent&& firstComponent,
+EId BasicScene<T_SceneComponents...>::addEntity(T_FirstComponent&& firstComponent,
                                               T_Components&&... components)
 {
-    _nodes.emplace_back(++_nodeId);
-    addComponents(_nodes.size()-1);
-    setComponents(_nodes.size()-1,
+    _entities.emplace_back(++_entityId);
+    addComponents(_entities.size()-1);
+    setComponents(_entities.size()-1,
                   std::forward<T_FirstComponent>(firstComponent),
                   std::forward<T_Components>(components)...);
 
-    return _nodeId;
+    return _entityId;
 }
 
 template <typename... T_SceneComponents>
-NId BasicScene<T_SceneComponents...>::addChildNode(const NId& parent)
+void BasicScene<T_SceneComponents...>::removeEntity(const EntityId& id)
 {
-    auto parentIt = _nodes.begin();
-    findNode(parent, parentIt, _nodes.end());
-    if (parentIt == _nodes.end())
-        return NId();
-
-    auto childIt = parentIt + parentIt->size;
-    increaseNodeSize(parentIt);
-    parentIt->children.push_back(++_nodeId);
-
-    addComponents(childIt-_nodes.begin());
-
-    _nodes.emplace(childIt, _nodeId, parentIt->id);
-
-    return _nodeId;
-}
-
-template <typename... T_SceneComponents>
-template <typename... T_Components>
-NId BasicScene<T_SceneComponents...>::addChildNode(const NId& parent, T_Components&&... components)
-{
-    auto parentIt = _nodes.begin();
-    findNode(parent, parentIt, _nodes.end());
-    if (parentIt == _nodes.end())
-        return NId();
-
-    auto childIt = parentIt + parentIt->size;
-    increaseNodeSize(parentIt);
-    parentIt->children.push_back(++_nodeId);
-
-    uint64_t pos = childIt-_nodes.begin();
-    addComponents(pos);
-    setComponents(pos, std::forward<T_Components>(components)...);
-
-    _nodes.emplace(childIt, _nodeId, parentIt->id);
-
-    return _nodeId;
-}
-
-template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::removeNode(const NodeId& id)
-{
-    auto it = _nodes.begin();
-    findNode(id, it);
-    if (it == _nodes.end())
+    auto it = _entities.begin();
+    findEntity(id, it);
+    if (it == _entities.end())
         return;
 
-    auto nodeSize = it->size;
+    removeComponents(it-_entities.begin());
 
-    removeComponents(it-_nodes.begin(), it-_nodes.begin()+nodeSize);
-
-    auto parentIt = _nodes.begin();
-    findNode(it->parent, parentIt);
-    decreaseNodeSize(parentIt, nodeSize);
-
-    for (auto pcIt = parentIt->children.begin(); pcIt != parentIt->children.end(); ++pcIt)
-        if (*pcIt == id) {
-            parentIt->children.erase(pcIt);
-            break;
-        }
-
-    _nodes.erase(it, it+nodeSize);
+    _entities.erase(it);
 }
 
 template <typename... T_SceneComponents>
@@ -114,102 +61,55 @@ void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...
     std::unordered_map<CId, uint64_t> nIterations;
     uint64_t maxIterations = 0;
 
-    NodeIterator nodeIt = _nodes.begin();
+    EntityIterator entityIt = _entities.begin();
 
     if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
                                   std::get<CIter<T_Components>>(iters)...,
                                   nIterations, maxIterations))
         return;
-    nodeIt += maxIterations;
+    entityIt += maxIterations;
     for (auto& nit : nIterations)
         nit.second = 0;
 
-    if (!visitor(*std::get<CIter<T_Components>>(iters)...))
-        maxIterations = nodeIt->size;
-    else
+    visitor(*std::get<CIter<T_Components>>(iters)...);
         maxIterations = 1;
 
 
     while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
                                    std::get<CIter<T_Components>>(iters)...,
                                    nIterations, maxIterations)) {
-        nodeIt += maxIterations;
+        entityIt += maxIterations;
         for (auto& nit : nIterations)
             nit.second = 0;
 
-        if (!visitor(*std::get<CIter<T_Components>>(iters)...))
-            maxIterations = nodeIt->size;
-        else
+        visitor(*std::get<CIter<T_Components>>(iters)...);
             maxIterations = 1;
     }
 }
 
 #ifdef FUG_DEBUG
 template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::print(const NodeIterator& beginIt, const NodeIterator& endIt, uint32_t level) {
-    NodeIterator it = beginIt;
-    for (;it<endIt;) {
-        for (auto i=0u; i<level; ++i)
-            std::cout << "  ";
-        std::cout << "Id: " << it->id << ", Size: " << it->size;
+void BasicScene<T_SceneComponents...>::print(void) {
+    for (auto it = _entities.begin(); it<_entities.end(); ++it)
+        std::cout << "Id: " << it->id << std::endl;
 
-        if (it->children.size() > 0) {
-            std::cout << ", Children: ";
-            for (auto& childId : it->children)
-                std::cout << childId << ", ";
-            std::cout << std::endl;
-
-            auto endIt2 = it+it->size;
-            print(++it, endIt2, level+1);
-            it = endIt2;
-        }
-        else {
-            std::cout << std::endl;
-            ++it;
-        }
-    }
-
-    if (level == 0) {
-        for (auto& c : accessComponents<TestComponent1>())
-            printf("%llu a:%d b:%d\n", c._nodeId, c.a, c.b);
-    }
+    for (auto& c : accessComponents<TestComponent1>())
+        printf("%llu a:%d b:%d\n", c._entityId, c.a, c.b);
 }
 #endif
 
 
 template <typename... T_SceneComponents>
-int BasicScene<T_SceneComponents...>::findNode(const NId& nodeId, NodeIterator& it, const NodeIterator& endIt)
+int BasicScene<T_SceneComponents...>::findEntity(const EId& entityId, EntityIterator& it, const EntityIterator& endIt)
 {
-    if (it->id == nodeId)
+    if (it->id == entityId)
         return 0;
 
     for (++it; it<endIt; ++it) {
-        if (it->id == nodeId)
+        if (it->id == entityId)
             return 0;
     }
     return 1;
-}
-
-template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::increaseNodeSize(NodeIterator& it)
-{
-    ++it->size;
-    if (it->parent == 0)
-        return;
-    auto parentIt = _nodes.begin();
-    findNode(it->parent, parentIt);
-    increaseNodeSize(parentIt);
-}
-
-template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::decreaseNodeSize(NodeIterator& it, uint64_t amount)
-{
-    it->size-=amount;
-    if (it->parent == 0)
-        return;
-    auto parentIt = _nodes.begin();
-    findNode(it->parent, parentIt);
-    decreaseNodeSize(parentIt, amount);
 }
 
 template <typename... T_SceneComponents>
@@ -234,7 +134,7 @@ void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
     auto nIt = v.insert(v.begin()+pos, T_FirstComponent());
-    nIt->_nodeId = NId();
+    nIt->_entityId = EId();
     addComponents<T_SecondComponent, T_Components...>(pos);
 }
 
@@ -244,7 +144,7 @@ void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_Component>&>(_components);
     auto nIt = v.insert(v.begin()+pos, T_Component());
-    nIt->_nodeId = NId();
+    nIt->_entityId = EId();
 }
 
 template <typename... T_SceneComponents>
@@ -255,7 +155,7 @@ void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos,
 {
     auto& c = *(accessComponents<T_FirstComponent>().begin() + pos);
     c = std::forward<T_FirstComponent>(firstComponent);
-    c._nodeId = _nodeId;
+    c._entityId = _entityId;
 
     //  set rest of the components
     setComponents(pos, std::forward<T_Components>(components)...);
@@ -267,32 +167,32 @@ void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos, T_Component&&
 {
     auto& c = *(accessComponents<T_Component>().begin() + pos);
     c = std::forward<T_Component>(component);
-    c._nodeId = _nodeId;
+    c._entityId = _entityId;
 }
 
 template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
-    removeComponents<T_SceneComponents...>(begin, end);
+    removeComponents<T_SceneComponents...>(pos);
 }
 
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent,
           typename T_SecondComponent,
           typename... T_Components>
-void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
-    v.erase(v.begin()+begin, v.begin()+end);
-    removeComponents<T_SecondComponent, T_Components...>(begin, end);
+    v.erase(v.begin()+pos);
+    removeComponents<T_SecondComponent, T_Components...>(pos);
 }
 
 template <typename... T_SceneComponents>
 template <typename T_Component>
-void BasicScene<T_SceneComponents...>::removeComponents(uint64_t begin, uint64_t end)
+void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
     auto& v = std::get<std::vector<T_Component>&>(_components);
-    v.erase(v.begin()+begin, v.begin()+end);
+    v.erase(v.begin()+pos);
 }
 
 template <typename... T_SceneComponents>
@@ -344,7 +244,7 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& fi
 
     firstIter += maxIterations-nit;
     nit = maxIterations;
-    for (;firstIter != firstVector.end() && firstIter->_nodeId == NId(); ++firstIter, ++nit);
+    for (;firstIter != firstVector.end() && firstIter->_entityId == EId(); ++firstIter, ++nit);
 
     if (firstIter == firstVector.end())
         return false;
@@ -358,7 +258,7 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& fi
 
         firstIter += maxIterations-nit;
         nit = maxIterations;
-        for (;firstIter != firstVector.end() && firstIter->_nodeId == NId(); ++firstIter, ++nit);
+        for (;firstIter != firstVector.end() && firstIter->_entityId == EId(); ++firstIter, ++nit);
 
         if (firstIter == firstVector.end())
             return false;
@@ -378,7 +278,7 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_Component>& vector,
 
     iter += maxIterations-nit;
     nit = maxIterations;
-    for (;iter != vector.end() && iter->_nodeId == NId(); ++iter, ++nit);
+    for (;iter != vector.end() && iter->_entityId == EId(); ++iter, ++nit);
 
     if (iter == vector.end())
         return false;
