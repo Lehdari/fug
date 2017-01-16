@@ -303,14 +303,19 @@ std::tuple<std::vector<T_Components>&...> BasicScene<T_SceneComponents...>::acce
 }
 
 template <typename... T_SceneComponents>
-template <typename T_FirstComponent, typename... T_Components>
+template <typename T_FirstComponent,
+          typename T_SecondComponent,
+          typename... T_Components>
 void BasicScene<T_SceneComponents...>::initIterators(std::vector<T_FirstComponent>& firstVector,
+                                                     std::vector<T_SecondComponent>& secondVector,
                                                      std::vector<T_Components>&... restVectors,
                                                      CIter<T_FirstComponent>& firstIter,
+                                                     CIter<T_SecondComponent>& secondIter,
                                                      CIter<T_Components>&... restIters)
 {
     firstIter = firstVector.begin();
-    initIterators<T_Components...>(restVectors..., restIters...);
+    initIterators<T_SecondComponent, T_Components...>(secondVector, restVectors...,
+                                                      secondIter, restIters...);
 }
 
 template <typename... T_SceneComponents>
@@ -323,10 +328,14 @@ void BasicScene<T_SceneComponents...>::initIterators(std::vector<T_Component>& v
 
 
 template <typename... T_SceneComponents>
-template <typename T_FirstComponent, typename... T_Components>
+template <typename T_FirstComponent,
+          typename T_SecondComponent,
+          typename... T_Components>
 bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& firstVector,
+                                               std::vector<T_SecondComponent>& secondVector,
                                                std::vector<T_Components>&... restVectors,
                                                CIter<T_FirstComponent>& firstIter,
+                                               CIter<T_SecondComponent>& secondIter,
                                                CIter<T_Components>&... restIters,
                                                std::unordered_map<CId, uint64_t>& nIterations,
                                                uint64_t& maxIterations)
@@ -342,7 +351,9 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& fi
 
     do {
         maxIterations = nit;
-        if (!iterate<T_Components...>(restVectors..., restIters..., nIterations, maxIterations))
+        if (!iterate<T_SecondComponent, T_Components...>(secondVector, restVectors...,
+                                                         secondIter, restIters...,
+                                                         nIterations, maxIterations))
             return false;
 
         firstIter += maxIterations-nit;

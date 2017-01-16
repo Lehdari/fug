@@ -109,20 +109,28 @@ namespace fug {
         std::tuple<std::vector<T_Components>&...> accessCollection(void);
 
 
-        template <typename T_FirstComponent, typename... T_Components>
+        template <typename T_FirstComponent,
+                  typename T_SecondComponent,
+                  typename... T_Components>
         inline static void initIterators(std::vector<T_FirstComponent>& firstVector,
+                                         std::vector<T_SecondComponent>& secondVector,
                                          std::vector<T_Components>&... restVectors,
                                          CIter<T_FirstComponent>& firstIter,
+                                         CIter<T_SecondComponent>& secondIter,
                                          CIter<T_Components>&... restIters);
 
         template <typename T_Component>
         inline static void initIterators(std::vector<T_Component>& vector,
                                          CIter<T_Component>& iter);
 
-        template <typename T_FirstComponent, typename... T_Components>
+        template <typename T_FirstComponent,
+                  typename T_SecondComponent,
+                  typename... T_Components>
         inline static bool iterate(std::vector<T_FirstComponent>& firstVector,
+                                   std::vector<T_SecondComponent>& secondVector,
                                    std::vector<T_Components>&... restVectors,
                                    CIter<T_FirstComponent>& firstIter,
+                                   CIter<T_SecondComponent>& secondIter,
                                    CIter<T_Components>&... restIters,
                                    std::unordered_map<CId, uint64_t>& nIterations,
                                    uint64_t& maxIterations);
