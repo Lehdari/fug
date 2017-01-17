@@ -1,20 +1,20 @@
 #include "UnitTests.hpp"
-#include "Scene.hpp"
-#include "EventManager.hpp"
-#include "ResourceManager.hpp"
-#include "TestVisitors.hpp"
-#include "TestComponents.hpp"
 
 #include <cstdio>
 
 
 #if FUG_UNIT_TEST == 1
+
+#include "Scene.hpp"
+#include "TestVisitors.hpp"
+#include "TestComponents.hpp"
+
 void fug::unitTest(void) {
     EId nid[10] = {0};
     uint64_t i = 0;
 
     TestComponent1 tc11; tc11.a = 3; tc11.b = 4;
-    TestComponent1 tc12; tc12.a = 5; tc12.b = 6;
+    //TestComponent1 tc12; tc12.a = 5; tc12.b = 6;
 
     //nid[i++] = FUG_SCENE.addEntity();
     nid[i++] = FUG_SCENE.addEntity(TestComponent1(), TestComponent2(), TestComponent3());
@@ -43,4 +43,19 @@ void fug::unitTest(void) {
     FUG_SCENE.print();
 
 }
-#endif  //  FUG_UNIT_TEST == 1
+
+#elif FUG_UNIT_TEST == 2
+
+#include "ResourceManager.hpp"
+#include "ResourcePointer.hpp"
+#include "TestResources.hpp"
+
+void fug::unitTest(void) {
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1_Init_Default>(1, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.loadResource(1);
+    FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+
+}
+
+#endif  //  FUG_UNIT_TEST
