@@ -11,7 +11,6 @@
 
 #include "Scene.hpp"
 #include "Macros.hpp"
-#include "TemplateUtils.hpp"
 #include "Component.hpp"
 
 

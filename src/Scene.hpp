@@ -34,6 +34,9 @@ namespace fug {
         #ifdef FUG_DEBUG
         void print(void);
         #endif
+
+    private:
+        SceneBase(void) {}
     };
 
 

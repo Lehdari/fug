@@ -9,7 +9,7 @@
 
 #ifdef FUG_UNIT_TEST
     /// Implementation and components for unit tests
-    #if FUG_UNIT_TEST == 1
+    //#if FUG_UNIT_TEST == 1
 
             #define FUG_IMPLEMENTATION_SCENE            BasicScene
             #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
@@ -20,7 +20,7 @@
                     FUG_COMPONENT   (TestComponent2)\
                     FUG_LCOMPONENT  (TestComponent3)
 
-    #endif
+    //#endif
 
 #else  //  FUG_UNIT_TEST
     /// Implementation and components for library build

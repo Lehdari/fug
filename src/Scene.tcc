@@ -14,13 +14,13 @@ EId SceneBase<T_Implementation>::addEntity(T_Components&&... components) {
 
 template <typename T_Implementation>
 void SceneBase<T_Implementation>::removeEntity(const EId& entity) {
-    return static_cast<T_Implementation*>(this)->removeEntity(entity);
+    static_cast<T_Implementation*>(this)->removeEntity(entity);
 }
 
 template <typename T_Implementation>
 template<typename T_Visitor, typename... T_Components>
 void SceneBase<T_Implementation>::accept(Visitor<T_Visitor, T_Components...>& visitor) {
-    return static_cast<T_Implementation*>(this)->accept(visitor);
+    static_cast<T_Implementation*>(this)->accept(visitor);
 }
 
 #ifdef FUG_DEBUG
