@@ -11,7 +11,10 @@
     /// Implementation and components for unit tests
     #if FUG_UNIT_TEST == 1
 
-            #define FUG_IMPLEMENTATION_SCENE    BasicScene
+            #define FUG_IMPLEMENTATION_SCENE            BasicScene
+            #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
+            #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
+
             #define FUG_COMPONENTS\
                     FUG_COMPONENT   (TestComponent1)\
                     FUG_COMPONENT   (TestComponent2)\
@@ -22,7 +25,10 @@
 #else  //  FUG_UNIT_TEST
     /// Implementation and components for library build
 
-    #define FUG_IMPLEMENTATION_SCENE    BasicScene
+    #define FUG_IMPLEMENTATION_SCENE            BasicScene
+    #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
+    #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
+
     #define FUG_COMPONENTS\
             FUG_COMPONENT   (TestComponent1)\
             FUG_COMPONENT   (TestComponent2)\
@@ -34,17 +40,25 @@
 
 namespace fug {
 
-    template <typename... T_SceneComponents>
-    class FUG_IMPLEMENTATION_SCENE;
-
     #define FUG_COMPONENT(x) class x;
     #define FUG_LCOMPONENT(x) class x;
-        FUG_COMPONENTS
+    FUG_COMPONENTS
+    #undef FUG_COMPONENT
+    #undef FUG_LCOMPONENT
+
+    template <typename... T_SceneComponents>
+    class FUG_IMPLEMENTATION_SCENE;
+    class FUG_IMPLEMENTATION_EVENT_MANAGER;
+    class FUG_IMPLEMENTATION_RESOURCE_MANAGER;
 
     #define FUG_COMPONENT(x) x,
     #define FUG_LCOMPONENT(x) x
-    using SceneImplementation   = FUG_IMPLEMENTATION_SCENE<FUG_COMPONENTS>;
+    using SceneImplementation           = FUG_IMPLEMENTATION_SCENE<FUG_COMPONENTS>;
     #undef FUG_COMPONENT
+    #undef FUG_LCOMPONENT
+
+    using EventManagerImplementation    = FUG_IMPLEMENTATION_EVENT_MANAGER;
+    using ResourceManagerImplementation = FUG_IMPLEMENTATION_RESOURCE_MANAGER;
 
 };
 

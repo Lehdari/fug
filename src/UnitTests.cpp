@@ -1,5 +1,7 @@
 #include "UnitTests.hpp"
 #include "Scene.hpp"
+#include "EventManager.hpp"
+#include "ResourceManager.hpp"
 #include "TestVisitors.hpp"
 #include "TestComponents.hpp"
 
