@@ -28,6 +28,18 @@ namespace fug {
     private:
         template <typename T_Resource>
         void pointerOutOfReferences(ResourcePointer<T_Resource>& pointer);
+
+
+        struct ResourceInfo {
+            void*       initInfo;
+            uint64_t    initInfoLoc;    //index in the initInfos buffer
+        };
+        std::vector<ResourceInfo>   _resourceInfos;
+
+        template <typename T_InitInfo>
+        std::vector<T_InitInfo>& accessInitInfos(void);
+
+
     };
 
 
