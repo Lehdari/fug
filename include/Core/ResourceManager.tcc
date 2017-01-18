@@ -15,6 +15,8 @@ void ResourceManagerBase<T_Implementation>::addResourceInfo(const RId& resourceI
 {
     static_cast<T_Implementation*>(this)->
         addResourceInfo<T_Resource, T_InitInfo>(resourceId, initInfo,
+    static_cast<T_Implementation*>(this)->template
+        addResourceInfo<T_InitInfo>(resourceId, initInfo,
                                                 initResources, depResources,
                                                 isGraphicsResource);
 }
@@ -23,7 +25,8 @@ template <typename T_Implementation>
 template<typename T_Resource>
 ResourcePointer<T_Resource> ResourceManagerBase<T_Implementation>::getResource(const RId& resourceId)
 {
-    return static_cast<T_Implementation*>(this)->getResource<T_Resource>(resourceId);
+    return static_cast<T_Implementation*>(this)->template
+        getResource<T_Resource>(resourceId);
 }
 
 template <typename T_Implementation>

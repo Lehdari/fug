@@ -17,6 +17,6 @@ void Resource<T_Resource>::destroy(void) {
     //if (status() != STATUS_READY)
     //    return;
     //setStatus(STATUS_DESTROYING);
-    static_cast<T_Resource*>(this)->destroy<T_ResourceInitInfo>();
+    static_cast<T_Resource*>(this)->template destroy<T_ResourceInitInfo>();
     //setStatus(STATUS_DESTROYED);
 }

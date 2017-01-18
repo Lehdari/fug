@@ -2,6 +2,7 @@
 #define FUG_RESOURCE_MANAGER_HPP
 
 
+#include <cstdio>
 #include <vector>
 
 #include "Implementation.hpp"
