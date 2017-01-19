@@ -35,8 +35,10 @@ namespace fug {
 
     private:
         template <typename T_Resource>
-        void pointerOutOfReferences(ResourcePointer<T_Resource>& pointer);
-        //void pointerOutOfReferences(void);
+        void registerPointer(ResourcePointer<T_Resource>* pointer);
+
+        template <typename T_Resource>
+        void unRegisterPointer(ResourcePointer<T_Resource>* pointer);
     };
 
 
@@ -45,16 +47,17 @@ namespace fug {
 
     using ResourceManager = ResourceManagerBase<ResourceManagerImplementation>;
 
-/*
+
     template <typename T_Resource>
-    std::function<void(ResourcePointer<T_Resource>&)>
-        ResourcePointer<T_Resource>::_outOfReferences(
-            &ResourceManager::pointerOutOfReferences<T_Resource>);
-*/
+    std::function<void(ResourcePointer<T_Resource>*)>
+        ResourcePointer<T_Resource>::_registerPointer
+            = std::bind(&ResourceManager::registerPointer<T_Resource>,
+                        &FUG_RESOURCE_MANAGER, std::placeholders::_1);
+
     template <typename T_Resource>
-    std::function<void(ResourcePointer<T_Resource>&)>
-        ResourcePointer<T_Resource>::_outOfReferences
-            = std::bind(&ResourceManager::pointerOutOfReferences<T_Resource>,
+    std::function<void(ResourcePointer<T_Resource>*)>
+        ResourcePointer<T_Resource>::_unRegisterPointer
+            = std::bind(&ResourceManager::unRegisterPointer<T_Resource>,
                         &FUG_RESOURCE_MANAGER, std::placeholders::_1);
 
 }

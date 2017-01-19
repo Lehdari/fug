@@ -56,6 +56,11 @@ void fug::unitTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(1, TestResource1_Init_Default());
     auto resPtr1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
     resPtr1->a++;
+    auto resPtr2(resPtr1);
+    auto resPtr3 = resPtr2;
+    resPtr2 = resPtr3;
+    auto resPtr4(std::move(resPtr2));
+    resPtr1 = std::move(resPtr3);
 }
 
 #endif  //  FUG_UNIT_TEST

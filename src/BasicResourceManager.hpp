@@ -31,9 +31,6 @@ namespace fug {
     private:
         BasicResourceManager(void) {}
 
-        template <typename T_Resource>
-        void pointerOutOfReferences(ResourcePointer<T_Resource>& pointer);
-
         struct ResourceInfo {
             void*               initInfo;
             uint64_t            initInfoLoc;    // index in the initInfos buffer, used initInfo vector gets reallocated
@@ -49,6 +46,14 @@ namespace fug {
             void(BasicResourceManager::*init)(const RId&, ResourceInfo&);   //call to initResource member function, allows loadResource to be untemplated.
         };
         std::unordered_map<ResourceId, ResourceInfo>    _resourceInfos;
+
+
+        template <typename T_Resource>
+        void registerPointer(ResourcePointer<T_Resource>* pointer);
+
+        template <typename T_Resource>
+        void unRegisterPointer(ResourcePointer<T_Resource>* pointer);
+
 
         template <typename T_Resource, typename T_InitInfo>
         void initResource(const RId& resourceId, ResourceInfo& resourceInfo);

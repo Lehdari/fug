@@ -34,7 +34,14 @@ void ResourceManagerBase<T_Implementation>::loadResource(const RId& resourceId, 
 
 template <typename T_Implementation>
 template <typename T_Resource>
-void ResourceManagerBase<T_Implementation>::pointerOutOfReferences(ResourcePointer<T_Resource>& pointer)
+void ResourceManagerBase<T_Implementation>::registerPointer(ResourcePointer<T_Resource>* pointer)
 {
-    static_cast<T_Implementation*>(this)->pointerOutOfReferences(pointer);
+    static_cast<T_Implementation*>(this)->registerPointer(pointer);
+}
+
+template <typename T_Implementation>
+template <typename T_Resource>
+void ResourceManagerBase<T_Implementation>::unRegisterPointer(ResourcePointer<T_Resource>* pointer)
+{
+    static_cast<T_Implementation*>(this)->unRegisterPointer(pointer);
 }

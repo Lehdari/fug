@@ -16,10 +16,10 @@ namespace fug {
         friend class FUG_IMPLEMENTATION_RESOURCE_MANAGER;
 
         ResourcePointer(void);
-        ResourcePointer(const ResourcePointer<T_Resource>& resourcePointer);
-        ResourcePointer(ResourcePointer<T_Resource>&& resourcePointer);
         ~ResourcePointer(void);
 
+        ResourcePointer(const ResourcePointer<T_Resource>& resourcePointer);
+        ResourcePointer(ResourcePointer<T_Resource>&& resourcePointer);
         ResourcePointer<T_Resource>& operator=(const ResourcePointer<T_Resource>& resourcePointer);
         ResourcePointer<T_Resource>& operator=(ResourcePointer<T_Resource>&& resourcePointer);
 
@@ -31,7 +31,7 @@ namespace fug {
         //  get resource pointer
         T_Resource* get(void);
         //  get resource id
-        const RId& getId(void);
+        const RId& getId(void) const;
 
     private:
         ResourcePointer(T_Resource* resource, const RId& resourceId, int64_t* referenceCount);
@@ -40,7 +40,8 @@ namespace fug {
         RId         _resourceId;
         int64_t*    _referenceCount;
 
-        static std::function<void(ResourcePointer<T_Resource>&)>    _outOfReferences;
+        static std::function<void(ResourcePointer<T_Resource>*)>    _registerPointer;
+        static std::function<void(ResourcePointer<T_Resource>*)>    _unRegisterPointer;
     };
 
 

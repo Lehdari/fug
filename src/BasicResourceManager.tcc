@@ -32,19 +32,34 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
 template<typename T_Resource>
 ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourceId)
 {
-    loadResource(resourceId, true);
+    try {
+        auto& resourceInfo = _resourceInfos.at(resourceId);
 
-    //  new resource is initialized and its position is stored in the info,
-    //  time to create the resource pointer and return it
-    auto& resourceInfo = _resourceInfos.at(resourceId);
-    return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo.resource),
-                                       resourceId, &resourceInfo.referenceCount);
+        //  if the resource don't exist, it has to be loaded first
+        if (resourceInfo.resource == nullptr)
+            loadResource(resourceId, true);
+
+        //  new resource is initialized and its position is stored in the info,
+        //  time to create the resource pointer and return it
+        return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo.resource),
+                                           resourceId, &resourceInfo.referenceCount);
+    }
+    catch(...) {
+        return ResourcePointer<T_Resource>();
+    }
+}
+
+
+template <typename T_Resource>
+void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
+{
+    printf("registerPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
 }
 
 template <typename T_Resource>
-void BasicResourceManager::pointerOutOfReferences(ResourcePointer<T_Resource>& pointer)
+void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointer)
 {
-    printf("pointerOutOfReferences\n");    //  TEMP
+    printf("unRegisterPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
 }
 
 
@@ -72,6 +87,7 @@ void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& res
                   resourceInfo.initResources,
                   resourceInfo.depResources);
 }
+
 
 template <typename T_InitInfo>
 std::vector<T_InitInfo>& BasicResourceManager::accessInitInfos(void)
