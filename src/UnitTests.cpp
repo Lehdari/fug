@@ -3,8 +3,8 @@
 #include <cstdio>
 
 
-#if FUG_UNIT_TEST == 1
-
+//#if FUG_UNIT_TEST == 1
+/*
 #include "Scene.hpp"
 #include "TestVisitors.hpp"
 #include "TestComponents.hpp"
@@ -43,8 +43,8 @@ void fug::unitTest(void) {
     FUG_SCENE.print();
 
 }
-
-#elif FUG_UNIT_TEST == 2
+*/
+//#elif FUG_UNIT_TEST == 2
 
 #include "ResourceManager.hpp"
 #include "ResourcePointer.hpp"
@@ -54,13 +54,47 @@ void fug::unitTest(void) {
 void fug::unitTest(void) {
 
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(1, TestResource1_Init_Default());
-    auto resPtr1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
-    resPtr1->a++;
-    auto resPtr2(resPtr1);
-    auto resPtr3 = resPtr2;
-    resPtr2 = resPtr3;
-    auto resPtr4(std::move(resPtr2));
-    resPtr1 = std::move(resPtr3);
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(2, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(3, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(4, TestResource1_Init_Default());
+
+    printf("Null initialization:\n");
+    ResourcePointer<TestResource1>   resPtr1;
+    ResourcePointer<TestResource1>   resPtr2;
+    ResourcePointer<TestResource1>   resPtr3;
+    ResourcePointer<TestResource1>   resPtr4;
+    printf("More null initialization:\n");
+    //ResourcePointer<TestResource1>   resPtr5;
+    //ResourcePointer<TestResource1>   resPtr6;
+    //ResourcePointer<TestResource1>   resPtr7;
+    //ResourcePointer<TestResource1>   resPtr8;
+
+
+    printf("Proper initialization:\n");
+    auto resPtr9 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+    auto resPtr10 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(2);
+    auto resPtr11 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(3);
+    auto resPtr12 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(4);
+    printf("More proper initialization\n");
+    auto resPtr13 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+    auto resPtr14 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(2);
+
+    printf("Null to new:\n");
+    auto resPtr17(resPtr1);
+    auto resPtr18 = std::move(resPtr2);
+    auto resPtr19 = resPtr3;
+    auto resPtr20 = std::move(resPtr4);
+
+    printf("Proper to new:\n");
+    auto resPtr21(resPtr9);
+    auto resPtr22(std::move(resPtr10));
+    auto resPtr23 = resPtr11;
+    auto resPtr24 = std::move(resPtr12);
+
+    printf("Proper to proper:\n");
+    resPtr21 = resPtr13;
+    resPtr22 = resPtr14;
+
 }
 
-#endif  //  FUG_UNIT_TEST
+//#endif  //  FUG_UNIT_TEST
