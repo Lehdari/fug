@@ -1,12 +1,12 @@
 template <typename T_Implementation>
 ResourceManagerBase<T_Implementation>& ResourceManagerBase<T_Implementation>::instance(void)
 {
-    static ResourceManagerBase<T_Implementation> resourceManager;
+    static T_Implementation resourceManager;
     return resourceManager;
 }
 
 template <typename T_Implementation>
-template <typename T_InitInfo>
+template <typename T_Resource, typename T_InitInfo>
 void ResourceManagerBase<T_Implementation>::addResourceInfo(const RId& resourceId,
                                                             const T_InitInfo& initInfo,
                                                             const std::vector<RId>& initResources,
@@ -14,7 +14,7 @@ void ResourceManagerBase<T_Implementation>::addResourceInfo(const RId& resourceI
                                                             bool isGraphicsResource)
 {
     static_cast<T_Implementation*>(this)->
-        addResourceInfo<T_InitInfo>(resourceId, initInfo,
+        addResourceInfo<T_Resource, T_InitInfo>(resourceId, initInfo,
                                                 initResources, depResources,
                                                 isGraphicsResource);
 }

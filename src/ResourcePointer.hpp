@@ -12,11 +12,10 @@ namespace fug {
 
     template <typename T_Resource>
     class ResourcePointer {
-        public:
+    public:
+        friend class FUG_IMPLEMENTATION_RESOURCE_MANAGER;
+
         ResourcePointer(void);
-        ResourcePointer(T_Resource* resource,
-                        const RId& resourceId,
-                        int* referenceCount);
         ResourcePointer(const ResourcePointer<T_Resource>& resourcePointer);
         ResourcePointer(ResourcePointer<T_Resource>&& resourcePointer);
         ~ResourcePointer(void);
@@ -35,9 +34,11 @@ namespace fug {
         const RId& getId(void);
 
     private:
+        ResourcePointer(T_Resource* resource, const RId& resourceId, int64_t* referenceCount);
+
         T_Resource* _resource;
         RId         _resourceId;
-        int*        _referenceCount;
+        int64_t*    _referenceCount;
 
         static std::function<void(ResourcePointer<T_Resource>&)>    _outOfReferences;
     };

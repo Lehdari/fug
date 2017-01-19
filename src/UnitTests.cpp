@@ -49,13 +49,13 @@ void fug::unitTest(void) {
 #include "ResourceManager.hpp"
 #include "ResourcePointer.hpp"
 #include "TestResources.hpp"
+#include "TestResources_Init.hpp"
 
 void fug::unitTest(void) {
 
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1_Init_Default>(1, TestResource1_Init_Default());
-    FUG_RESOURCE_MANAGER.loadResource(1);
-    FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
-
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(1, TestResource1_Init_Default());
+    auto resPtr1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+    resPtr1->a++;
 }
 
 #endif  //  FUG_UNIT_TEST

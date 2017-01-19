@@ -6,5 +6,6 @@ using namespace fug;
 
 void BasicResourceManager::loadResource(const RId& resourceId, bool waitForFinish)
 {
-    printf("loadResource\n");
+    auto& resourceInfo = _resourceInfos.at(resourceId);
+    (this->*resourceInfo.init)(resourceId, resourceInfo);
 }

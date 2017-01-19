@@ -7,12 +7,11 @@
 
 namespace fug {
 
-    struct TestResource1_Init_Default {
-
-    };
-
     class FUG_RESOURCE(TestResource1) {
+    public:
         FUG_RESOURCE_INIT_DESTROY_DECL
+
+        int a;
     };
 
 }

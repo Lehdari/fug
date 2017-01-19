@@ -1,7 +1,7 @@
 template <typename T_Implementation>
 SceneBase<T_Implementation>& SceneBase<T_Implementation>::instance(void)
 {
-    static SceneBase<T_Implementation> scene;
+    static T_Implementation scene;
     return scene;
 }
 

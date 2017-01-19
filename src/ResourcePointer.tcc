@@ -8,7 +8,7 @@ ResourcePointer<T_Resource>::ResourcePointer(void) :
 template<typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(T_Resource* resource,
                                              const RId& resourceId,
-                                             int* referenceCount) :
+                                             int64_t* referenceCount) :
     _resource(resource),
     _resourceId(resourceId),
     _referenceCount(referenceCount)

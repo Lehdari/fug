@@ -1,4 +1,4 @@
-template <typename T_InitInfo>
+template <typename T_Resource, typename T_InitInfo>
 void BasicResourceManager::addResourceInfo(const RId& resourceId,
                                            const T_InitInfo& initInfo,
                                            const std::vector<RId>& initResources,
@@ -14,15 +14,31 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
     //  reassign all init info pointers if initInfo vector gets reallocated
     if (initInfos.size() > capacity) {
         for (auto& rInfo : _resourceInfos)
-            rInfo.initInfo = &initInfos[rInfo.initInfoLoc];
+            rInfo.second.initInfo = &initInfos[rInfo.second.initInfoLoc];
     }
-    _resourceInfos.emplace_back(ResourceInfo{&initInfos.back(), initInfos.size()-1});
+
+    _resourceInfos.emplace(std::make_pair(resourceId, ResourceInfo{
+        &initInfos.back(),                      //  initInfo
+        initInfos.size()-1,                     //  initInfoLoc
+        nullptr,                                //  resource
+        0,                                      //  resourceLoc
+        initResources,                          //  initResources
+        depResources,                           //  depResources
+        0,                                      //  referenceCount
+        &initResource<T_Resource, T_InitInfo>   //  init
+    }));
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourceId)
 {
-    printf("getResource\n");    //  TEMP
+    loadResource(resourceId, true);
+
+    //  new resource is initialized and its position is stored in the info,
+    //  time to create the resource pointer and return it
+    auto& resourceInfo = _resourceInfos.at(resourceId);
+    return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo.resource),
+                                       resourceId, &resourceInfo.referenceCount);
 }
 
 template <typename T_Resource>
@@ -32,9 +48,41 @@ void BasicResourceManager::pointerOutOfReferences(ResourcePointer<T_Resource>& p
 }
 
 
+template <typename T_Resource, typename T_InitInfo>
+void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& resourceInfo)
+{
+    auto& resources = accessResources<T_Resource>();
+    auto capacity = resources.capacity();
+
+    //  add the new resource
+    resources.emplace_back();
+    auto& resource = resources.back();
+
+    //  reassign all init info pointers if resources vector gets reallocated
+    if (resources.size() > capacity) {
+        for (auto& rInfo : _resourceInfos)
+            rInfo.second.resource = &resources[rInfo.second.resourceLoc];
+    }
+
+    //  store location of the newly added resource
+    resourceInfo.resource = &resource;
+    resourceInfo.resourceLoc = resources.size()-1;
+
+    resource.init(*static_cast<T_InitInfo*>(resourceInfo.initInfo),
+                  resourceInfo.initResources,
+                  resourceInfo.depResources);
+}
+
 template <typename T_InitInfo>
 std::vector<T_InitInfo>& BasicResourceManager::accessInitInfos(void)
 {
     static std::vector<T_InitInfo> v;
+    return v;
+}
+
+template <typename T_Resource>
+std::vector<T_Resource>& BasicResourceManager::accessResources(void)
+{
+    static std::vector<T_Resource> v;
     return v;
 }

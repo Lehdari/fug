@@ -1,6 +1,7 @@
 #ifndef FUG_RESOURCE_HPP
 #define FUG_RESOURCE_HPP
 
+
 //  macro for correct CRTP usage
 #define FUG_RESOURCE(RESOURCE_TYPE)\
     RESOURCE_TYPE : public fug::Resource<RESOURCE_TYPE>
@@ -11,7 +12,7 @@
     void init(const T_ResourceInitInfo& initInfo,\
               const std::vector<RId>& initResources,\
               const std::vector<RId>& depResources);\
-    template<typename T_ResourceInitInfo>\
+template<typename T_ResourceInitInfo>\
     void destroy(void);\
 
 //  macros for init/destroy implementations in resource initialization files
@@ -31,11 +32,10 @@
 
 namespace fug {
 
-
-    // Structs and Classes
     template<typename T_Resource>
     class Resource {
     public:
+        Resource(void)                  = default;
         Resource(Resource&&)            = default;
         Resource& operator=(Resource&&) = default;
         virtual ~Resource(void)         = default;
@@ -46,7 +46,7 @@ namespace fug {
 
         template<typename T_ResourceInitInfo>
         void init(T_ResourceInitInfo initInfo,
-                  std::vector<RId> initResources,
+                  std::vector<RId> initResources, // dependency res. vectors are copyed as value for parallellization purposes
                   std::vector<RId> depResources);
 
         template<typename T_ResourceInitInfo>

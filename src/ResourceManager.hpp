@@ -19,7 +19,7 @@ namespace fug {
         //  Get the singleton instance handle
         static ResourceManagerBase<T_Implementation>& instance(void);
 
-        template <typename T_InitInfo>
+        template <typename T_Resource, typename T_InitInfo>
         void addResourceInfo(const RId& resourceId,
                              const T_InitInfo& initInfo,
                              const std::vector<RId>& initResources = std::vector<RId>(),
