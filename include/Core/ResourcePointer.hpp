@@ -34,11 +34,10 @@ namespace fug {
         const RId& getId(void) const;
 
     private:
-        ResourcePointer(T_Resource* resource, const RId& resourceId, int64_t* referenceCount);
+        ResourcePointer(T_Resource* resource, const RId& resourceId);
 
         T_Resource* _resource;
         RId         _resourceId;
-        int64_t*    _referenceCount;
 
         static std::function<void(ResourcePointer<T_Resource>*)>    _registerPointer;
         static std::function<void(ResourcePointer<T_Resource>*)>    _unRegisterPointer;
