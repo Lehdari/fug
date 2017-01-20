@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 2.8)
 project(fug)
 
 file(GLOB_RECURSE CORE_SRC_FILES lib/glLoadGen/gl_core_3_3.c src/Core/*.cpp)

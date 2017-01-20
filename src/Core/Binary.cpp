@@ -1,6 +1,7 @@
 #include "Core/Binary.hpp"
 
 #include <cstring>
+#include <cstdio>
 
 using namespace fug;
 
