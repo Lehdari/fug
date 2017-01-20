@@ -13,10 +13,8 @@ void ResourceManagerBase<T_Implementation>::addResourceInfo(const RId& resourceI
                                                             const std::vector<RId>& depResources,
                                                             bool isGraphicsResource)
 {
-    static_cast<T_Implementation*>(this)->
+    static_cast<T_Implementation*>(this)-> template
         addResourceInfo<T_Resource, T_InitInfo>(resourceId, initInfo,
-    static_cast<T_Implementation*>(this)->template
-        addResourceInfo<T_InitInfo>(resourceId, initInfo,
                                                 initResources, depResources,
                                                 isGraphicsResource);
 }
