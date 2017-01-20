@@ -9,7 +9,7 @@ namespace fug {
 
 
     void unitTest(void);
-
+    void resourceTest(void);
 
 }
 
