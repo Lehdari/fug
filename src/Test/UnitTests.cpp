@@ -51,7 +51,7 @@ void fug::unitTest(void) {
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 
-void fug::resourceTest(void) {
+void fug::unitTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -97,10 +97,6 @@ void fug::resourceTest(void) {
     printf("Proper to proper:\n");
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
-}
-
-void fug::unitTest(void) {
-    resourceTest();
 }
 
 #endif  //  FUG_UNIT_TEST
