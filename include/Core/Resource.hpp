@@ -1,6 +1,7 @@
 #ifndef FUG_RESOURCE_HPP
 #define FUG_RESOURCE_HPP
 
+#include <vector>
 
 //  macro for correct CRTP usage
 #define FUG_RESOURCE(RESOURCE_TYPE)\
