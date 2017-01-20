@@ -51,8 +51,6 @@ void fug::unitTest(void) {
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 
-void fug::unitTest(void) {
-
 void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
