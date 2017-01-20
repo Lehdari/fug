@@ -6,7 +6,7 @@
 #define FUG_DEV
 #define FUG_DEBUG
 
-//  Undefin
+//  Unit test to use, 0 for no unit test
 #define FUG_UNIT_TEST 2
 
 

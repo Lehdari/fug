@@ -2,6 +2,11 @@
 #define FUG_VISITOR_HPP
 
 
+//  macro for correct CRTP usage
+#define FUG_VISITOR(VISITOR_TYPE)\
+    VISITOR_TYPE : public fug::Resource<VISITOR_TYPE>
+
+
 namespace fug {
 
 
@@ -18,12 +23,12 @@ namespace fug {
         //  descendants of the entity should be visited
         //  true: descendants will be visited
         //  false: descendants will be skipped
-        bool operator()(T_Components&... components);
+        void operator()(T_Components&... components);
     };
 
 
     template <typename T_Visitor, typename... T_Components>
-    bool Visitor<T_Visitor, T_Components...>::operator()(T_Components&... components)
+    void Visitor<T_Visitor, T_Components...>::operator()(T_Components&... components)
     {
         return (*static_cast<T_Visitor*>(this))(components...);
     }

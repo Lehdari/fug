@@ -3,8 +3,8 @@
 #include <cstdio>
 
 
-//#if FUG_UNIT_TEST == 1
-/*
+#if FUG_UNIT_TEST == 1
+
 #include "Scene.hpp"
 #include "TestVisitors.hpp"
 #include "TestComponents.hpp"
@@ -43,8 +43,8 @@ void fug::unitTest(void) {
     FUG_SCENE.print();
 
 }
-*/
-//#elif FUG_UNIT_TEST == 2
+
+#elif FUG_UNIT_TEST == 2
 
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
@@ -97,4 +97,4 @@ void fug::unitTest(void) {
 
 }
 
-//#endif  //  FUG_UNIT_TEST
+#endif  //  FUG_UNIT_TEST
