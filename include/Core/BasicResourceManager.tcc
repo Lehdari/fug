@@ -25,7 +25,7 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
         initResources,                          //  initResources
         depResources,                           //  depResources
         0,                                      //  referenceCount
-        &initResource<T_Resource, T_InitInfo>   //  init
+        &BasicResourceManager::initResource<T_Resource, T_InitInfo>   //  init
     }));
 }
 
