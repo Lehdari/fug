@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "Implementation.hpp"
-#include "ResourcePointer.hpp"
+#include "Core/ResourcePointer.hpp"
 
 
 namespace fug {
@@ -63,7 +63,7 @@ namespace fug {
 }
 
 /// include implementation headers here
-#include "BasicResourceManager.hpp"
+#include "Core/BasicResourceManager.hpp"
 
 
 #endif // FUG_RESOURCE_MANAGER_HPP

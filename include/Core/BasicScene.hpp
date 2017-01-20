@@ -10,8 +10,8 @@
 #endif
 
 #include "Scene.hpp"
-#include "Macros.hpp"
-#include "Component.hpp"
+#include "Core/Macros.hpp"
+#include "Core/Component.hpp"
 
 
 namespace fug {

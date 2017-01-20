@@ -4,7 +4,7 @@
 #define FUG_IMPLEMENTATION_HPP
 
 
-#include "Macros.hpp"
+#include "Core/Macros.hpp"
 
 
 #ifdef FUG_UNIT_TEST

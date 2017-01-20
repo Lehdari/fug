@@ -2,7 +2,7 @@
 #define FUG_TEST_RESOURCES_HPP
 
 
-#include "Resource.hpp"
+#include "Core/Resource.hpp"
 
 
 namespace fug {

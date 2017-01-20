@@ -1,4 +1,4 @@
-#include "UnitTests.hpp"
+#include "Test/UnitTests.hpp"
 
 
 using namespace fug;

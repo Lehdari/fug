@@ -1,4 +1,4 @@
-#include "BasicResourceManager.hpp"
+#include "Core/BasicResourceManager.hpp"
 
 
 using namespace fug;

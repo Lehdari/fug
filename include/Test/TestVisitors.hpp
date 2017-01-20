@@ -2,7 +2,7 @@
 #define FUG_TEST_VISITORS_HPP
 
 
-#include "Visitor.hpp"
+#include "Core/Visitor.hpp"
 #include "TestComponents.hpp"
 
 

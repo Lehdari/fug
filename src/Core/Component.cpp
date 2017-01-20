@@ -1,4 +1,4 @@
-#include "Component.hpp"
+#include "Core/Component.hpp"
 
 
 using namespace fug;

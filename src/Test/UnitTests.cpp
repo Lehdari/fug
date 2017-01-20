@@ -1,4 +1,4 @@
-#include "UnitTests.hpp"
+#include "Test/UnitTests.hpp"
 
 #include <cstdio>
 
@@ -46,10 +46,10 @@ void fug::unitTest(void) {
 */
 //#elif FUG_UNIT_TEST == 2
 
-#include "ResourceManager.hpp"
-#include "ResourcePointer.hpp"
-#include "TestResources.hpp"
-#include "TestResources_Init.hpp"
+#include "Core/ResourceManager.hpp"
+#include "Core/ResourcePointer.hpp"
+#include "Test/TestResources.hpp"
+#include "Test/TestResources_Init.hpp"
 
 void fug::unitTest(void) {
 

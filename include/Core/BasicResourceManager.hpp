@@ -5,7 +5,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "ResourceManager.hpp"
+#include "Core/ResourceManager.hpp"
 
 
 namespace fug {

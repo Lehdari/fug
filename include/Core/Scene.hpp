@@ -6,7 +6,7 @@
 
 #include "Implementation.hpp"
 #include "Types.hpp"
-#include "Visitor.hpp"
+#include "Core/Visitor.hpp"
 
 
 namespace fug {

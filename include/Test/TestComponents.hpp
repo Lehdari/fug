@@ -2,7 +2,7 @@
 #define FUG_TEST_COMPONENTS_HPP
 
 
-#include "Component.hpp"
+#include "Core/Component.hpp"
 
 
 namespace fug {
