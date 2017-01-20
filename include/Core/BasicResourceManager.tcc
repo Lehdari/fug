@@ -53,13 +53,13 @@ ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourc
 template <typename T_Resource>
 void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 {
-    printf("registerPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
+    printf("registerPointer, counter: %lld\n", (long long)*pointer->_referenceCount);    //  TEMP
 }
 
 template <typename T_Resource>
 void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointer)
 {
-    printf("unRegisterPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
+    printf("unRegisterPointer, counter: %lld\n", (long long)*pointer->_referenceCount);    //  TEMP
 }
 
 
