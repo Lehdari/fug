@@ -18,14 +18,17 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLA
 
 find_package(Eigen3 REQUIRED)
 find_package(SFML 2 REQUIRED system window graphics network audio)
+find_package(GLEW REQUIRED)
 
 include_directories(
     ${EIGEN3_INCLUDE_DIR}
     ${SFML_INCLUDE_DIRS}
+    ${GLEW_INCLUDE_DIRS}
 )
 
 link_libraries (
     ${SFML_LIBRARIES}
+    ${GLEW_LIBRARIES}
 )
 
 add_definitions(-DFUG_UNIT_TEST=2)
