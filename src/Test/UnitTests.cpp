@@ -46,12 +46,24 @@ void fug::unitTest(void) {
 
 #elif FUG_UNIT_TEST == 2
 
+#include "Core/Binary.hpp"
+#include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 
-void fug::unitTest(void) {
+void fug::gfxResourceTest(void) {
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+        (1, BinaryInitInfo_File{"test.txt"});
+#if 0
+    // Assumes a test file
+    auto resPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(1);
+    printf("%s\n", resPtr->getBufferPtr());
+#endif
+}
+
+void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -97,6 +109,11 @@ void fug::unitTest(void) {
     printf("Proper to proper:\n");
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
+}
+
+void fug::unitTest(void) {
+    resourceTest();
+    gfxResourceTest();
 }
 
 #endif  //  FUG_UNIT_TEST
