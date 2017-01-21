@@ -11,6 +11,10 @@ namespace fug {
 
     };
 
+    struct TestResource2_Init_TestResource1 {
+
+    };
+
 
     #include "TestResources_Init.tcc"
 

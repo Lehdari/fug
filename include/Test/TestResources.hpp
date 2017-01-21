@@ -14,6 +14,13 @@ namespace fug {
         int a;
     };
 
+    class FUG_RESOURCE(TestResource2) {
+    public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+
+        int a;
+    };
+
 }
 
 

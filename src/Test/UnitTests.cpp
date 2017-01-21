@@ -3,6 +3,8 @@
 #include <cstdio>
 
 
+#define FUG_UNIT_TEST 2
+
 #if FUG_UNIT_TEST == 1
 
 #include "Scene.hpp"
@@ -54,6 +56,15 @@ void fug::unitTest(void) {
 void fug::unitTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource2, TestResource2_Init_TestResource1>
+        (2, TestResource2_Init_TestResource1(), {1});
+
+    FUG_RESOURCE_MANAGER.getResource<TestResource2>(2);
+
+
+/*
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (1, TestResource1_Init_Default());
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (2, TestResource1_Init_Default());
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -97,6 +108,7 @@ void fug::unitTest(void) {
     printf("Proper to proper:\n");
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
+*/
 }
 
 #endif  //  FUG_UNIT_TEST
