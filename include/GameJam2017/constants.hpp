@@ -5,10 +5,10 @@
 namespace fug {
 
     namespace WorldDir {
-        const Eigen::Vector3f up(0, 1.f, 0);
-        const Eigen::Vector3f down(0, -1.f, 0);
-        const Eigen::Vector3f left(-1.f, 0, 0);
-        const Eigen::Vector3f right(1.f, 0, 0);
+        const Vector3f up(0, 1.f, 0);
+        const Vector3f down(0, -1.f, 0);
+        const Vector3f left(-1.f, 0, 0);
+        const Vector3f right(1.f, 0, 0);
     }
 
     namespace Input {
@@ -17,9 +17,19 @@ namespace fug {
             Down,
             Left,
             Right,
-            Fire
-        }
+            Shoot
+        };
     }
+
+    // Eventtien portteja vois määritellä tänne?
+    //namespace Ports {
+    //    namespace type {
+    //        enum {
+    //            port1,
+    //            port2
+    //        }
+    //    }
+    //}
 
 }
 

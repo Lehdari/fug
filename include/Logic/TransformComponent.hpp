@@ -2,7 +2,7 @@
 #define FUG_TRANSFORM_COMPONENT_HPP
 
 
-#include <Eigen/Geometry>
+#include <Core/MathTypes.hpp>
 #include "Core/Component.hpp"
 
 
@@ -10,7 +10,7 @@ namespace fug {
 
     class TransformComponent : public Component {
     public:
-        Eigen::Transform<float, 4, Affine> transform;
+        Matrix4f transform;
     };
 
 }

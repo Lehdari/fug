@@ -1,4 +1,6 @@
-#ifdef FUG_UNIT_TEST == 0
+#include "Core/Macros.hpp"
+
+#if FUG_UNIT_TEST != 0
     #include "Test/UnitTests.hpp"
 
     using namespace fug;
@@ -12,7 +14,7 @@
 
 int main(void) {
 
-    #ifdef FUG_UNIT_TEST == 0
+    #if FUG_UNIT_TEST != 0
     unitTest();
     #else
     return gameJam2017();

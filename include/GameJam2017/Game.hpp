@@ -6,10 +6,11 @@ namespace fgj {
 
     class Game {
     public:
-        int rintaKarvat;
-
+        Game();
+        void loop();
+        ~Game();
+        
     private:
-        int benisXD;
     };
 
 }

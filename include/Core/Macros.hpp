@@ -7,7 +7,7 @@
 #define FUG_DEBUG
 
 //  Unit test to use, 0 for no unit test
-#define FUG_UNIT_TEST 2
+#define FUG_UNIT_TEST 0
 
 
 //  Convenience macros

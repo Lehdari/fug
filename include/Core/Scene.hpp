@@ -35,7 +35,7 @@ namespace fug {
         void print(void);
         #endif
 
-    private:
+    protected:
         SceneBase(void) {}
     };
 

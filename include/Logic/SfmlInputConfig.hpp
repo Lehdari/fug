@@ -2,19 +2,24 @@
 #define FUG_SFML_INPUT_COMPONENT_HPP
 
 
+#include <cstdint>
+#include <utility>
 #include <unordered_map>
-#include <SFML/Keyboard.hpp>
+#include <SFML/Window.hpp>
 #include "Core/Resource.hpp"
-#include "GameJam0217/constants.hpp"
+#include "GameJam2017/constants.hpp"
 
 
 namespace fug {
 
     class FUG_RESOURCE(SfmlInputConfig) {
     public:
+        // <key, <player_id, action>>
+        using InputMap = std::unordered_map<sf::Keyboard::Key, std::pair<uint8_t, Input::Action>>;
+
         FUG_RESOURCE_INIT_DESTROY_DECL
 
-        std::unordered_map<sf::Keyboard::Key, Input::Action> inputMap;
+        InputMap inputMap;
     };
 
 }

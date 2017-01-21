@@ -92,9 +92,6 @@ template <typename... T_SceneComponents>
 void BasicScene<T_SceneComponents...>::print(void) {
     for (auto it = _entities.begin(); it<_entities.end(); ++it)
         std::cout << "Id: " << it->id << std::endl;
-
-    for (auto& c : accessComponents<TestComponent1>())
-        printf("%llu a:%d b:%d\n", c._entityId, c.a, c.b);
 }
 #endif
 

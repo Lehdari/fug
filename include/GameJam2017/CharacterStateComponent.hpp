@@ -2,7 +2,6 @@
 #define FUG_CHARACTER_COMPONENT_HPP
 
 
-#include <Eigen/Dense>
 #include "Core/Component.hpp"
 
 

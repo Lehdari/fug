@@ -7,7 +7,7 @@
 #include "Core/Macros.hpp"
 
 
-#ifdef FUG_UNIT_TEST
+#if FUG_UNIT_TEST != 0
     /// Implementation and components for unit tests
     //#if FUG_UNIT_TEST == 1
 
@@ -30,10 +30,9 @@
     #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
 
     #define FUG_COMPONENTS\
-            FUG_COMPONENT   (TestComponent1)\
-            FUG_COMPONENT   (TestComponent2)\
-            FUG_LCOMPONENT  (TestComponent3)
-
+            FUG_COMPONENT   (CharacterInfoComponent)\
+            FUG_COMPONENT   (PlayerInfoComponent)\
+            FUG_LCOMPONENT   (CharacterStateComponent)
 
 #endif  //  FUG_UNIT_TEST
 
