@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 project(fug)
 
-file(GLOB_RECURSE SRC_FILES lib/glLoadGen/gl_core_3_3.c src/*.cpp src/*/*.cpp)
+file(GLOB_RECURSE CORE_SRC_FILES lib/glLoadGen/gl_core_3_3.c src/Core/*.cpp)
+file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
+file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
+
 include_directories(include lib/glLoadGen)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -24,12 +27,17 @@ link_libraries (
     ${SFML_LIBRARIES}
 )
 
+add_definitions(-DFUG_UNIT_TEST=2)
+
 # Xcode-project shizz
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     file(GLOB_RECURSE INCLUDE_FILES include/*/*.hpp include/*/*.tcc)
-    add_executable(fug ${SRC_FILES} ${INCLUDE_FILES})
+    add_executable(fgj ${CORE_SRC_FILES} ${GAME_SRC_FILES} ${INCLUDE_FILES})
+    add_executable(fug ${CORE_SRC_FILES} ${TEST_SRC_FILES} ${INCLUDE_FILES})
 else()
-    add_executable(fug ${SRC_FILES})
+    add_executable(fgj ${CORE_SRC_FILES} ${GAME_SRC_FILES})
+    add_executable(fug ${CORE_SRC_FILES} ${TEST_SRC_FILES})
 endif()
 
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)
+set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
