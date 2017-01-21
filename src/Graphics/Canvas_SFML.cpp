@@ -23,6 +23,13 @@ Canvas_SFML::Canvas_SFML(void)
         throw "Loading ogl extensions failed!";
     }
     
+    glClearColor(0.f, 0.f, 0.f, 1.f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+    
 }
 
 bool Canvas_SFML::isOpen(void) {

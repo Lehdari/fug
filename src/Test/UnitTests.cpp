@@ -23,6 +23,13 @@
 #include "Graphics/ShaderProgram_Init_Default.hpp"
 #include "Graphics/Texture.hpp"
 #include "Graphics/Texture_Init_Binary.hpp"
+#include "Graphics/Canvas_SFML.hpp"
+#include "Graphics/SpriteMeshComponent.hpp"
+#include "Graphics/SpriteMaterial.hpp"
+#include "Graphics/SpriteMaterial_Init.hpp"
+#include "Graphics/SpriteMesh.hpp"
+#include "Graphics/SpriteMesh_Init.hpp"
+#include "Graphics/SpriteMeshComponent.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 #include "Test/TestEvents.hpp"
@@ -202,10 +209,106 @@ void fug::eventTest(void) {
 
 }
 
+void fug::drawTest()
+{
+    Canvas_SFML c;
+    sf::Window* wPtr = c.getWindow();
+    
+    // Load resources
+    
+    // Texture
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+    (100, BinaryInitInfo_File{"test.png"});
+    FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
+    (101, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
+        GL_CLAMP_TO_BORDER,
+        GL_CLAMP_TO_BORDER,
+        GL_NEAREST,
+        GL_NEAREST},
+     {100}, {}, true);
+    printf("Texture!\n");
+    
+    // ShaderProgram
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+    (102, BinaryInitInfo_File{"../src/Graphics/shader/sprite_vert.glsl"});
+    printf("First glsl!\n");
+    
+    
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
+    (103, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
+        GL_VERTEX_SHADER}, {102}, {});
+    printf("First shaderobj!\n");
+    
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+    (104, BinaryInitInfo_File{"../src/Graphics/shader/sprite_frag.glsl"});
+    printf("Second glsl!\n");
+    
+    
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
+    (105, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
+        GL_FRAGMENT_SHADER}, {104}, {});
+    printf("Second shaderobj!\n");
+    
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
+        (106, ShaderProgramInitInfo_Default{}, {103,105}, {});
+    printf("Shader Program!\n");
+    
+    // SpriteMaterial
+    FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMaterial, SpriteMaterialInitInfo_Default>
+    (107, SpriteMaterialInitInfo_Default{{"diffuse"},
+                                        {"uModelToClip"},
+                                        {"uSpriteW", "uSpriteH"},
+                                        {"uFrameRow", "uFrameColumn"},
+                                        32, 32},
+                                        {}, {106,101});
+    printf("SpriteMaterial!\n");
+    
+    // SpriteMesh
+    FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMesh, SpriteMeshInitInfo_Default>
+    (108, SpriteMeshInitInfo_Default(), {}, {107});
+    printf("SpriteMesh!\n");
+    
+    // SpriteMeshComponent
+    auto meshResPtr = FUG_RESOURCE_MANAGER.getResource<SpriteMesh>(108);
+    SpriteMeshComponent meshComp(meshResPtr);
+    printf("SpriteMeshComponent!\n");
+    
+    
+    
+    bool running = true;
+    while (running)
+    {
+        // handle events
+        sf::Event event;
+        while (wPtr->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                // end the program
+                running = false;
+            }
+            else if (event.type == sf::Event::Resized)
+            {
+                // adjust the viewport when the window is resized
+                glViewport(0, 0, event.size.width, event.size.height);
+            }
+        }
+        
+        // clear the buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        // draw...
+        meshComp.draw(Matrix4Glf::Identity(), 0, 0);
+        
+        // end the current frame (internally swaps the front and back buffers)
+        wPtr->display();
+    }
+}
 
 void fug::unitTest(void) {
     sceneTest();
     //resourceTest();
     //gfxResourceTest();
 	//eventTest();
+	drawTest();
 }

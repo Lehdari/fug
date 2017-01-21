@@ -11,6 +11,7 @@ namespace fug {
     void eventTest(void);
     void resourceTest(void);
     void gfxResourceTest(void);
+    void drawTest(void);
     void unitTest(void);
 
 }
