@@ -3,7 +3,7 @@
 
 
 #include <Eigen/Dense>
-#include <gl_core_4_1.h>
+#include <gl_core_3_3.h>
 
 
 #define PI 3.14159265358979323846
