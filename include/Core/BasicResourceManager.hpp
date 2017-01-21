@@ -15,6 +15,12 @@ namespace fug {
     public:
         friend class ResourceManagerBase<BasicResourceManager>;
 
+        BasicResourceManager(const BasicResourceManager&)               = delete;
+        BasicResourceManager(BasicResourceManager&&)                    = delete;
+        BasicResourceManager& operator=(const BasicResourceManager&&)   = delete;
+        BasicResourceManager& operator=(BasicResourceManager&&)         = delete;
+
+
         template <typename T_Resource, typename T_InitInfo>
         void addResourceInfo(const RId& resourceId,
                              const T_InitInfo& initInfo,
