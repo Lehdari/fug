@@ -3,6 +3,7 @@ project(fug)
 
 file(GLOB_RECURSE CORE_SRC_FILES lib/glLoadGen/gl_core_3_3.c src/Core/*.cpp)
 file(GLOB_RECURSE LOGIC_SRC_FILES src/Logic/*.cpp)
+file(GLOB_RECURSE GRAPHICS_SRC_FILES src/Graphics/*.cpp)
 file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
@@ -36,11 +37,11 @@ add_definitions(-DFUG_UNIT_TEST=2)
 # Xcode-project shizz
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     file(GLOB_RECURSE INCLUDE_FILES include/*/*.hpp include/*/*.tcc)
-    add_executable(fgj ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${GAME_SRC_FILES} ${INCLUDE_FILES})
-    add_executable(fug ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${TEST_SRC_FILES} ${INCLUDE_FILES})
+    add_executable(fgj ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${GRAPHICS_SRC_FILES} ${GAME_SRC_FILES} ${INCLUDE_FILES})
+    add_executable(fug ${CORE_SRC_FILES} ${GRAPHICS_SRC_FILES} ${TEST_SRC_FILES} ${INCLUDE_FILES})
 else()
-    add_executable(fgj ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${GAME_SRC_FILES})
-    add_executable(fug ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${TEST_SRC_FILES})
+    add_executable(fgj ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${GRAPHICS_SRC_FILES} ${GAME_SRC_FILES})
+    add_executable(fug ${CORE_SRC_FILES} ${GRAPHICS_SRC_FILES} ${TEST_SRC_FILES})
 endif()
 
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)
