@@ -47,6 +47,7 @@ void BasicScene<T_SceneComponents...>::removeEntity(const EntityId& id)
     _entities.erase(it);
 }
 
+/*  TODO remove this implementation before hotfix
 template <typename... T_SceneComponents>
 template <typename T_Visitor, typename... T_Components>
 void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...>& visitor)
@@ -84,6 +85,33 @@ void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...
 
         visitor(*std::get<CIter<T_Components>>(iters)...);
             maxIterations = 1;
+    }
+}
+*/
+template <typename... T_SceneComponents>
+template <typename T_Visitor, typename... T_Components>
+void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...>& visitor)
+{
+    static auto collection = accessCollection<T_Components...>();
+
+    std::tuple<CIter<T_Components>...> iters;
+
+    initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                   std::get<CIter<T_Components>>(iters)...);
+
+    auto entityId = EId();
+    ++entityId;
+    if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                  std::get<CIter<T_Components>>(iters)...,
+                                  entityId))
+        return;
+
+    visitor(*std::get<CIter<T_Components>>(iters)...);
+
+    while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
+                                   ++std::get<CIter<T_Components>>(iters)...,
+                                   entityId)) {
+        visitor(*std::get<CIter<T_Components>>(iters)...);
     }
 }
 
@@ -223,7 +251,7 @@ void BasicScene<T_SceneComponents...>::initIterators(std::vector<T_Component>& v
     iter = vector.begin();
 }
 
-
+/*  //  TODO remove these implementations before hotfix
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent,
           typename T_SecondComponent,
@@ -281,5 +309,52 @@ bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_Component>& vector,
         return false;
 
     maxIterations = nit;
+    return true;
+}
+*/
+template <typename... T_SceneComponents>
+template <typename T_FirstComponent,
+          typename T_SecondComponent,
+          typename... T_Components>
+bool BasicScene<T_SceneComponents...>::iterate(
+    std::vector<T_FirstComponent>& firstVector,
+    std::vector<T_SecondComponent>& secondVector,
+    std::vector<T_Components>&... restVectors,
+    CIter<T_FirstComponent>& firstIter,
+    CIter<T_SecondComponent>& secondIter,
+    CIter<T_Components>&... restIters,
+    EId& maxId)
+{
+
+    for (;maxId > firstIter->_entityId && firstIter != firstVector.end(); ++firstIter);
+    maxId = firstIter->_entityId;
+
+    if (firstIter == firstVector.end() || !iterate<T_SecondComponent, T_Components...>
+        (secondVector, restVectors..., secondIter, restIters..., maxId))
+        return false;
+
+    for (;maxId > firstIter->_entityId && firstIter != firstVector.end();) {
+        for (;maxId > firstIter->_entityId && firstIter != firstVector.end(); ++firstIter);
+        maxId = firstIter->_entityId;
+
+        if (firstIter == firstVector.end() || !iterate<T_SecondComponent, T_Components...>
+            (secondVector, restVectors..., secondIter, restIters..., maxId))
+            return false;
+    }
+
+    return true;
+}
+
+template <typename... T_SceneComponents>
+template <typename T_Component>
+bool BasicScene<T_SceneComponents...>::iterate(
+    std::vector<T_Component>& vector,
+    CIter<T_Component>& iter,
+    EId& maxId)
+{
+    for (;maxId > iter->_entityId && iter != vector.end(); ++iter);
+    maxId = iter->_entityId;
+    if (iter == vector.end())
+        return false;
     return true;
 }

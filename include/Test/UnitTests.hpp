@@ -7,11 +7,11 @@
 
 namespace fug {
 
-
+    void sceneTest(void);
     void eventTest(void);
-    void unitTest(void);
     void resourceTest(void);
     void gfxResourceTest(void);
+    void unitTest(void);
 
 }
 
