@@ -35,10 +35,11 @@ namespace fug {
         glGetShaderiv(objectId_, GL_COMPILE_STATUS, &compileStatus);
 
         if (compileStatus == GL_FALSE) {
-            glGetShaderiv(objectId_, infoLogLength, &infoLogLength);
+            glGetShaderiv(objectId_, GL_INFO_LOG_LENGTH, &infoLogLength);
             char* infoLog = new char[infoLogLength];
-            glGetShaderInfoLog(objectId_, infoLogLength, NULL, infoLog);
+            glGetShaderInfoLog(objectId_, infoLogLength, &infoLogLength, infoLog);
             fprintf(stderr, "%s", infoLog);
+            glDeleteShader(objectId_);
             throw infoLog;
         }
     }

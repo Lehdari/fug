@@ -15,6 +15,8 @@
 #include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
+#include "Graphics/Canvas.hpp"
+#include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Binary.hpp"
 #include "Graphics/Texture.hpp"
@@ -129,6 +131,9 @@ void fug::resourceTest(void) {
 
 void fug::gfxResourceTest(void) {
     // Assumes a test file
+    fug::Canvas_SFML canvas;
+    canvas.display();
+
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
         (5, BinaryInitInfo_File{"test.glsl"});
 
@@ -143,7 +148,7 @@ void fug::gfxResourceTest(void) {
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
         (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
-                                        GL_VERTEX_SHADER}, {5}, {});
+                                        GL_FRAGMENT_SHADER}, {5}, {});
     auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     printf("%s: get: %p\n", __func__, srcResPtr1.get());
 
