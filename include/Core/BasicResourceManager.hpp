@@ -33,6 +33,8 @@ namespace fug {
         BasicResourceManager(void) {}
 
         struct ResourceInfo {
+            uint64_t            typeId;
+
             void*               initInfo;
             uint64_t            initInfoLoc;        // index in the initInfos buffer, used initInfo vector gets reallocated
 
@@ -72,6 +74,12 @@ namespace fug {
         template <typename T_Resource>
         std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>>&
             accessResourcePointerPointers(void);
+
+
+        static uint64_t _resourceTypeId;
+
+        template <typename T_Resource>
+        static uint64_t getResourceTypeId(void);
     };
 
 

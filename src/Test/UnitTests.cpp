@@ -56,8 +56,15 @@ void fug::unitTest(void) {
 void fug::unitTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
+
+    auto tr1Ptr1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+    printf("get: %p\n", tr1Ptr1.get());
+
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource2, TestResource2_Init_TestResource1>
         (2, TestResource2_Init_TestResource1(), {1});
+
+    //auto tr1Ptr2 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
+    //printf("get: %p\n", tr1Ptr2.get());
 
     FUG_RESOURCE_MANAGER.getResource<TestResource2>(2);
 

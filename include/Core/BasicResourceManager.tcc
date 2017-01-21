@@ -17,7 +17,8 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
             rInfo.second.initInfo = &initInfos[rInfo.second.initInfoLoc];
     }
 
-    _resourceInfos.emplace(std::make_pair(resourceId, ResourceInfo{
+    _resourceInfos.emplace(std::make_pair(resourceId, ResourceInfo {
+        getResourceTypeId<T_Resource>(),        //  typeId
         &initInfos.back(),                      //  initInfo
         initInfos.size()-1,                     //  initInfoLoc
         nullptr,                                //  resource
@@ -52,8 +53,6 @@ ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourc
 template <typename T_Resource>
 void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 {
-    //  ResourceInfo
-    auto& resourceInfo = _resourceInfos[pointer->_resourceId];
     //  ResourcePointer pointers
     auto& resourcePointers = accessResourcePointerPointers<T_Resource>(pointer->_resourceId);
 
@@ -65,8 +64,6 @@ void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 template <typename T_Resource>
 void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointer)
 {
-    //  ResourceInfo
-    auto& resourceInfo = _resourceInfos[pointer->_resourceId];
     //  ResourcePointer pointers
     auto& resourcePointers = accessResourcePointerPointers<T_Resource>(pointer->_resourceId);
 
@@ -88,12 +85,15 @@ void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& res
     //  add the new resource
     resources.emplace_back();
     auto& resource = resources.back();
+    auto typeId = getResourceTypeId<T_Resource>();
 
     //  reassign all init info pointers and resource pointer pointers
     //  if resources vector gets reallocated
     if (resources.size() > capacity) {
-        for (auto& rInfo : _resourceInfos)
-            rInfo.second.resource = &resources[rInfo.second.resourceLoc];
+        for (auto& rInfo : _resourceInfos) {
+            if (rInfo.second.typeId == typeId)
+                rInfo.second.resource = &resources[rInfo.second.resourceLoc];
+        }
 
         //  ResourcePointer pointers
         for (auto& rpv : accessResourcePointerPointers<T_Resource>())
@@ -138,4 +138,12 @@ std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>>&
 {
     static std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>> m;
     return m;
+}
+
+
+template <typename T_Resource>
+uint64_t BasicResourceManager::getResourceTypeId(void)
+{
+    static uint64_t typeId = ++_resourceTypeId;
+    return typeId;
 }
