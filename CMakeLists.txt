@@ -17,9 +17,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLAGS}")
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 find_package(Eigen3 REQUIRED)
 find_package(SFML 2 REQUIRED system window graphics network audio)
+find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(Box2D REQUIRED)
 
 include_directories(
     ${EIGEN3_INCLUDE_DIR}
@@ -28,8 +31,10 @@ include_directories(
 )
 
 link_libraries (
+	${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
     ${GLEW_LIBRARIES}
+	Box2D
 )
 
 add_definitions(-DFUG_UNIT_TEST=2)
