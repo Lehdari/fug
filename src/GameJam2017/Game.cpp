@@ -6,10 +6,16 @@
 #include "Logic/SfmlInputConfig_Init.hpp"
 #include "Logic/Box2dWorld.hpp"
 #include "Logic/Box2dWorld_Init.hpp"
+#include "Logic/createPhysicsBox.hpp"
+#include "Logic/Box2dTransformVisitor.hpp"
+#include "Logic/TransformComponent.hpp"
 #include "GameJam2017/PlayerInputVisitor.hpp"
 #include "GameJam2017/PlayerComponent.hpp"
 #include "GameJam2017/CharacterStateComponent.hpp"
 #include "GameJam2017/CharacterInfoComponent.hpp"
+
+#include <iostream> // TEMP
+#include <cstdint>
 
 using namespace fgj;
 using namespace fug;
@@ -43,8 +49,9 @@ Game::~Game()
 
 bool Game::loadLevel(std::string name)
 {
-    FUG_RESOURCE_MANAGER.addResourceInfo<Box2dWorld, Box2dWorld_Init_Default>(1,
-        Box2dWorld_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<Box2dWorld, Box2dWorld_Init_Default>(2,
+        Box2dWorld_Init_Default(b2Vec2(0, -1.f)));
+    worldRes = FUG_RESOURCE_MANAGER.getResource<Box2dWorld>(2);
 
     return true;
 }
@@ -54,12 +61,25 @@ void Game::loop()
     EId nid[666] = {0};
     uint64_t i = 0;
 
+    std::cerr << "adding phys box" << std::endl;
+    nid[i++] = FUG_SCENE.addEntity(TransformComponent(),
+        createPhysicsBox(b2_dynamicBody, b2Vec2(0, 3), b2Vec2(1.f, 1.f), 1.f, 1.f));
+
+    std::cerr << "adding character" << std::endl;
     nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
         CharacterStateComponent());
 
     PlayerInputVisitor playerInputVisitor;
+    Box2dTransformVisitor physTransformVisitor;
 
+    std::cout << "entering loop" << std::endl;
+
+    float dt = 0.1;
+    uint32_t velocityIterations = 6;
+    uint32_t positionIterations = 2;
     while(true) {
+        worldRes->world->Step(dt, velocityIterations, positionIterations);
         FUG_SCENE.accept(playerInputVisitor);
+        FUG_SCENE.accept(physTransformVisitor);
     }   
 }

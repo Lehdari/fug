@@ -11,9 +11,9 @@ namespace fug {
 
 
     class Box2dTransformVisitor : public Visitor<Box2dTransformVisitor,
-        Box2dBodyComponent, TransformComponent> {
+        TransformComponent, Box2dBodyComponent> {
     public:
-        void operator()(Box2dBodyComponent& body, TransformComponent& transform);
+        void operator()(TransformComponent& transform, Box2dBodyComponent& body);
     };
 
 }

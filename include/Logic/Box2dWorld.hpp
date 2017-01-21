@@ -12,7 +12,7 @@ namespace fug {
     public:
         FUG_RESOURCE_INIT_DESTROY_DECL
 
-        b2World world;
+        b2World* world;
     };
 
 }

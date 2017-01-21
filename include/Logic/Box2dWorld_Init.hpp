@@ -2,6 +2,7 @@
 #define FUG_BOX2D_WORLD_INIT_HPP
 
 
+#include <iostream>
 #include "Logic/Box2dWorld.hpp"
 #include "Logic/Box2dBodyComponent.hpp"
 

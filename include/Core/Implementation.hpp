@@ -21,6 +21,7 @@
                 FUG_COMPONENT   (CharacterInfoComponent)\
                 FUG_COMPONENT   (PlayerComponent)\
                 FUG_COMPONENT   (Box2dBodyComponent)\
+                FUG_COMPONENT   (TransformComponent)\
                 FUG_LCOMPONENT  (CharacterStateComponent)
     #else
         #error "Invalid build type"

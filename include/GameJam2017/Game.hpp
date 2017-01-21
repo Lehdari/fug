@@ -5,8 +5,12 @@
 #include <memory>
 
 #include <Box2D/Box2D.h>
+#include "Logic/Box2dWorld.hpp"
+#include "Core/ResourcePointer.hpp"
 
 namespace fgj {
+
+    using namespace fug;
 
     class Game {
     public:
@@ -17,6 +21,7 @@ namespace fgj {
         void loop();
 
     private:
+        ResourcePointer<Box2dWorld> worldRes;
     };
 
 }

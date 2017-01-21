@@ -8,6 +8,7 @@ using namespace fgj;
 int fgj::gameJam2017(void)
 {
     Game game;
+    game.loadLevel("penis");
     game.loop();
 
     return 0;
