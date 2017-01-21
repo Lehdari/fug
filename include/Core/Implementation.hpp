@@ -10,14 +10,13 @@
 #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
 #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
 
-#if FUG_BUILD_TYPE == TEST
+#ifdef FUG_BUILD_TYPE_TEST
     #define FUG_COMPONENTS\
             FUG_COMPONENT   (TestComponent1)\
             FUG_COMPONENT   (TestComponent2)\
             FUG_LCOMPONENT  (TestComponent3)
-
 #else
-    #if FUG_BUILD_TYPE == GAME
+    #if FUG_BUILD_TYPE_GAME
         #define FUG_COMPONENTS\
                 FUG_COMPONENT   (CharacterInfoComponent)\
                 FUG_COMPONENT   (PlayerComponent)\

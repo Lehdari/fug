@@ -44,8 +44,8 @@ else()
     add_executable(fug ${CORE_SRC_FILES} ${GRAPHICS_SRC_FILES} ${TEST_SRC_FILES})
 endif()
 
-target_compile_definitions(fug PRIVATE FUG_BUILD_TYPE=TEST)
-target_compile_definitions(fgj PRIVATE FUG_BUILD_TYPE=GAME)
+target_compile_definitions(fug PRIVATE FUG_BUILD_TYPE_TEST=1)
+target_compile_definitions(fgj PRIVATE FUG_BUILD_TYPE_GAME=1)
 
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)
 set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
