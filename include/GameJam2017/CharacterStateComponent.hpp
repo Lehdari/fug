@@ -3,6 +3,7 @@
 
 
 #include "Core/Component.hpp"
+#include "Core/MathTypes.hpp"
 
 
 namespace fug {
@@ -10,10 +11,7 @@ namespace fug {
     class CharacterStateComponent : public Component {
     public:
         bool alive;
-        bool moveUp;
-        bool moveDown;
-        bool moveLeft;
-        bool moveRight;
+        Vector3f movementDir;
     };
 
 }
