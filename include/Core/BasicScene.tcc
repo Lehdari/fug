@@ -26,9 +26,6 @@ EId BasicScene<T_SceneComponents...>::addEntity(T_Components&&... components)
 {
     _entities.emplace_back(++_entityId);
     addComponents(std::forward<T_Components>(components)...);
-/*    setComponents(_entities.size()-1,
-                  std::forward<T_FirstComponent>(firstComponent),
-                  std::forward<T_Components>(components)...);*/
 
     return _entityId;
 }
@@ -46,7 +43,6 @@ void BasicScene<T_SceneComponents...>::removeEntity(const EntityId& id)
     _entities.erase(it);
 }
 
-/*  TODO remove this implementation before hotfix
 template <typename... T_SceneComponents>
 template <typename T_Visitor, typename... T_Components>
 void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...>& visitor)
@@ -57,49 +53,6 @@ void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...
 
     initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
                                    std::get<CIter<T_Components>>(iters)...);
-
-    std::unordered_map<CId, uint64_t> nIterations;
-    uint64_t maxIterations = 0;
-
-    EntityIterator entityIt = _entities.begin();
-
-    if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                  std::get<CIter<T_Components>>(iters)...,
-                                  nIterations, maxIterations))
-        return;
-    entityIt += maxIterations;
-    for (auto& nit : nIterations)
-        nit.second = 0;
-
-    visitor(*std::get<CIter<T_Components>>(iters)...);
-        maxIterations = 1;
-
-
-    while(iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                   std::get<CIter<T_Components>>(iters)...,
-                                   nIterations, maxIterations)) {
-        entityIt += maxIterations;
-        for (auto& nit : nIterations)
-            nit.second = 0;
-
-        visitor(*std::get<CIter<T_Components>>(iters)...);
-            maxIterations = 1;
-    }
-}
-*/
-template <typename... T_SceneComponents>
-template <typename T_Visitor, typename... T_Components>
-void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...>& visitor)
-{
-    static auto collection = accessCollection<T_Components...>();
-
-    std::tuple<CIter<T_Components>...> iters;
-
-    initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
-                                   std::get<CIter<T_Components>>(iters)...);
-
-    //if (sizeof...(T_Components) == 2)
-    //    printf("%llu %llu\n", std::get<std::vector<T_Components>&>(collection).size()...);
 
     auto entityId = EId();
     ++entityId;
@@ -146,13 +99,7 @@ std::vector<T_Component>& BasicScene<T_SceneComponents...>::accessComponents(voi
     static std::vector<T_Component> v;
     return v;
 }
-/*
-template <typename... T_SceneComponents>
-void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
-{
-    addComponents<T_SceneComponents...>(pos);
-}
-*/
+
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent,
           typename T_SecondComponent,
@@ -176,30 +123,7 @@ void BasicScene<T_SceneComponents...>::addComponents(T_Component&& component)
     v.push_back(std::forward<T_Component>(component));
     v.back()._entityId = _entityId;
 }
-/*
-template <typename... T_SceneComponents>
-template <typename T_FirstComponent, typename... T_Components>
-void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos,
-                                                     T_FirstComponent&& firstComponent,
-                                                     T_Components&&... components)
-{
-    auto& c = *(accessComponents<T_FirstComponent>().begin() + pos);
-    c = std::forward<T_FirstComponent>(firstComponent);
-    c._entityId = _entityId;
 
-    //  set rest of the components
-    setComponents(pos, std::forward<T_Components>(components)...);
-}
-
-template <typename... T_SceneComponents>
-template <typename T_Component>
-void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos, T_Component&& component)
-{
-    auto& c = *(accessComponents<T_Component>().begin() + pos);
-    c = std::forward<T_Component>(component);
-    c._entityId = _entityId;
-}
-*/
 template <typename... T_SceneComponents>
 void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
@@ -256,67 +180,6 @@ void BasicScene<T_SceneComponents...>::initIterators(std::vector<T_Component>& v
     iter = vector.begin();
 }
 
-/*  //  TODO remove these implementations before hotfix
-template <typename... T_SceneComponents>
-template <typename T_FirstComponent,
-          typename T_SecondComponent,
-          typename... T_Components>
-bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_FirstComponent>& firstVector,
-                                               std::vector<T_SecondComponent>& secondVector,
-                                               std::vector<T_Components>&... restVectors,
-                                               CIter<T_FirstComponent>& firstIter,
-                                               CIter<T_SecondComponent>& secondIter,
-                                               CIter<T_Components>&... restIters,
-                                               std::unordered_map<CId, uint64_t>& nIterations,
-                                               uint64_t& maxIterations)
-{
-    uint64_t& nit = nIterations[Component::typeId<T_FirstComponent>()];
-
-    firstIter += maxIterations-nit;
-    nit = maxIterations;
-    for (;firstIter != firstVector.end() && firstIter->_entityId == EId(); ++firstIter, ++nit);
-
-    if (firstIter == firstVector.end())
-        return false;
-
-    do {
-        maxIterations = nit;
-        if (!iterate<T_SecondComponent, T_Components...>(secondVector, restVectors...,
-                                                         secondIter, restIters...,
-                                                         nIterations, maxIterations))
-            return false;
-
-        firstIter += maxIterations-nit;
-        nit = maxIterations;
-        for (;firstIter != firstVector.end() && firstIter->_entityId == EId(); ++firstIter, ++nit);
-
-        if (firstIter == firstVector.end())
-            return false;
-    } while (maxIterations > nit);
-
-    return true;
-}
-
-template <typename... T_SceneComponents>
-template <typename T_Component>
-bool BasicScene<T_SceneComponents...>::iterate(std::vector<T_Component>& vector,
-                                               CIter<T_Component>& iter,
-                                               std::unordered_map<CId, uint64_t>& nIterations,
-                                               uint64_t& maxIterations)
-{
-    uint64_t& nit = nIterations[Component::typeId<T_Component>()];
-
-    iter += maxIterations-nit;
-    nit = maxIterations;
-    for (;iter != vector.end() && iter->_entityId == EId(); ++iter, ++nit);
-
-    if (iter == vector.end())
-        return false;
-
-    maxIterations = nit;
-    return true;
-}
-*/
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent,
           typename T_SecondComponent,
