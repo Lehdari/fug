@@ -18,15 +18,18 @@ Binary::Binary(const Binary& other)
     size_ = other.size_;
 }
 
-const char *Binary::getBufferPtr(void) const {
+const char *Binary::getBufferPtr(void) const
+{
     return buffer_;
 }
 
-size_t Binary::getBufferSize(void) const {
+size_t Binary::getBufferSize(void) const
+{
     return size_;
 }
 
-Binary::~Binary(void) {
+Binary::~Binary(void)
+{
     if (buffer_)
         delete[] buffer_;
 }

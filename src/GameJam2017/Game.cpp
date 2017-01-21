@@ -14,7 +14,8 @@
 using namespace fgj;
 using namespace fug;
 
-Game::Game() {
+Game::Game()
+{
 // Input mapping
     // <key, <player_id, action>>
     SfmlInputConfig_Init_Default inputMap = {
@@ -36,17 +37,20 @@ Game::Game() {
     //window.setFramerateLimit(60);
 }
 
-Game::~Game() {
+Game::~Game()
+{
 }
 
-bool Game::loadLevel(std::string name) {
+bool Game::loadLevel(std::string name)
+{
     FUG_RESOURCE_MANAGER.addResourceInfo<Box2dWorld, Box2dWorld_Init_Default>(1,
         Box2dWorld_Init_Default());
 
     return true;
 }
 
-void Game::loop() {
+void Game::loop()
+{
     EId nid[666] = {0};
     uint64_t i = 0;
 
