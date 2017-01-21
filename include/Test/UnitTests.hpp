@@ -10,7 +10,6 @@ namespace fug {
 
     void unitTest(void);
 
-
 }
 
 

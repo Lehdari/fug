@@ -24,8 +24,7 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
         0,                                      //  resourceLoc
         initResources,                          //  initResources
         depResources,                           //  depResources
-        0,                                      //  referenceCount
-        &BasicResourceManager::initResource<T_Resource, T_InitInfo>   //  init
+        &BasicResourceManager::initResource<T_Resource, T_InitInfo> //  init
     }));
 }
 
@@ -42,7 +41,7 @@ ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourc
         //  new resource is initialized and its position is stored in the info,
         //  time to create the resource pointer and return it
         return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo.resource),
-                                           resourceId, &resourceInfo.referenceCount);
+                                           resourceId);
     }
     catch(...) {
         return ResourcePointer<T_Resource>();
@@ -53,13 +52,30 @@ ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourc
 template <typename T_Resource>
 void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 {
-    printf("registerPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
+    //  ResourceInfo
+    auto& resourceInfo = _resourceInfos[pointer->_resourceId];
+    //  ResourcePointer pointers
+    auto& resourcePointers = accessResourcePointerPointers<T_Resource>(pointer->_resourceId);
+
+    resourcePointers.push_back(pointer);
+
+    printf("registerPointer, counter: %lld\n", resourcePointers.size());    //  TEMP
 }
 
 template <typename T_Resource>
 void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointer)
 {
-    printf("unRegisterPointer, counter: %lld\n", *pointer->_referenceCount);    //  TEMP
+    //  ResourceInfo
+    auto& resourceInfo = _resourceInfos[pointer->_resourceId];
+    //  ResourcePointer pointers
+    auto& resourcePointers = accessResourcePointerPointers<T_Resource>(pointer->_resourceId);
+
+    resourcePointers.erase(std::remove(resourcePointers.begin(),
+                                       resourcePointers.end(),
+                                       pointer),
+                           resourcePointers.end());
+
+    printf("unRegisterPointer, counter: %lld\n", resourcePointers.size());    //  TEMP
 }
 
 
@@ -73,10 +89,16 @@ void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& res
     resources.emplace_back();
     auto& resource = resources.back();
 
-    //  reassign all init info pointers if resources vector gets reallocated
+    //  reassign all init info pointers and resource pointer pointers
+    //  if resources vector gets reallocated
     if (resources.size() > capacity) {
         for (auto& rInfo : _resourceInfos)
             rInfo.second.resource = &resources[rInfo.second.resourceLoc];
+
+        //  ResourcePointer pointers
+        for (auto& rpv : accessResourcePointerPointers<T_Resource>())
+            for (auto* rp : rpv.second)
+                rp->_resource = &resources[_resourceInfos[rpv.first].resourceLoc];
     }
 
     //  store location of the newly added resource
@@ -101,4 +123,19 @@ std::vector<T_Resource>& BasicResourceManager::accessResources(void)
 {
     static std::vector<T_Resource> v;
     return v;
+}
+
+template <typename T_Resource>
+std::vector<ResourcePointer<T_Resource>*>&
+    BasicResourceManager::accessResourcePointerPointers(const RId& resourceId)
+{
+    return accessResourcePointerPointers<T_Resource>()[resourceId];
+}
+
+template <typename T_Resource>
+std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>>&
+    BasicResourceManager::accessResourcePointerPointers(void)
+{
+    static std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>> m;
+    return m;
 }

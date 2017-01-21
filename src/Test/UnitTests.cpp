@@ -52,11 +52,14 @@ void fug::unitTest(void) {
 #include "Test/TestResources_Init.hpp"
 
 void fug::unitTest(void) {
-
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(1, TestResource1_Init_Default());
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(2, TestResource1_Init_Default());
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(3, TestResource1_Init_Default());
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>(4, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (1, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (2, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (3, TestResource1_Init_Default());
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (4, TestResource1_Init_Default());
 
     printf("Null initialization:\n");
     ResourcePointer<TestResource1>   resPtr1;
@@ -94,7 +97,6 @@ void fug::unitTest(void) {
     printf("Proper to proper:\n");
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
-
 }
 
 #endif  //  FUG_UNIT_TEST

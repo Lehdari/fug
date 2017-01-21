@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <algorithm>
 
 #include "Core/ResourceManager.hpp"
 
@@ -33,15 +34,13 @@ namespace fug {
 
         struct ResourceInfo {
             void*               initInfo;
-            uint64_t            initInfoLoc;    // index in the initInfos buffer, used initInfo vector gets reallocated
+            uint64_t            initInfoLoc;        // index in the initInfos buffer, used initInfo vector gets reallocated
 
             void*               resource;
-            uint64_t            resourceLoc;    // same thing as with the initInfoLoc
+            uint64_t            resourceLoc;        // same thing as with the initInfoLoc
 
-            std::vector<RId>    initResources;  // resources required when initializing
-            std::vector<RId>    depResources;   // resources required for the whole lifetime
-
-            int64_t             referenceCount; // reference counter passed to ResourcePointers
+            std::vector<RId>    initResources;      // resources required when initializing
+            std::vector<RId>    depResources;       // resources required for the whole lifetime
 
             void(BasicResourceManager::*init)(const RId&, ResourceInfo&);   //call to initResource member function, allows loadResource to be untemplated.
         };
@@ -64,6 +63,15 @@ namespace fug {
 
         template <typename T_Resource>  //  TODO replace with ObjectPool once implemented
         std::vector<T_Resource>& accessResources(void);
+
+
+        template <typename T_Resource>
+        std::vector<ResourcePointer<T_Resource>*>&
+            accessResourcePointerPointers(const RId& resourceId);
+
+        template <typename T_Resource>
+        std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>>&
+            accessResourcePointerPointers(void);
     };
 
 

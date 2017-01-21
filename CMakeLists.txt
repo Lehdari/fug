@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.1)
 project(fug)
 
-file(GLOB_RECURSE SRC_FILES src/*.cpp src/*/*.cpp)
-include_directories(include)
+file(GLOB_RECURSE SRC_FILES lib/glLoadGen/gl_core_3_3.c src/*.cpp src/*/*.cpp)
+include_directories(include lib/glLoadGen)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CMAKE_MODULE_PATH "~/cmake_modules")
+endif()
+
 
 find_package(Eigen3 REQUIRED)
 find_package(SFML 2 REQUIRED system window graphics network audio)
@@ -16,5 +21,12 @@ link_libraries (
     ${SFML_LIBRARIES}
 )
 
-add_executable(fug ${SRC_FILES})
+# Xcode-project shizz
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    file(GLOB_RECURSE INCLUDE_FILES include/*/*.hpp include/*/*.tcc)
+    add_executable(fug ${SRC_FILES} ${INCLUDE_FILES})
+else()
+    add_executable(fug ${SRC_FILES})
+endif()
+
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)

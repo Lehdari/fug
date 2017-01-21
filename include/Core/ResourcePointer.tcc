@@ -1,90 +1,71 @@
 template<typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(void) :
     _resource(nullptr),
-    _resourceId(),
-    _referenceCount(nullptr)
+    _resourceId()
 {
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(T_Resource* resource,
-                                             const RId& resourceId,
-                                             int64_t* referenceCount) :
+                                             const RId& resourceId) :
     _resource(resource),
-    _resourceId(resourceId),
-    _referenceCount(referenceCount)
+    _resourceId(resourceId)
 {
-    if (_referenceCount) {
-        ++*_referenceCount;
+    if (_resource)
         _registerPointer(this);
-    }
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(const ResourcePointer<T_Resource>& resourcePointer) :
     _resource(resourcePointer._resource),
-    _resourceId(resourcePointer._resourceId),
-    _referenceCount(resourcePointer._referenceCount)
+    _resourceId(resourcePointer._resourceId)
 {
-    if (_referenceCount) {
-        ++*_referenceCount;
+    if (_resource)
         _registerPointer(this);
-    }
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(ResourcePointer<T_Resource>&& resourcePointer) :
     _resource(resourcePointer._resource),
-    _resourceId(resourcePointer._resourceId),
-    _referenceCount(resourcePointer._referenceCount)
+    _resourceId(resourcePointer._resourceId)
 {
     resourcePointer._resource = nullptr;
-    resourcePointer._referenceCount = nullptr;
     if (_resource)
         _registerPointer(this);
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>::~ResourcePointer(void) {
-    if (_resource) {
-        --*_referenceCount; // note: can go to negative values
+    if (_resource)
         _unRegisterPointer(this);
-    }
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(const ResourcePointer<T_Resource>& resourcePointer) {
-    if (_resource) {
-        --*_referenceCount;
+    if (_resource)
         _unRegisterPointer(this);
-    }
 
     _resource = resourcePointer._resource;
     _resourceId = resourcePointer._resourceId;
-    _referenceCount = resourcePointer._referenceCount;
 
-    if (_referenceCount) {
-        ++*_referenceCount;
+    if (_resource)
         _registerPointer(this);
-    }
 
     return *this;
 }
 
 template<typename T_Resource>
 ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(ResourcePointer<T_Resource>&& resourcePointer) {
-    if (_resource) {
-        --*_referenceCount; // note: can go to negative values
+    if (_resource)
         _unRegisterPointer(this);
-    }
 
     _resource = resourcePointer._resource;
     _resourceId = resourcePointer._resourceId;
-    _referenceCount = resourcePointer._referenceCount;
-    _registerPointer(this);
+
+    if (_resource)
+        _registerPointer(this);
 
     resourcePointer._resource = nullptr;
-    resourcePointer._referenceCount = nullptr;
 
     return *this;
 }
