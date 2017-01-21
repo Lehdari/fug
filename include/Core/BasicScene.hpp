@@ -30,8 +30,8 @@ namespace fug {
         using EntityIterator  = typename std::vector<Entity>::iterator;
 
 
-        template<typename T_FirstComponent, typename... T_Components>
-        EId addEntity(T_FirstComponent&& firstComponent, T_Components&&... components);
+        template<typename... T_Components>
+        EId addEntity(T_Components&&... components);
 
         EId addEntity(void);
 
@@ -60,17 +60,19 @@ namespace fug {
 
         template <typename T_Component>
         using CIter = typename std::vector<T_Component>::iterator;
-
+/*
         void addComponents(uint64_t pos);
-
+*/
         template <typename T_FirstComponent,
                   typename T_SecondComponent,
                   typename... T_Components>
-        void addComponents(uint64_t pos);
+        void addComponents(T_FirstComponent&& firstComponent,
+                           T_SecondComponent&& secondComponent,
+                           T_Components&&... restComponents);
 
         template <typename T_Component>
-        void addComponents(uint64_t pos);
-
+        void addComponents(T_Component&& component);
+/*
         template <typename T_FirstComponent, typename... T_Components>
         void setComponents(uint64_t pos,
                            T_FirstComponent&& firstComponent,
@@ -78,7 +80,7 @@ namespace fug {
 
         template <typename T_Component>
         void setComponents(uint64_t pos, T_Component&& component);
-
+*/
         void removeComponents(uint64_t pos);
 
         template <typename T_FirstComponent,

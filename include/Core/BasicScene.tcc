@@ -21,15 +21,14 @@ EId BasicScene<T_SceneComponents...>::addEntity(void)
 }
 
 template <typename... T_SceneComponents>
-template <typename T_FirstComponent, typename... T_Components>
-EId BasicScene<T_SceneComponents...>::addEntity(T_FirstComponent&& firstComponent,
-                                              T_Components&&... components)
+template <typename... T_Components>
+EId BasicScene<T_SceneComponents...>::addEntity(T_Components&&... components)
 {
     _entities.emplace_back(++_entityId);
-    addComponents(_entities.size()-1);
-    setComponents(_entities.size()-1,
+    addComponents(std::forward<T_Components>(components)...);
+/*    setComponents(_entities.size()-1,
                   std::forward<T_FirstComponent>(firstComponent),
-                  std::forward<T_Components>(components)...);
+                  std::forward<T_Components>(components)...);*/
 
     return _entityId;
 }
@@ -99,6 +98,9 @@ void BasicScene<T_SceneComponents...>::accept(Visitor<T_Visitor, T_Components...
     initIterators<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
                                    std::get<CIter<T_Components>>(iters)...);
 
+    //if (sizeof...(T_Components) == 2)
+    //    printf("%llu %llu\n", std::get<std::vector<T_Components>&>(collection).size()...);
+
     auto entityId = EId();
     ++entityId;
     if (!iterate<T_Components...>(std::get<std::vector<T_Components>&>(collection)...,
@@ -144,34 +146,37 @@ std::vector<T_Component>& BasicScene<T_SceneComponents...>::accessComponents(voi
     static std::vector<T_Component> v;
     return v;
 }
-
+/*
 template <typename... T_SceneComponents>
 void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
 {
     addComponents<T_SceneComponents...>(pos);
 }
-
+*/
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent,
           typename T_SecondComponent,
           typename... T_Components>
-void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
+void BasicScene<T_SceneComponents...>::addComponents(T_FirstComponent&& firstComponent,
+                                                     T_SecondComponent&& secondComponent,
+                                                     T_Components&&... restComponents)
 {
-    auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
-    auto nIt = v.insert(v.begin()+pos, T_FirstComponent());
-    nIt->_entityId = EId();
-    addComponents<T_SecondComponent, T_Components...>(pos);
+    auto& v = accessComponents<T_FirstComponent>();//std::get<std::vector<T_FirstComponent>&>(_components);
+    v.push_back(std::forward<T_FirstComponent>(firstComponent));
+    v.back()._entityId = _entityId;
+    addComponents<T_SecondComponent, T_Components...>(std::forward<T_SecondComponent>(secondComponent),
+                                                      std::forward<T_Components>(restComponents)...);
 }
 
 template <typename... T_SceneComponents>
 template <typename T_Component>
-void BasicScene<T_SceneComponents...>::addComponents(uint64_t pos)
+void BasicScene<T_SceneComponents...>::addComponents(T_Component&& component)
 {
-    auto& v = std::get<std::vector<T_Component>&>(_components);
-    auto nIt = v.insert(v.begin()+pos, T_Component());
-    nIt->_entityId = EId();
+    auto& v = accessComponents<T_Component>();//std::get<std::vector<T_FirstComponent>&>(_components);
+    v.push_back(std::forward<T_Component>(component));
+    v.back()._entityId = _entityId;
 }
-
+/*
 template <typename... T_SceneComponents>
 template <typename T_FirstComponent, typename... T_Components>
 void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos,
@@ -194,7 +199,7 @@ void BasicScene<T_SceneComponents...>::setComponents(uint64_t pos, T_Component&&
     c = std::forward<T_Component>(component);
     c._entityId = _entityId;
 }
-
+*/
 template <typename... T_SceneComponents>
 void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
@@ -325,7 +330,6 @@ bool BasicScene<T_SceneComponents...>::iterate(
     CIter<T_Components>&... restIters,
     EId& maxId)
 {
-
     for (;maxId > firstIter->_entityId && firstIter != firstVector.end(); ++firstIter);
     maxId = firstIter->_entityId;
 
