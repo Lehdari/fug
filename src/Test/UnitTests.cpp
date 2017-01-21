@@ -19,6 +19,8 @@
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Binary.hpp"
+#include "Graphics/ShaderProgram.hpp"
+#include "Graphics/ShaderProgram_Init_Default.hpp"
 #include "Graphics/Texture.hpp"
 #include "Graphics/Texture_Init_Binary.hpp"
 #include "Test/TestResources.hpp"
@@ -134,6 +136,7 @@ void fug::gfxResourceTest(void) {
     fug::Canvas_SFML canvas;
     canvas.display();
 
+    TEST("Binary");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
         (5, BinaryInitInfo_File{"test.glsl"});
 
@@ -146,19 +149,26 @@ void fug::gfxResourceTest(void) {
     printf("%s\n", srcResPtr->getBufferPtr());
 #endif
 
+    TEST("ShaderObject");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
         (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
                                         GL_FRAGMENT_SHADER}, {5}, {});
     auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     printf("%s: get: %p\n", __func__, srcResPtr1.get());
+    TEST_OK
 
-    auto shdrResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(6);
+    TEST("ShaderProgram");
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
+        (7, ShaderProgramInitInfo_Default{}, {6}, {});
+    TEST_OK
 
+    TEST("Texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (7, BinaryInitInfo_File{"test.png"});
+        (8, BinaryInitInfo_File{"test.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
-        (8, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
-                                   0, 0, 0, 0}, {7}, {});
+        (9, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
+                                   0, 0, 0, 0}, {8}, {});
+    TEST_OK
 }
 
 
