@@ -6,8 +6,8 @@ using namespace fgj;
 
 
 int fgj::gameJam2017(void) {
-
     Game game;
+    game.loop();
 
     return 0;
 

@@ -7,9 +7,9 @@
 
 #if FUG_UNIT_TEST == 1
 
-#include "Scene.hpp"
-#include "TestVisitors.hpp"
-#include "TestComponents.hpp"
+#include "Core/Scene.hpp"
+#include "Core/TestVisitors.hpp"
+#include "Core/TestComponents.hpp"
 
 void fug::unitTest(void) {
     EId nid[10] = {0};

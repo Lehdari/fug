@@ -6,10 +6,6 @@
 #define FUG_DEV
 #define FUG_DEBUG
 
-//  Unit test to use, 0 for no unit test
-#define FUG_UNIT_TEST 2
-
-
 //  Convenience macros
 #define FUG_SCENE               fug::Scene::instance()
 #define FUG_EVENT_MANAGER       fug::EventManager::instance()
