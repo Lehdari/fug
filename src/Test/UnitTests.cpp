@@ -218,7 +218,7 @@ void fug::drawTest()
     
     // Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (100, BinaryInitInfo_File{"test.png"});
+    (100, BinaryInitInfo_File{"../res/texture/test.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
     (101, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
         GL_CLAMP_TO_BORDER,
