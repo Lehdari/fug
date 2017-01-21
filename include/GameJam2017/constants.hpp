@@ -1,6 +1,7 @@
 #ifndef FUG_CONSTANTS_HPP
 #define FUG_CONSTANTS_HPP
 
+#include "Core/MathTypes.hpp"
 
 namespace fug {
 
