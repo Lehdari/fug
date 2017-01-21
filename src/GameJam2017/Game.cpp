@@ -67,7 +67,7 @@ void Game::loop()
         createPhysicsBox(b2_dynamicBody, b2Vec2(0, 3), b2Vec2(0.1f, 0.1f), 1.f, 0.01f));
     #endif
 
-    #if 0
+    #if 1
     std::cerr << "adding character" << std::endl;
     nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
         CharacterStateComponent());
@@ -82,8 +82,8 @@ void Game::loop()
     uint32_t velocityIterations = 6;
     uint32_t positionIterations = 2;
     //while(true) {
-        //worldRes->world->Step(dt, velocityIterations, positionIterations);
-        //FUG_SCENE.accept(physTransformVisitor);
-        //FUG_SCENE.accept(playerInputVisitor);
+        worldRes->world->Step(dt, velocityIterations, positionIterations);
+        FUG_SCENE.accept(physTransformVisitor);
+        FUG_SCENE.accept(playerInputVisitor);
     //}
 }
