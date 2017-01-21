@@ -6,10 +6,10 @@ include_directories(include lib/glLoadGen)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_MODULE_PATH "~/cmake_modules")
+    set(CLANG_COVERAGE_LINK_FLAGS "-framework OpenGL")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(CLANG_COVERAGE_LINK_FLAGS "-lGL")
 endif()
-
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLAGS}")
 
 find_package(Eigen3 REQUIRED)
