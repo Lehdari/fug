@@ -12,6 +12,8 @@
 #include "Core/ResourcePointer.hpp"
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Binary.hpp"
+#include "Graphics/Texture.hpp"
+#include "Graphics/Texture_Init_Binary.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 
