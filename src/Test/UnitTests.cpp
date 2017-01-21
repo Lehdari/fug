@@ -37,7 +37,7 @@
 #include "Core/Utility.hpp"
 
 void fug::sceneTest(void) {
-    EId nid[10] = {0};
+    /*EId nid[10] = {0};
     uint64_t i = 0;
 
     TestComponent1 tc11; tc11.a = 3; tc11.b = 4;
@@ -67,7 +67,7 @@ void fug::sceneTest(void) {
     FUG_SCENE.removeEntity(nid[2]);
     FUG_SCENE.removeEntity(nid[5]);
 
-    FUG_SCENE.print();
+    FUG_SCENE.print();*/
 }
 
 void fug::resourceTest(void) {
@@ -306,7 +306,7 @@ void fug::drawTest()
 }
 
 void fug::unitTest(void) {
-    sceneTest();
+    //sceneTest();
     //resourceTest();
     //gfxResourceTest();
 	//eventTest();

@@ -5,9 +5,9 @@ FUG_RESOURCE_INIT(SpriteMesh, SpriteMeshInitInfo_Default) {
     _material = FUG_RESOURCE_MANAGER.template getResource<SpriteMaterial>(depResources[0]);
 
     GLfloat positions[]{-1.f, -1.f, 0.f, 1.f,
-                        1.f, -1.f, 0.f, 1.f,
-                        1.f,  1.f, 0.f, 1.f,
-                       -1.f,  1.f, 0.f, 1.f };
+                         1.f, -1.f, 0.f, 1.f,
+                         1.f,  1.f, 0.f, 1.f,
+                        -1.f,  1.f, 0.f, 1.f };
     GLuint indices[6] = {0,1,2,2,3,0};
 
     //  create and bind the VAO
