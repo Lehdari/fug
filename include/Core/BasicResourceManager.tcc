@@ -56,7 +56,7 @@ void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 
     resourcePointers.push_back(pointer);
 
-    printf("registerPointer, counter: %llu\n", resourcePointers.size());    //  TEMP
+    printf("registerPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());
 }
 
 template <typename T_Resource>
@@ -70,7 +70,7 @@ void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointe
                                        pointer),
                            resourcePointers.end());
 
-    printf("unRegisterPointer, counter: %llu\n", resourcePointers.size());    //  TEMP
+    printf("unRegisterPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());    //  TEMP
 }
 
 

@@ -6,7 +6,6 @@
 
 #include "Core/Macros.hpp"
 
-
 #if FUG_UNIT_TEST != 0
     /// Implementation and components for unit tests
     //#if FUG_UNIT_TEST == 1
@@ -32,6 +31,7 @@
     #define FUG_COMPONENTS\
             FUG_COMPONENT   (CharacterInfoComponent)\
             FUG_COMPONENT   (PlayerComponent)\
+            FUG_COMPONENT   (Box2dBodyComponent)\
             FUG_LCOMPONENT  (CharacterStateComponent)
 
 #endif  //  FUG_UNIT_TEST

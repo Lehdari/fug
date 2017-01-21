@@ -48,12 +48,16 @@ void fug::unitTest(void) {
 
 #elif FUG_UNIT_TEST == 2
 
+#include "Core/Binary.hpp"
+#include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
+#include "Graphics/ShaderObject.hpp"
+#include "Graphics/ShaderObject_Init_Binary.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 
-void fug::unitTest(void) {
+void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, TestResource1_Init_Default());
 
@@ -116,6 +120,35 @@ void fug::unitTest(void) {
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
 */
+}
+
+void fug::gfxResourceTest(void) {
+    // Assumes a test file
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+        (5, BinaryInitInfo_File{"test.glsl"});
+
+#if 1
+    auto srcResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
+    //auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
+
+    printf("%s: get: %p\n", __func__, srcResPtr.get());
+    printf("%s, resource pointer buffer: %p\n", __func__, srcResPtr->getBufferPtr());
+    printf("%s\n", srcResPtr->getBufferPtr());
+#endif
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
+        (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
+                                        GL_VERTEX_SHADER}, {5}, {});
+    auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
+    printf("%s: get: %p\n", __func__, srcResPtr1.get());
+
+    auto shdrResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(6);
+}
+
+
+void fug::unitTest(void) {
+    resourceTest();
+    gfxResourceTest();
 }
 
 #endif  //  FUG_UNIT_TEST
