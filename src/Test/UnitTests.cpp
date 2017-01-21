@@ -25,9 +25,7 @@
 #include "Core/EventManager.hpp"
 #include "Core/Utility.hpp"
 
-#if 0
-/* TODO: Write real tests */
-void fug::unitTest(void) {
+void fug::sceneTest(void) {
     EId nid[10] = {0};
     uint64_t i = 0;
 
@@ -60,7 +58,6 @@ void fug::unitTest(void) {
 
     FUG_SCENE.print();
 }
-#endif
 
 void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -157,10 +154,10 @@ void fug::eventTest(void) {
 
 	std::cout << "Testing events\n\n";
 
-	TEST("push")	
+	TEST("push")
 	FUG_EVENT_MANAGER.pushEvent(ev1); // TODO implement
 	TEST_OK
-	
+
 	TEST("getMailbox")
 	auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>();
 	TEST_OK
@@ -168,7 +165,7 @@ void fug::eventTest(void) {
 	TEST("begin, end");
 	auto begin = mailbox.begin();
 	auto end = mailbox.end();
-	std::cout << " -> " << begin << std::endl 
+	std::cout << " -> " << begin << std::endl
 			  << " -> " << end << std::endl;
 	TEST_OK
 
@@ -186,7 +183,8 @@ void fug::eventTest(void) {
 
 
 void fug::unitTest(void) {
-    resourceTest();
-    gfxResourceTest();
-	eventTest();
+    sceneTest();
+    //resourceTest();
+    //gfxResourceTest();
+	//eventTest();
 }

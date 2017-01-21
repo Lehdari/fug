@@ -117,14 +117,12 @@ namespace fug {
                                    CIter<T_FirstComponent>& firstIter,
                                    CIter<T_SecondComponent>& secondIter,
                                    CIter<T_Components>&... restIters,
-                                   std::unordered_map<CId, uint64_t>& nIterations,
-                                   uint64_t& maxIterations);
+                                   EId& maxId);
 
         template <typename T_Component>
         inline static bool iterate(std::vector<T_Component>& vector,
                                    CIter<T_Component>& iter,
-                                   std::unordered_map<CId, uint64_t>& nIterations,
-                                   uint64_t& maxIterations);
+                                   EId& maxId);
     };
 
 
