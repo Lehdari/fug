@@ -10,13 +10,17 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
     auto capacity = initInfos.capacity();
     initInfos.push_back(initInfo);
     //  reassign all init info pointers if initInfo vector gets reallocated
+    auto initInfoTypeId = getTypeId<T_InitInfo>();
     if (initInfos.size() > capacity) {
-        for (auto& rInfo : _resourceInfos)
-            rInfo.second.initInfo = &initInfos[rInfo.second.initInfoLoc];
+        for (auto& rInfo : _resourceInfos) {
+            if (rInfo.second.initInfoTypeId == initInfoTypeId)
+                rInfo.second.initInfo = &initInfos[rInfo.second.initInfoLoc];
+        }
     }
 
     _resourceInfos.emplace(std::make_pair(resourceId, ResourceInfo {
-        getResourceTypeId<T_Resource>(),        //  typeId
+        getTypeId<T_Resource>(),                //  resourceTypeId
+        initInfoTypeId,                         //  initInfoTypeId
         &initInfos.back(),                      //  initInfo
         initInfos.size()-1,                     //  initInfoLoc
         nullptr,                                //  resource
@@ -33,6 +37,11 @@ ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourc
 {
     try {
         auto& resourceInfo = _resourceInfos.at(resourceId);
+
+        //  check if the type matches the id
+        auto resourceTypeId = getTypeId<T_Resource>();
+        if (resourceInfo.resourceTypeId != resourceTypeId)
+            throw "BasicResourceManager: resource id does not match the given type";
 
         //  if the resource don't exist, it has to be loaded first
         if (resourceInfo.resource == nullptr)
@@ -84,13 +93,13 @@ void BasicResourceManager::initResource(ResourceInfo& resourceInfo)
     //  add the new resource
     resources.emplace_back();
     auto& resource = resources.back();
-    auto typeId = getResourceTypeId<T_Resource>();
+    auto resourceTypeId = getTypeId<T_Resource>();
 
     //  reassign all init info pointers and resource pointer pointers
     //  if resources vector gets reallocated
     if (resources.size() > capacity) {
         for (auto& rInfo : _resourceInfos) {
-            if (rInfo.second.typeId == typeId)
+            if (rInfo.second.resourceTypeId == resourceTypeId)
                 rInfo.second.resource = &resources[rInfo.second.resourceLoc];
         }
 
@@ -148,8 +157,8 @@ std::unordered_map<RId, std::vector<ResourcePointer<T_Resource>*>>&
 
 
 template <typename T_Resource>
-uint64_t BasicResourceManager::getResourceTypeId(void)
+uint64_t BasicResourceManager::getTypeId(void)
 {
-    static uint64_t typeId = ++_resourceTypeId;
+    static uint64_t typeId = ++_typeId;
     return typeId;
 }
