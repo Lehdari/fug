@@ -9,5 +9,5 @@ void Box2dTransformVisitor::operator()(TransformComponent& transform, Box2dBodyC
 {
     auto pos = body.body->GetPosition();
     transform.transform = Eigen::Affine3f(Eigen::Translation3f(pos.x, pos.y, 0) * Eigen::AngleAxisf(body.body->GetAngle(), Vector3f(0, 0, -1))).matrix();
-    std::cout << pos.x << " " << pos.y << std::endl;
+    std::cout << pos.x << " " << pos.y << " " << body.body->GetMass() << std::endl;
 }

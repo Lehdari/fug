@@ -16,7 +16,7 @@ void PlayerInputVisitor::operator()(CharacterStateComponent& state,
     auto inputConfig = FUG_RESOURCE_MANAGER.getResource<SfmlInputConfig>(1);
     auto& inputMap = inputConfig->inputMap;
 
-    std::cerr << "penis" << std::endl;
+    std::cout << "penis" << std::endl;
 
     /*
     // Iteroi eventit läpi
