@@ -8,7 +8,8 @@ using namespace fug;
 b2World* Box2dBodyComponent::world = nullptr;
 
 
-Box2dBodyComponent::Box2dBodyComponent()
+Box2dBodyComponent::Box2dBodyComponent() :
+    body(nullptr)
 {}
 
 Box2dBodyComponent::Box2dBodyComponent(b2Body* body) :
@@ -30,7 +31,7 @@ Box2dBodyComponent& Box2dBodyComponent::operator=(fug::Box2dBodyComponent &&othe
 
 Box2dBodyComponent::~Box2dBodyComponent()
 {
-    if(world) {
+    if(world && body) {
         world->DestroyBody(body);
     }
 }

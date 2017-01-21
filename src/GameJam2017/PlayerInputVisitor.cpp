@@ -6,6 +6,7 @@
 #include "GameJam2017/constants.hpp"
 #include "Logic/SfmlInputConfig.hpp"
 
+#include <iostream>
 
 using namespace fug;
 
@@ -14,6 +15,8 @@ void PlayerInputVisitor::operator()(CharacterStateComponent& state,
 {
     auto inputConfig = FUG_RESOURCE_MANAGER.getResource<SfmlInputConfig>(1);
     auto& inputMap = inputConfig->inputMap;
+
+    std::cerr << "penis" << std::endl;
 
     /*
     // Iteroi eventit läpi
