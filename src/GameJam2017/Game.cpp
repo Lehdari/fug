@@ -13,6 +13,7 @@
 #include "GameJam2017/PlayerComponent.hpp"
 #include "GameJam2017/CharacterStateComponent.hpp"
 #include "GameJam2017/CharacterInfoComponent.hpp"
+#include "Graphics/Canvas_SFML.hpp"
 
 #include <iostream> // TEMP
 #include <cstdint>
@@ -59,6 +60,9 @@ bool Game::loadLevel(std::string name)
 
 void Game::loop()
 {
+    Canvas_SFML canvas;
+    canvas.display();
+
     EId nid[666] = {0};
     uint64_t i = 0;
 
