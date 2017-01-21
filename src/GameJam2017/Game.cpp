@@ -14,7 +14,6 @@
 #include "GameJam2017/CharacterStateComponent.hpp"
 #include "GameJam2017/CharacterInfoComponent.hpp"
 
-#include <iostream> // TEMP
 #include <cstdint>
 
 using namespace fgj;
@@ -61,17 +60,13 @@ void Game::loop()
     EId nid[666] = {0};
     uint64_t i = 0;
 
-    #if 1
     std::cerr << "adding phys box" << std::endl;
     nid[i++] = FUG_SCENE.addEntity(TransformComponent(),
         createPhysicsBox(b2_dynamicBody, b2Vec2(3, 3), b2Vec2(4.f, 4.f), 1.f, 0.01f));
-    #endif
 
-    #if 0
     std::cerr << "adding character" << std::endl;
     nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
         CharacterStateComponent());
-    #endif
 
     PlayerInputVisitor playerInputVisitor;
     Box2dTransformVisitor physTransformVisitor;
@@ -84,9 +79,6 @@ void Game::loop()
     while(true) {
         worldRes->world->Step(dt, velocityIterations, positionIterations);
         FUG_SCENE.accept(physTransformVisitor);
-        std::cout << worldRes->world->GetBodyCount() << std::endl;
-        std::cout << worldRes->world->GetTreeHeight() << std::endl;
-        std::cout << worldRes->world->GetTreeBalance() << std::endl;
-       // FUG_SCENE.accept(playerInputVisitor);
+        FUG_SCENE.accept(playerInputVisitor);
     }
 }

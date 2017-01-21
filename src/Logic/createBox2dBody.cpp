@@ -10,6 +10,7 @@ Box2dBodyComponent createBox2dBody(Box2dBodyDefinition def)
     auto worldRes = FUG_RESOURCE_MANAGER.getResource<Box2dWorld>(2);
     std::cerr << worldRes->world << std::endl;
     b2BodyDef bodyDef;
+    bodyDef.type = def.type;
     bodyDef.position = def.position;
     bodyDef.awake = true;
     bodyDef.active = true;
@@ -18,11 +19,9 @@ Box2dBodyComponent createBox2dBody(Box2dBodyDefinition def)
     auto body = worldRes->world->CreateBody(&bodyDef);
     b2FixtureDef fixtureDef;
     fixtureDef.shape = def.shape;
-    fixtureDef.density = 2.f;//def.density;
-    fixtureDef.friction = 0.0f;//def.friction;
+    fixtureDef.density = def.density;
+    fixtureDef.friction = def.friction;
     auto fixture = body->CreateFixture(&fixtureDef);
-    //fixture->SetDensity(2.f);
-    //body->ResetMassData();
     return Box2dBodyComponent(body);
 }
 
