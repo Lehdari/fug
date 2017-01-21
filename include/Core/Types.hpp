@@ -11,6 +11,10 @@ namespace fug {
     using   EntityId    = uint64_t;
     using   ResourceId  = uint64_t;
 
+	using	EventId		= uint64_t;
+	using	EventPort	= uint16_t;
+	using 	MailboxSize_t 	= uint16_t;
+
     /// Shortening typedefs
     using   CId = ComponentId;
     using   EId = EntityId;

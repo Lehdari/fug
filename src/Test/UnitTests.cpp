@@ -6,6 +6,11 @@
 #include "Test/TestVisitors.hpp"
 #include "Test/TestComponents.hpp"
 
+#define TEST_OK std::cout<<"ok"<<std::endl;
+#define TEST(M) std::cout<<"Testing "<<M<<" ... "<<std::endl;
+#define TEST_EQ(F,S) if(F!=S)throw;
+#define TEST_INEQ(F,S) if(F==S)throw;
+
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
@@ -16,6 +21,9 @@
 #include "Graphics/Texture_Init_Binary.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
+#include "Test/TestEvents.hpp"
+#include "Core/EventManager.hpp"
+#include "Core/Utility.hpp"
 
 #if 0
 /* TODO: Write real tests */
@@ -143,7 +151,42 @@ void fug::gfxResourceTest(void) {
 }
 
 
+void fug::eventTest(void) {
+
+	TestEvent1 ev1;
+
+	std::cout << "Testing events\n\n";
+
+	TEST("push")	
+	FUG_EVENT_MANAGER.pushEvent(ev1); // TODO implement
+	TEST_OK
+	
+	TEST("getMailbox")
+	auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>();
+	TEST_OK
+
+	TEST("begin, end");
+	auto begin = mailbox.begin();
+	auto end = mailbox.end();
+	std::cout << " -> " << begin << std::endl 
+			  << " -> " << end << std::endl;
+	TEST_OK
+
+	TEST("accessing")
+	end->data = "Hola!";
+	TEST_EQ(end->data, "Hola!")
+	TEST_OK
+
+	TEST("dereferencing")
+	(*end).data = "Hello!";
+	TEST_INEQ((*end).data, "Hola!")
+	TEST_OK
+
+}
+
+
 void fug::unitTest(void) {
     resourceTest();
     gfxResourceTest();
+	eventTest();
 }
