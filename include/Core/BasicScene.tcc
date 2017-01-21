@@ -15,7 +15,6 @@ template <typename... T_SceneComponents>
 EId BasicScene<T_SceneComponents...>::addEntity(void)
 {
     _entities.emplace_back(++_entityId);
-    addComponents(_entities.size()-1);
 
     return _entityId;
 }
