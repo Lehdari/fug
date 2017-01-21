@@ -1,5 +1,4 @@
 #include "Core/ResourceManager.hpp"
-#include "Core/ResourcePointer.hpp"
 #include "GameJam2017/PlayerInputVisitor.hpp"
 #include "GameJam2017/constants.hpp"
 #include "Logic/SfmlInputConfig.hpp"

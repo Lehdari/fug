@@ -4,6 +4,8 @@
 #include "Core/Scene.hpp"
 #include "Logic/SfmlInputConfig.hpp"
 #include "Logic/SfmlInputConfig_Init.hpp"
+#include "Logic/Box2dWorld.hpp"
+#include "Logic/Box2dWorld_Init.hpp"
 #include "GameJam2017/PlayerInputVisitor.hpp"
 #include "GameJam2017/PlayerComponent.hpp"
 #include "GameJam2017/CharacterStateComponent.hpp"
@@ -28,12 +30,20 @@ Game::Game() {
             { sf::Keyboard::D, std::make_pair(1, Input::Right) },
         }
     };
-    FUG_RESOURCE_MANAGER.addResourceInfo<SfmlInputConfig, SfmlInputConfig_Init_Default>(1, std::move(inputMap));
+    FUG_RESOURCE_MANAGER.addResourceInfo<SfmlInputConfig, SfmlInputConfig_Init_Default>(1,
+        std::move(inputMap));
 
     //window.setFramerateLimit(60);
 }
 
 Game::~Game() {
+}
+
+bool Game::loadLevel(std::string name) {
+    FUG_RESOURCE_MANAGER.addResourceInfo<Box2dWorld, Box2dWorld_Init_Default>(1,
+        Box2dWorld_Init_Default());
+
+    return true;
 }
 
 void Game::loop() {

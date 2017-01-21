@@ -1,5 +1,5 @@
-#ifndef FUG_PLAYER_INPUT_VISITORS_HPP
-#define FUG_PLAYER_INPUT_VISITORS_HPP
+#ifndef FUG_PLAYER_INPUT_VISITOR_HPP
+#define FUG_PLAYER_INPUT_VISITOR_HPP
 
 
 #include "Core/Visitor.hpp"
@@ -21,4 +21,4 @@ namespace fug {
 }
 
 
-#endif // FUG_PLAYER_INPUT_VISITORS_HPP
+#endif // FUG_PLAYER_INPUT_VISITOR_HPP

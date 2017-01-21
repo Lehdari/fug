@@ -6,9 +6,9 @@ include_directories(include lib/glLoadGen)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_MODULE_PATH "~/cmake_modules")
-    set(CLANG_COVERAGE_LINK_FLAGS "-framework OpenGL")
+    set(CLANG_COVERAGE_LINK_FLAGS "-framework OpenGL -lbox2d")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CLANG_COVERAGE_LINK_FLAGS "-lGL")
+    set(CLANG_COVERAGE_LINK_FLAGS "-lGL -lBox2D")
 endif()
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLAGS}")
 

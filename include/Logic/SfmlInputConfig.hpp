@@ -1,5 +1,5 @@
-#ifndef FUG_SFML_INPUT_COMPONENT_HPP
-#define FUG_SFML_INPUT_COMPONENT_HPP
+#ifndef FUG_SFML_INPUT_CONFIG_HPP
+#define FUG_SFML_INPUT_CONFIG_HPP
 
 
 #include <cstdint>
@@ -14,10 +14,10 @@ namespace fug {
 
     class FUG_RESOURCE(SfmlInputConfig) {
     public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+        
         // <key, <player_id, action>>
         using InputMap = std::unordered_map<sf::Keyboard::Key, std::pair<uint8_t, Input::Action>>;
-
-        FUG_RESOURCE_INIT_DESTROY_DECL
 
         InputMap inputMap;
     };
@@ -25,4 +25,4 @@ namespace fug {
 }
 
 
-#endif // FUG_SFML_INPUT_COMPONENT_HPP
+#endif // FUG_SFML_INPUT_CONFIG_HPP
