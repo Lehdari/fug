@@ -1,6 +1,7 @@
 #ifndef FUG_UTILITY_HH
 #define FUG_UTILITY_HH
 
+#include <cstdlib>
 #include <string>
 #include <cxxabi.h>
 
