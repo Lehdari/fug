@@ -8,6 +8,7 @@
 namespace fug {
 
 
+    void eventTest(void);
     void unitTest(void);
     void resourceTest(void);
     void gfxResourceTest(void);
