@@ -1,11 +1,11 @@
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(void) :
     _resource(nullptr),
     _resourceId()
 {
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(T_Resource* resource,
                                              const RId& resourceId) :
     _resource(resource),
@@ -15,7 +15,7 @@ ResourcePointer<T_Resource>::ResourcePointer(T_Resource* resource,
         _registerPointer(this);
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(const ResourcePointer<T_Resource>& resourcePointer) :
     _resource(resourcePointer._resource),
     _resourceId(resourcePointer._resourceId)
@@ -24,7 +24,7 @@ ResourcePointer<T_Resource>::ResourcePointer(const ResourcePointer<T_Resource>& 
         _registerPointer(this);
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>::ResourcePointer(ResourcePointer<T_Resource>&& resourcePointer) :
     _resource(resourcePointer._resource),
     _resourceId(resourcePointer._resourceId)
@@ -34,13 +34,13 @@ ResourcePointer<T_Resource>::ResourcePointer(ResourcePointer<T_Resource>&& resou
         _registerPointer(this);
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>::~ResourcePointer(void) {
     if (_resource)
         _unRegisterPointer(this);
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(const ResourcePointer<T_Resource>& resourcePointer) {
     if (_resource)
         _unRegisterPointer(this);
@@ -54,7 +54,7 @@ ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(const Resour
     return *this;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(ResourcePointer<T_Resource>&& resourcePointer) {
     if (_resource)
         _unRegisterPointer(this);
@@ -70,32 +70,32 @@ ResourcePointer<T_Resource>& ResourcePointer<T_Resource>::operator=(ResourcePoin
     return *this;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 T_Resource& ResourcePointer<T_Resource>::operator*(void) {
     return *_resource;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 const T_Resource& ResourcePointer<T_Resource>::operator*(void) const {
     return *_resource;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 T_Resource* ResourcePointer<T_Resource>::operator->(void) {
     return _resource;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 const T_Resource* ResourcePointer<T_Resource>::operator->(void) const {
     return _resource;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 T_Resource* ResourcePointer<T_Resource>::get(void) {
     return _resource;
 }
 
-template<typename T_Resource>
+template <typename T_Resource>
 const RId& ResourcePointer<T_Resource>::getId(void) const {
     return _resourceId;
 }
