@@ -7,7 +7,7 @@ file(GLOB_RECURSE GRAPHICS_SRC_FILES src/Graphics/*.cpp)
 file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
-include_directories(include lib/glLoadGen)
+include_directories(include lib/)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_MODULE_PATH "~/cmake_modules")
@@ -43,6 +43,9 @@ else()
     add_executable(fgj ${CORE_SRC_FILES} ${LOGIC_SRC_FILES} ${GRAPHICS_SRC_FILES} ${GAME_SRC_FILES})
     add_executable(fug ${CORE_SRC_FILES} ${GRAPHICS_SRC_FILES} ${TEST_SRC_FILES})
 endif()
+
+target_compile_definitions(fug PRIVATE FUG_BUILD_TYPE_TEST=1)
+target_compile_definitions(fgj PRIVATE FUG_BUILD_TYPE_GAME=1)
 
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)
 set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
