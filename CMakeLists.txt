@@ -7,7 +7,7 @@ file(GLOB_RECURSE GRAPHICS_SRC_FILES src/Graphics/*.cpp)
 file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
-include_directories(include lib/glLoadGen)
+include_directories(include lib/)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_MODULE_PATH "~/cmake_modules")
