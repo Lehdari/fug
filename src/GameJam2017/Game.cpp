@@ -50,7 +50,7 @@ Game::~Game()
 bool Game::loadLevel(std::string name)
 {
     FUG_RESOURCE_MANAGER.addResourceInfo<Box2dWorld, Box2dWorld_Init_Default>(2,
-        Box2dWorld_Init_Default(b2Vec2(0, -1.f)));
+        Box2dWorld_Init_Default(b2Vec2(0, -8.f)));
     worldRes = FUG_RESOURCE_MANAGER.getResource<Box2dWorld>(2);
 
     return true;
@@ -63,23 +63,23 @@ void Game::loop()
 
     std::cerr << "adding phys box" << std::endl;
     nid[i++] = FUG_SCENE.addEntity(TransformComponent(),
-        createPhysicsBox(b2_dynamicBody, b2Vec2(0, 3), b2Vec2(1.f, 1.f), 1.f, 1.f));
+        createPhysicsBox(b2_dynamicBody, b2Vec2(0, 3), b2Vec2(0.1f, 0.1f), 1.f, 0.01f));
 
-    std::cerr << "adding character" << std::endl;
-    nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
-        CharacterStateComponent());
+    //std::cerr << "adding character" << std::endl;
+    //nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
+    //    CharacterStateComponent());
 
     PlayerInputVisitor playerInputVisitor;
     Box2dTransformVisitor physTransformVisitor;
 
     std::cout << "entering loop" << std::endl;
 
-    float dt = 0.1;
+    float dt = 1.f/60.f;
     uint32_t velocityIterations = 6;
     uint32_t positionIterations = 2;
     while(true) {
         worldRes->world->Step(dt, velocityIterations, positionIterations);
-        FUG_SCENE.accept(playerInputVisitor);
         FUG_SCENE.accept(physTransformVisitor);
+        //FUG_SCENE.accept(playerInputVisitor);
     }   
 }
