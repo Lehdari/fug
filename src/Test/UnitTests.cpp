@@ -2,15 +2,21 @@
 
 #include <cstdio>
 
-
-#define FUG_UNIT_TEST 2
-
-#if FUG_UNIT_TEST == 1
-
 #include "Core/Scene.hpp"
-#include "Core/TestVisitors.hpp"
-#include "Core/TestComponents.hpp"
+#include "Test/TestVisitors.hpp"
+#include "Test/TestComponents.hpp"
 
+#include "Core/Binary.hpp"
+#include "Core/Binary_Init_File.hpp"
+#include "Core/ResourceManager.hpp"
+#include "Core/ResourcePointer.hpp"
+#include "Graphics/ShaderObject.hpp"
+#include "Graphics/ShaderObject_Init_Binary.hpp"
+#include "Test/TestResources.hpp"
+#include "Test/TestResources_Init.hpp"
+
+#if 0
+/* TODO: Write real tests */
 void fug::unitTest(void) {
     EId nid[10] = {0};
     uint64_t i = 0;
@@ -43,19 +49,8 @@ void fug::unitTest(void) {
     FUG_SCENE.removeEntity(nid[5]);
 
     FUG_SCENE.print();
-
 }
-
-#elif FUG_UNIT_TEST == 2
-
-#include "Core/Binary.hpp"
-#include "Core/Binary_Init_File.hpp"
-#include "Core/ResourceManager.hpp"
-#include "Core/ResourcePointer.hpp"
-#include "Graphics/ShaderObject.hpp"
-#include "Graphics/ShaderObject_Init_Binary.hpp"
-#include "Test/TestResources.hpp"
-#include "Test/TestResources_Init.hpp"
+#endif
 
 void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -150,5 +145,3 @@ void fug::unitTest(void) {
     resourceTest();
     gfxResourceTest();
 }
-
-#endif  //  FUG_UNIT_TEST

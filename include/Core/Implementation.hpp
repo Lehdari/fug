@@ -6,36 +6,28 @@
 
 #include "Core/Macros.hpp"
 
-#if FUG_UNIT_TEST != 0
-    /// Implementation and components for unit tests
-    //#if FUG_UNIT_TEST == 1
+#define FUG_IMPLEMENTATION_SCENE            BasicScene
+#define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
+#define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
 
-            #define FUG_IMPLEMENTATION_SCENE            BasicScene
-            #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
-            #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
-
-            #define FUG_COMPONENTS\
-                    FUG_COMPONENT   (TestComponent1)\
-                    FUG_COMPONENT   (TestComponent2)\
-                    FUG_LCOMPONENT  (TestComponent3)
-
-    //#endif
-
-#else  //  FUG_UNIT_TEST
-    /// Implementation and components for library build
-
-    #define FUG_IMPLEMENTATION_SCENE            BasicScene
-    #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
-    #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
-
+#if FUG_BUILD_TYPE == TEST
     #define FUG_COMPONENTS\
-            FUG_COMPONENT   (CharacterInfoComponent)\
-            FUG_COMPONENT   (PlayerComponent)\
-            FUG_COMPONENT   (Box2dBodyComponent)\
-            FUG_LCOMPONENT  (CharacterStateComponent)
+            FUG_COMPONENT   (TestComponent1)\
+            FUG_COMPONENT   (TestComponent2)\
+            FUG_LCOMPONENT  (TestComponent3)
 
-#endif  //  FUG_UNIT_TEST
+#else
+    #if FUG_BUILD_TYPE == GAME
+        #define FUG_COMPONENTS\
+                FUG_COMPONENT   (CharacterInfoComponent)\
+                FUG_COMPONENT   (PlayerComponent)\
+                FUG_COMPONENT   (Box2dBodyComponent)\
+                FUG_LCOMPONENT  (CharacterStateComponent)
+    #else
+        #error "Invalid build type"
+    #endif
 
+#endif
 
 namespace fug {
 
