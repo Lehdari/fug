@@ -2,6 +2,7 @@
 #define FUG_TEXTURE_HPP
 
 #include "Core/Resource.hpp"
+#include "Core/MathTypes.hpp"
 
 #include "glLoadGen/gl_core_3_3.h"
 
@@ -10,9 +11,12 @@ namespace fug {
     public:
         FUG_RESOURCE_INIT_DESTROY_DECL
         Texture(void);
+        const Vector2Glf& getSize() const;
         void bind(GLenum target) const;
     private:
         GLuint textureId_;
+        
+        Vector2Glf _textureSize;
     };
 }
 

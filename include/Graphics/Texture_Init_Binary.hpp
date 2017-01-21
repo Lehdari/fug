@@ -44,6 +44,8 @@ namespace fug {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, initInfo.minFiltering);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, initInfo.magFiltering);
         glGenerateMipmap(GL_TEXTURE_2D);
+        
+        _textureSize = Vector2Glf(img.getSize().x, img.getSize().y);
     }
 
     FUG_RESOURCE_DESTROY(Texture, TextureInitInfo_Binary)
