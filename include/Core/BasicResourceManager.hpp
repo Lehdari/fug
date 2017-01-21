@@ -15,6 +15,8 @@ namespace fug {
     public:
         friend class ResourceManagerBase<BasicResourceManager>;
 
+        ~BasicResourceManager(void);
+
         BasicResourceManager(const BasicResourceManager&)               = delete;
         BasicResourceManager(BasicResourceManager&&)                    = delete;
         BasicResourceManager& operator=(const BasicResourceManager&&)   = delete;
@@ -50,7 +52,8 @@ namespace fug {
             std::vector<RId>    initResources;      // resources required when initializing
             std::vector<RId>    depResources;       // resources required for the whole lifetime
 
-            void(BasicResourceManager::*init)(const RId&, ResourceInfo&);   //call to initResource member function, allows loadResource to be untemplated.
+            void(BasicResourceManager::*init)(ResourceInfo&);       //call to initResource member function, allows loadResource to be untemplated.
+            void(BasicResourceManager::*destroy)(ResourceInfo&);    //call to destroyResource member function, allows loadResource to be untemplated.
         };
         std::unordered_map<ResourceId, ResourceInfo>    _resourceInfos;
 
@@ -63,7 +66,10 @@ namespace fug {
 
 
         template <typename T_Resource, typename T_InitInfo>
-        void initResource(const RId& resourceId, ResourceInfo& resourceInfo);
+        void initResource(ResourceInfo& resourceInfo);
+
+        template <typename T_Resource, typename T_InitInfo>
+        void destroyResource(ResourceInfo& resourceInfo);
 
 
         template <typename T_InitInfo>

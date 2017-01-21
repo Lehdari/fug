@@ -23,7 +23,8 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
         0,                                      //  resourceLoc
         initResources,                          //  initResources
         depResources,                           //  depResources
-        &BasicResourceManager::initResource<T_Resource, T_InitInfo> //  init
+        &BasicResourceManager::initResource<T_Resource, T_InitInfo>,    //  init
+        &BasicResourceManager::destroyResource<T_Resource, T_InitInfo>  //  destroy
     }));
 }
 
@@ -75,7 +76,7 @@ void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointe
 
 
 template <typename T_Resource, typename T_InitInfo>
-void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& resourceInfo)
+void BasicResourceManager::initResource(ResourceInfo& resourceInfo)
 {
     auto& resources = accessResources<T_Resource>();
     auto capacity = resources.capacity();
@@ -106,6 +107,13 @@ void BasicResourceManager::initResource(const RId& resourceId, ResourceInfo& res
     resource.init(*static_cast<T_InitInfo*>(resourceInfo.initInfo),
                   resourceInfo.initResources,
                   resourceInfo.depResources);
+}
+
+template <typename T_Resource, typename T_InitInfo>
+void BasicResourceManager::destroyResource(ResourceInfo& resourceInfo)
+{
+    if (resourceInfo.resource)
+        static_cast<T_Resource*>(resourceInfo.resource)->template destroy<T_InitInfo>();
 }
 
 

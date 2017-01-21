@@ -6,7 +6,7 @@ FUG_RESOURCE_INIT(TestResource1, TestResource1_Init_Default)
 
 FUG_RESOURCE_DESTROY(TestResource1, TestResource1_Init_Default)
 {
-
+    printf("Destroying TestResource1 with TestResource1_Init_Default\n");
 }
 
 FUG_RESOURCE_INIT(TestResource2, TestResource2_Init_TestResource1)
@@ -23,5 +23,5 @@ FUG_RESOURCE_INIT(TestResource2, TestResource2_Init_TestResource1)
 
 FUG_RESOURCE_DESTROY(TestResource2, TestResource2_Init_TestResource1)
 {
-
+    printf("Initializing TestResource1 with TestResource2_Init_TestResource1\n");
 }
