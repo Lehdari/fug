@@ -153,6 +153,12 @@ void fug::gfxResourceTest(void) {
     printf("%s: get: %p\n", __func__, srcResPtr1.get());
 
     auto shdrResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(6);
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+        (7, BinaryInitInfo_File{"test.png"});
+    FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
+        (8, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
+                                   0, 0, 0, 0}, {7}, {});
 }
 
 
