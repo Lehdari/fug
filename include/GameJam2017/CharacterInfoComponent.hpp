@@ -9,6 +9,10 @@ namespace fug {
 
     class CharacterInfoComponent : public Component {
     public:
+        CharacterInfoComponent() :
+            placeholder(false)
+        {}
+        
         bool placeholder;
     };
 

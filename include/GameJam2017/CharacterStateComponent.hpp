@@ -10,6 +10,11 @@ namespace fug {
 
     class CharacterStateComponent : public Component {
     public:
+        CharacterStateComponent() : 
+            alive(true),
+            movementDir()
+        {}
+        
         bool alive;
         Vector3f movementDir;
     };

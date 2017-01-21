@@ -10,7 +10,10 @@ namespace fug {
 
     class TransformComponent : public Component {
     public:
-        TransformComponent() : transform() {}
+        TransformComponent() :
+            transform()
+        {}
+        
         Matrix4f transform;
     };
 

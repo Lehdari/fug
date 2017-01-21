@@ -20,7 +20,8 @@
 using namespace fgj;
 using namespace fug;
 
-Game::Game()
+Game::Game() :
+    worldRes()
 {
 // Input mapping
     // <key, <player_id, action>>
@@ -65,9 +66,9 @@ void Game::loop()
     nid[i++] = FUG_SCENE.addEntity(TransformComponent(),
         createPhysicsBox(b2_dynamicBody, b2Vec2(0, 3), b2Vec2(0.1f, 0.1f), 1.f, 0.01f));
 
-    //std::cerr << "adding character" << std::endl;
-    //nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
-    //    CharacterStateComponent());
+    std::cerr << "adding character" << std::endl;
+    nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
+        CharacterStateComponent());
 
     PlayerInputVisitor playerInputVisitor;
     Box2dTransformVisitor physTransformVisitor;
@@ -77,9 +78,9 @@ void Game::loop()
     float dt = 1.f/60.f;
     uint32_t velocityIterations = 6;
     uint32_t positionIterations = 2;
-    while(true) {
+    //while(true) {
         worldRes->world->Step(dt, velocityIterations, positionIterations);
         FUG_SCENE.accept(physTransformVisitor);
-        //FUG_SCENE.accept(playerInputVisitor);
-    }   
+        FUG_SCENE.accept(playerInputVisitor);
+    //}   
 }

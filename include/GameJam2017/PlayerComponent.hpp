@@ -10,6 +10,13 @@ namespace fug {
 
     class PlayerComponent : public Component {
     public:
+        PlayerComponent(uint8_t id) :
+            playerId(id)
+        {}
+        PlayerComponent() :
+            playerId(0)
+        {}
+        
         uint8_t playerId;
     };
 
