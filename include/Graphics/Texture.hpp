@@ -3,7 +3,7 @@
 
 #include "Core/Resource.hpp"
 
-#include <GL/glew.h>
+#include "glLoadGen/gl_core_3_3.h"
 
 namespace fug {
     class FUG_RESOURCE(Texture) {
