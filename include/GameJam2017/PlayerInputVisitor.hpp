@@ -5,17 +5,17 @@
 #include "Core/Visitor.hpp"
 #include "GameJam2017/CharacterStateComponent.hpp"
 #include "GameJam2017/CharacterInfoComponent.hpp"
-#include "GameJam2017/PlayerInfoComponent.hpp"
+#include "GameJam2017/PlayerComponent.hpp"
 
 
 namespace fug {
 
 
     class PlayerInputVisitor : public Visitor<PlayerInputVisitor,
-        CharacterStateComponent, CharacterInfoComponent, PlayerInfoComponent> {
+        CharacterStateComponent, CharacterInfoComponent, PlayerComponent> {
     public:
         void operator()(CharacterStateComponent& state, CharacterInfoComponent& characterInfo,
-            PlayerInfoComponent& playerInfo);
+            PlayerComponent& playerInfo);
     };
 
 }

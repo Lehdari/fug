@@ -8,13 +8,8 @@
 using namespace fug;
 
 void PlayerInputVisitor::operator()(CharacterStateComponent& state,
-    CharacterInfoComponent& characterInfo, PlayerInfoComponent& playerInfo)
+    CharacterInfoComponent& characterInfo, PlayerComponent& player)
 {
-    // Not needed because NPCs never have the PlayerInfocomponent
-    //if(!characterInfo.isPlayer) {
-    //    return;
-    //}
-
     auto inputConfig = FUG_RESOURCE_MANAGER.getResource<SfmlInputConfig>(1);
     auto& inputMap = inputConfig->inputMap;
 
@@ -22,7 +17,7 @@ void PlayerInputVisitor::operator()(CharacterStateComponent& state,
     /*
     if(inputMap.count(event.x.key.code) > 0) {
         auto playerAndAction = inputMap[event.x.key.code];
-        if(!playerAndAction.first = playerInfo.playerId) {
+        if(!playerAndAction.first = player.playerId) {
             continue
         }
         bool keyPressed = (event.x.type == sf::Event::KeyPressed);

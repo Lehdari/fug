@@ -9,7 +9,7 @@ namespace fug {
 
     class CharacterInfoComponent : public Component {
     public:
-        bool isPlayer;
+        bool placeholder;
     };
 
 }

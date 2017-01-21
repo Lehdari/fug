@@ -31,8 +31,8 @@
 
     #define FUG_COMPONENTS\
             FUG_COMPONENT   (CharacterInfoComponent)\
-            FUG_COMPONENT   (PlayerInfoComponent)\
-            FUG_LCOMPONENT   (CharacterStateComponent)
+            FUG_COMPONENT   (PlayerComponent)\
+            FUG_LCOMPONENT  (CharacterStateComponent)
 
 #endif  //  FUG_UNIT_TEST
 
