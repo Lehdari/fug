@@ -1,7 +1,4 @@
 
-#ifdef FUG_DEBUG
-#include "Utility.hpp"
-#endif
 
 template <typename T_Event>
 Mailbox<T_Event> BasicEventManager::getMailbox(EventPort const& port) 
@@ -20,26 +17,57 @@ Mailbox<T_Event> BasicEventManager::getMailbox(EventPort const& port)
 					   MailboxSize_t(vec.size() - FUG_MAILBOX_SIZE)};
 	}
 
+	auto info = infos[port];
 	begin._vec = &vec;
-	begin._info = infos[port];
-	begin._index = begin._info.head;
+	begin._info = info;
+	begin._index = info.tail;
 	end._vec = &vec;
-	end._info = infos[port];
-	end._index = begin._info.tail;
+	end._info = info;
+	end._index = info.head;
 
 	return Mailbox<T_Event>(begin, end);
 }
 
 template <typename T_Event>
-void BasicEventManager::pushEvent(Event<T_Event> const& event) 
+void BasicEventManager::pushEvent(T_Event const& payload, EventPort const& port) 
 {
-	// TODO
+	Event<T_Event> event(payload, port);
+
+	#ifdef FUG_DEBUG
+	std::cout << "* Pushing " << event << std::endl;
+	#endif
+
+	auto mailbox = getMailbox<T_Event>(port);
+	auto begin = mailbox.begin();
+	auto end = mailbox.end();
+
+	getEventVector<T_Event>(port).at(end._index) = event;
+	++end;
+
+	auto headIndex = end._index;
+	auto tailIndex = begin._index;
+	
+	auto& info = getMailboxInfos<T_Event>().at(port);
+	info.head = headIndex;
+
+	if (headIndex == tailIndex) {
+		++begin;
+		tailIndex = begin._index;
+		info.tail = tailIndex;
+	}
+
+	#ifdef FUG_DEBUG
+	std::cout << "* Mailbox head: " << getMailbox<T_Event>(port).end() << std::endl;
+	#endif
+
 }
 
 template <typename T_Event>
 void BasicEventManager::flushEvents(EventPort const& port)
 {
-	// TODO
+	auto& info = getMailboxInfos<T_Event>().at(port);
+	info.head = info.start;
+	info.tail = info.start;
 }
 
 template <typename T_Event>
@@ -67,18 +95,20 @@ std::unordered_map<EventPort, MailboxInfo>& BasicEventManager::getMailboxInfos()
 template <typename T_Event>
 void BasicEventManager::registerMailbox(Mailbox<T_Event>* mailbox)
 {
-	// TODO
+	/* TODO
 	#ifdef FUG_DEBUG
 	std::cout << ">> " << util::str(*mailbox) << " registered" << std::endl;
 	#endif
+	*/
 }
 
 
 template <typename T_Event>
 void BasicEventManager::unRegisterMailbox(Mailbox<T_Event>* mailbox)
 {
-	//TODO
+	/* TODO
 	#ifdef FUG_DEBUG
-	std::cout << "<< " << util::str(*mailbox) << " unregistered" << std::endl;
+	//std::cout << "<< " << util::str(*mailbox) << " unregistered" << std::endl;
 	#endif
+	*/
 }

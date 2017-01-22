@@ -7,11 +7,11 @@ MailboxIterator<T_Event>::MailboxIterator() :
 template <typename T_Event>
 MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++()
 {
-	if (_index == _info.tail) {
-		_index = _info.head;
+	if (_index == _info.end) {
+		_index = _info.start;
 	}
 	else {
-		++_index;
+		_index++;
 	}
 	return *this;
 }
@@ -19,11 +19,8 @@ MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++()
 template <typename T_Event>
 MailboxIterator<T_Event> MailboxIterator<T_Event>::operator--()
 {
-	if (_index == _info.head) {
-		_index = _info.tail;
-	}
-	else {
-		--_index;
+	if (--_index == _info.start) {
+		_index = _info.end;
 	}
 	return *this;
 }
@@ -66,8 +63,12 @@ Event<T_Event>* MailboxIterator<T_Event>::operator->()
 }
 
 #ifdef FUG_DEBUG
+
+#include "Utility.hpp"
+
 template <typename T_Event>
-std::ostream& operator<<(std::ostream& os, MailboxIterator<T_Event> const& it) {
+std::ostream& operator<<(std::ostream& os, MailboxIterator<T_Event> const& it)
+{
 	os << util::str(it) << " (port " << it._info.port << ") with"
 	   << " index " << it._index
 	   << ", start " << it._info.start
@@ -77,4 +78,3 @@ std::ostream& operator<<(std::ostream& os, MailboxIterator<T_Event> const& it) {
 	return os;
 }
 #endif
-

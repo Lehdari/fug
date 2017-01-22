@@ -1,6 +1,6 @@
 
 template <typename T_Implementation>
-T_Implementation& EventManagerBase<T_Implementation>::instance(void)
+EventManagerBase<T_Implementation>& EventManagerBase<T_Implementation>::instance(void)
 {
 	static T_Implementation manager;
 	return manager;
@@ -15,16 +15,16 @@ Mailbox<T_Event> EventManagerBase<T_Implementation>::getMailbox(EventPort const&
 
 template <typename T_Implementation>
 template <typename T_Event>
-void EventManagerBase<T_Implementation>::pushEvent(Event<T_Event> const& event) 
+void EventManagerBase<T_Implementation>::pushEvent(T_Event const& event, EventPort const& port) 
 {
-	static_cast<T_Implementation*>(this)->pushEvent(event);
+	static_cast<T_Implementation*>(this)->pushEvent(event, port);
 }
 
 template <typename T_Implementation>
 template <typename T_Event>
 void EventManagerBase<T_Implementation>::flushEvents(EventPort const& port)
 {
-	static_cast<T_Implementation*>(this)->flushEvents(port);
+	static_cast<T_Implementation*>(this)-> template flushEvents<T_Event>(port);
 }
 
 template <typename T_Implementation>
