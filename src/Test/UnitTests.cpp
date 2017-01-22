@@ -14,26 +14,33 @@
 #include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
-#include "Graphics/Canvas.hpp"
-#include "Graphics/Canvas_SFML.hpp"
-#include "Graphics/ShaderObject.hpp"
-#include "Graphics/ShaderObject_Init_Binary.hpp"
-#include "Graphics/ShaderProgram.hpp"
-#include "Graphics/ShaderProgram_Init_Default.hpp"
-#include "Graphics/Texture.hpp"
-#include "Graphics/Texture_Init_Binary.hpp"
-#include "Graphics/Canvas_SFML.hpp"
-#include "Graphics/SpriteMeshComponent.hpp"
-#include "Graphics/SpriteMaterial.hpp"
-#include "Graphics/SpriteMaterial_Init.hpp"
-#include "Graphics/SpriteMesh.hpp"
-#include "Graphics/SpriteMesh_Init.hpp"
-#include "Graphics/SpriteMeshComponent.hpp"
 #include "Test/TestResources.hpp"
 #include "Test/TestResources_Init.hpp"
 #include "Test/TestEvents.hpp"
 #include "Core/EventManager.hpp"
 #include "Core/Utility.hpp"
+
+// Graphics includes
+#include "Graphics/Canvas.hpp"
+#include "Graphics/Canvas_SFML.hpp"
+
+#include "Graphics/Renderer.hpp"
+
+#include "Graphics/ShaderObject.hpp"
+#include "Graphics/ShaderObject_Init_Binary.hpp"
+#include "Graphics/ShaderProgram.hpp"
+#include "Graphics/ShaderProgram_Init_Default.hpp"
+
+#include "Graphics/SpriteMeshComponent.hpp"
+#include "Graphics/SpriteMaterial.hpp"
+#include "Graphics/SpriteMaterial_Init.hpp"
+
+#include "Graphics/SpriteMesh.hpp"
+#include "Graphics/SpriteMesh_Init.hpp"
+#include "Graphics/SpriteMeshComponent.hpp"
+
+#include "Graphics/Texture.hpp"
+#include "Graphics/Texture_Init_Binary.hpp"
 
 void fug::sceneTest(void) {
     /*EId nid[10] = {0};
@@ -285,7 +292,8 @@ void fug::drawTest()
     SpriteMeshComponent meshComp(meshResPtr);
     printf("SpriteMeshComponent!\n");
 
-
+    Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
+                      Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
     bool running = true;
     unsigned frame = 0;
@@ -317,7 +325,7 @@ void fug::drawTest()
             if (column == 0) anim = anim < 7 ? anim + 1 : 0;
         }
         // draw...
-        meshComp.draw(Matrix4Glf::Identity(), anim , column);
+        renderer(meshComp);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
