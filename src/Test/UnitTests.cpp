@@ -280,6 +280,9 @@ void fug::drawTest()
 
 
     bool running = true;
+    unsigned frame = 0;
+    unsigned anim = 0;
+    unsigned column = 0;
     while (running)
     {
         // handle events
@@ -301,11 +304,16 @@ void fug::drawTest()
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        if (frame % 16 == 15) {
+            column = column < 7 ? column + 1 : 0;
+            if (column == 0) anim = anim < 7 ? anim + 1 : 0;
+        }
         // draw...
-        meshComp.draw(Matrix4Glf::Identity(), 0, 0);
+        meshComp.draw(Matrix4Glf::Identity(), anim , column);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
+        frame++;
     }
 }
 
