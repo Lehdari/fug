@@ -14,16 +14,8 @@ std::ostream& operator<<(std::ostream& os, Event<T_Event> const& event)
 {
 	os << util::str(event) << " (port " << event.info.port << ")"
 	   << " with ID " << event.info.id
-	   << ", persistency " << event.info.persistent
-	   << ", payload '";
-	try {
-		os << event.data;
-	}
-	catch (int e) {
-		os << e << "( ??? )";
-	}
-	os << "'";
-
+	   << ", persistency " << event.info.persistent;
+	
 	return os;
 }
 #endif

@@ -6,7 +6,6 @@
 #include "Test/TestVisitors.hpp"
 #include "Test/TestComponents.hpp"
 
-#define TEST_OK std::cout<<"ok"<<std::endl;
 #define TEST(M) std::cout<<"Testing "<<M<<" ... "<<std::endl;
 #define TEST_EQ(F,S) if(F!=S)throw;
 #define TEST_INEQ(F,S) if(F==S)throw;
@@ -152,12 +151,10 @@ void fug::gfxResourceTest(void) {
                                         GL_FRAGMENT_SHADER}, {5}, {});
     auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     printf("%s: get: %p\n", __func__, srcResPtr1.get());
-    TEST_OK
 
     TEST("ShaderProgram");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
         (7, ShaderProgramInitInfo_Default{}, {6}, {});
-    TEST_OK
 
     TEST("Texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
@@ -165,7 +162,6 @@ void fug::gfxResourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
         (9, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
                                    0, 0, 0, 0}, {8}, {});
-    TEST_OK
 }
 
 
@@ -177,36 +173,40 @@ void fug::eventTest(void) {
 	for (uint64_t i = 1; i<11; i++) {
 		FUG_EVENT_MANAGER.pushEvent(10*i, 123);
 	}
-	TEST_OK
 
 	TEST("getMailbox")
 	auto mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
-	TEST_OK
 
 	TEST("begin, end");
 	auto begin = mailbox.begin();
 	auto end = mailbox.end();
 	std::cout << " -> " << begin << std::endl
 			  << " -> " << end << std::endl;
-	TEST_OK
 
 	TEST("iteration")
-	do {
-		++begin;
+	for (; begin != end; ++begin) {
 		std::cout << begin->data << "  ";
-	} while (begin != end);
+	}
 	std::cout << std::endl;
-	TEST_OK
+	
+	TEST("flush")
+	FUG_EVENT_MANAGER.flushEvents<uint64_t>(123);
+	auto mailbox2 = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
+	begin = mailbox2.begin();
+	end = mailbox2.end();
+	std::cout << "should be empty:" << std::endl;
+	for (; begin != end; ++begin) {
+		std::cout << begin->data << "  ";
+	}
+	std::cout << std::endl;
 
 	TEST("accessing")
 	end->data = 123;
 	TEST_EQ(end->data, 123)
-	TEST_OK
 
 	TEST("dereferencing")
 	(*end).data = 321;
 	TEST_INEQ((*end).data, 123)
-	TEST_OK
 	
 }
 

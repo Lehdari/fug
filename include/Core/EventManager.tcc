@@ -24,7 +24,7 @@ template <typename T_Implementation>
 template <typename T_Event>
 void EventManagerBase<T_Implementation>::flushEvents(EventPort const& port)
 {
-	static_cast<T_Implementation*>(this)->flushEvents(port);
+	static_cast<T_Implementation*>(this)-> template flushEvents<T_Event>(port);
 }
 
 template <typename T_Implementation>

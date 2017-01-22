@@ -41,12 +41,12 @@ void BasicEventManager::pushEvent(T_Event const& payload, EventPort const& port)
 	auto begin = mailbox.begin();
 	auto end = mailbox.end();
 
+	getEventVector<T_Event>(port).at(end._index) = event;
 	++end;
+
 	auto headIndex = end._index;
 	auto tailIndex = begin._index;
-
-	getEventVector<T_Event>(port).at(headIndex) = event;
-
+	
 	auto& info = getMailboxInfos<T_Event>().at(port);
 	info.head = headIndex;
 
@@ -65,7 +65,9 @@ void BasicEventManager::pushEvent(T_Event const& payload, EventPort const& port)
 template <typename T_Event>
 void BasicEventManager::flushEvents(EventPort const& port)
 {
-	// TODO
+	auto& info = getMailboxInfos<T_Event>().at(port);
+	info.head = info.start;
+	info.tail = info.start;
 }
 
 template <typename T_Event>
@@ -93,18 +95,20 @@ std::unordered_map<EventPort, MailboxInfo>& BasicEventManager::getMailboxInfos()
 template <typename T_Event>
 void BasicEventManager::registerMailbox(Mailbox<T_Event>* mailbox)
 {
-	// TODO
+	/* TODO
 	#ifdef FUG_DEBUG
-	//std::cout << ">> " << util::str(*mailbox) << " registered" << std::endl;
+	std::cout << ">> " << util::str(*mailbox) << " registered" << std::endl;
 	#endif
+	*/
 }
 
 
 template <typename T_Event>
 void BasicEventManager::unRegisterMailbox(Mailbox<T_Event>* mailbox)
 {
-	//TODO
+	/* TODO
 	#ifdef FUG_DEBUG
 	//std::cout << "<< " << util::str(*mailbox) << " unregistered" << std::endl;
 	#endif
+	*/
 }
