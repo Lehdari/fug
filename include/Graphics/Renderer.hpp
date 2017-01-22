@@ -2,12 +2,10 @@
 #define FUG_GRAPHICS_RENDERER_HPP
 
 
+#include <Core/MathTypes.hpp>
 #include <Core/Visitor.hpp>
 #include <Graphics/SpriteMeshComponent.hpp>
-#include <Core/MathTypes.hpp>
-
-#include <stack>
-
+#include <Graphics/Camera.hpp>
 
 namespace fug {
 
@@ -20,27 +18,8 @@ namespace fug {
         
         bool operator()(SpriteMeshComponent& component);
         
-        void lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up);
-        void projection(const float& fov, const float& aspectRatio,
-                        const float& near,const float& far);
-
-        const Vector3Glf& getPosition(void) const;
-    
     private:
-        //  Vectors for orientation matrix
-        Vector3Glf _position;
-        Vector3Glf _forward;
-        Vector3Glf _up;
-
-        //  Values for projection matrix
-        float _fov;
-        float _aspectRatio;
-        float _near;
-        float _far;
-
-        //  Quaternion and matrices calculated from members above
-        Matrix4Glf _orientation;
-        Matrix4Glf _projection;
+        Camera _cam;
 
     };
 
