@@ -3,10 +3,8 @@
 using namespace fug;
 
 
-SpriteMeshComponent::SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh,
-                                         const Matrix4Glf& transformation) :
-    _mesh(mesh),
-    _transformation(transformation)
+SpriteMeshComponent::SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh) :
+    _mesh(mesh)
 {}
 
 const SpriteMesh& SpriteMeshComponent::getMesh(void) const
@@ -19,13 +17,8 @@ ResourcePointer<SpriteMesh> SpriteMeshComponent::getMeshPointer(void) const
     return _mesh;
 }
 
-void SpriteMeshComponent::setTransformation(const Matrix4Glf& transformation)
-{
-    _transformation = transformation;
-}
-
-void SpriteMeshComponent::draw(const Matrix4Glf& camera,
+void SpriteMeshComponent::draw(const Matrix4Glf& transform, const Matrix4Glf& camera,
                                const GLint& frameRow, const GLint& frameColumn) const
 {
-    _mesh->draw(_transformation, camera, frameRow, frameColumn);
+    _mesh->draw(transform, camera, frameRow, frameColumn);
 }

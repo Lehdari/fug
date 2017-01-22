@@ -11,7 +11,7 @@ Renderer::Renderer(const Vector3Glf& position, const Vector3Glf& forward, const 
     ;
 }
 
-bool Renderer::operator()(MeshComponent& component) {
-    component.draw(_cam.getView(), _cam.getProj());
+bool Renderer::operator()(MeshComponent& mesh, TransformComponent& transform) {
+    mesh.draw(transform.transform ,_cam.getView(), _cam.getProj());
     return true;
 }

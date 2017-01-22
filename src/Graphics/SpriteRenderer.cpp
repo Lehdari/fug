@@ -11,7 +11,7 @@ SpriteRenderer::SpriteRenderer(const Vector3Glf& position, const Vector3Glf& for
     ;
 }
 
-bool SpriteRenderer::operator()(SpriteMeshComponent& component) {
-    component.draw(_cam.getWorldToClip(), 0, 0);
+bool SpriteRenderer::operator()(SpriteMeshComponent& sprite, TransformComponent& transform) {
+    sprite.draw(transform.transform, _cam.getWorldToClip(), 0, 0);
     return true;
 }

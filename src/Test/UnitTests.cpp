@@ -378,8 +378,18 @@ void fug::drawTest()
             if (column == 0) anim = anim < 7 ? anim + 1 : 0;
         }
         // draw...
-        spriteRenderer(spriteMeshComp);
-        renderer(cubeMeshComp);
+        
+        TransformComponent transform;
+        transform.transform << 1.f, 0.f, 0.f, 1.f,
+                               0.f, 1.f, 0.f, -1.f,
+                               0.f, 0.f, 1.f, 0.f,
+                               0.f, 0.f, 0.f, 1.f;
+        spriteRenderer(spriteMeshComp, transform);
+        transform.transform << 1.f, 0.f, 0.f, -2.5f,
+                               0.f, 1.f, 0.f,  1.5f,
+                               0.f, 0.f, 1.f,  1.5f,
+                               0.f, 0.f, 0.f,   1.f;
+        renderer(cubeMeshComp, transform);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
