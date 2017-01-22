@@ -17,10 +17,10 @@ namespace fug {
 
         ~Mailbox();
 
-		Mailbox(Mailbox const&) = delete; // TODO
+		Mailbox(Mailbox const&);
         Mailbox(Mailbox<T_Event>&&);
-		Mailbox<T_Event>& operator=(Mailbox<T_Event> const&) = delete; // TODO
-		Mailbox<T_Event>& operator=(Mailbox<T_Event>&&) = delete; // TODO
+		Mailbox<T_Event>& operator=(Mailbox<T_Event> const&);
+		Mailbox<T_Event>& operator=(Mailbox<T_Event>&&);
 
 		MailboxIterator<T_Event> const& begin();
 		MailboxIterator<T_Event> const& end();

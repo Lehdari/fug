@@ -26,10 +26,12 @@ namespace fug {
 
 	public:
 		// incrementation
-		MailboxIterator operator++();
+		MailboxIterator& operator++();
+		MailboxIterator operator++(int);
 
 		// decrementation
-		MailboxIterator operator--();
+		MailboxIterator& operator--();
+		MailboxIterator operator--(int);
 
 		// (in)equality
 		bool operator==(MailboxIterator const&);

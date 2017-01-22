@@ -5,7 +5,7 @@ MailboxIterator<T_Event>::MailboxIterator() :
 {}
 
 template <typename T_Event>
-MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++()
+MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator++()
 {
 	if (_index == _info.end) {
 		_index = _info.start;
@@ -17,14 +17,32 @@ MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++()
 }
 
 template <typename T_Event>
-MailboxIterator<T_Event> MailboxIterator<T_Event>::operator--()
+MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++(int)
 {
-	if (--_index == _info.start) {
+	auto ret = *this;
+	++*this;
+	return ret;
+}
+
+template <typename T_Event>
+MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator--()
+{
+	if (_index == _info.start) {
 		_index = _info.end;
+	}
+	else {
+		_index--;
 	}
 	return *this;
 }
 
+template <typename T_Event>
+MailboxIterator<T_Event> MailboxIterator<T_Event>::operator--(int)
+{
+	auto ret = *this;
+	--*this;
+	return ret;
+}
 
 template <typename T_Event>
 bool MailboxIterator<T_Event>::operator==(MailboxIterator const& other)
