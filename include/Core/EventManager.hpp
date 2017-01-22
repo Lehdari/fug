@@ -18,7 +18,7 @@ namespace fug {
 		friend class Mailbox;
 		
 		// Returns the (singleton) instance of this class
-		static T_Implementation& instance(void);
+		static EventManagerBase<T_Implementation>& instance(void);
 
 		// Returns a specific mailbox handle for type & port combination
 		template <typename T_Event>
@@ -26,7 +26,7 @@ namespace fug {
 
 		// Adds a Event to its specific mailbox
 		template <typename T_Event>
-		void pushEvent(Event<T_Event> const&);
+		void pushEvent(T_Event const&, EventPort const& = EventPort());
 
 		// Flushes a specific mailbox
 		template <typename T_Event>

@@ -171,16 +171,16 @@ void fug::gfxResourceTest(void) {
 
 void fug::eventTest(void) {
 
-	TestEvent1 ev1;
-
 	std::cout << "Testing events\n\n";
 
 	TEST("push")
-	FUG_EVENT_MANAGER.pushEvent(ev1); // TODO implement
+	for (uint64_t i = 1; i<11; i++) {
+		FUG_EVENT_MANAGER.pushEvent(10*i, 123);
+	}
 	TEST_OK
 
 	TEST("getMailbox")
-	auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>();
+	auto mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
 	TEST_OK
 
 	TEST("begin, end");
@@ -190,16 +190,24 @@ void fug::eventTest(void) {
 			  << " -> " << end << std::endl;
 	TEST_OK
 
+	TEST("iteration")
+	do {
+		++begin;
+		std::cout << begin->data << "  ";
+	} while (begin != end);
+	std::cout << std::endl;
+	TEST_OK
+
 	TEST("accessing")
-	end->data = "Hola!";
-	TEST_EQ(end->data, "Hola!")
+	end->data = 123;
+	TEST_EQ(end->data, 123)
 	TEST_OK
 
 	TEST("dereferencing")
-	(*end).data = "Hello!";
-	TEST_INEQ((*end).data, "Hola!")
+	(*end).data = 321;
+	TEST_INEQ((*end).data, 123)
 	TEST_OK
-
+	
 }
 
 

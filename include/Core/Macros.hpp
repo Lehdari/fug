@@ -7,7 +7,7 @@
 #define FUG_DEBUG
 
 //	Constants
-#define FUG_MAILBOX_SIZE		2048
+#define FUG_MAILBOX_SIZE		6
 
 //  Convenience macros
 #define FUG_SCENE               fug::Scene::instance()

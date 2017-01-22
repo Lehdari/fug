@@ -2,7 +2,6 @@
 #define FUG_MAILBOX_ITERATOR_HPP
 
 #include "Event.hpp"
-#include "Utility.hpp"
 
 #include <iostream>
 

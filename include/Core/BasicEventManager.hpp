@@ -1,9 +1,13 @@
 #ifndef FUG_BASIC_EVENT_MANAGER_HPP
 #define FUG_BASIC_EVENT_MANAGER_HPP
 
-#include <unordered_map>
+#ifdef FUG_DEBUG
+#include "Utility.hpp"
+#endif
 
+#include <unordered_map>
 #include "EventManager.hpp"
+
 
 namespace fug {
 
@@ -19,7 +23,7 @@ namespace fug {
 		Mailbox<T_Event> getMailbox(EventPort const& = EventPort());
 
 		template <typename T_Event>
-		void pushEvent(Event<T_Event> const&);
+		void pushEvent(T_Event const&, EventPort const& = EventPort());
 
 		template <typename T_Event>
 		void flushEvents(EventPort const& = EventPort());

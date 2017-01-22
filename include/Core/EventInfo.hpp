@@ -8,8 +8,8 @@ namespace fug {
 	// Metadata container for Event
     struct EventInfo {
 
-		const EventId id;
-		const EventPort port;
+		EventId id;
+		EventPort port;
 
 		bool persistent;
     };
