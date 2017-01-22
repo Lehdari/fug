@@ -11,19 +11,16 @@ namespace fug {
 
     class SpriteMeshComponent : public Component {
     public:
-        SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh,
-                      const Matrix4Glf& transformation = Matrix4Glf::Identity());
+        SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh);
 
         const SpriteMesh& getMesh(void) const;
         ResourcePointer<SpriteMesh> getMeshPointer(void) const;
 
-        void setTransformation(const Matrix4Glf& transformation);
-        void draw(const Matrix4Glf& camera,
+        void draw(const Matrix4Glf& transform, const Matrix4Glf& camera,
                   const GLint& frameRow, const GLint& frameColumn) const;
 
     private:
         ResourcePointer<SpriteMesh> _mesh;
-        Matrix4Glf _transformation;
     };
 
 } // namespace fug 

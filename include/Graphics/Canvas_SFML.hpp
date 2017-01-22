@@ -12,7 +12,7 @@ namespace fug {
     class Canvas_SFML : public Canvas<Canvas_SFML> {
     public:
         Canvas_SFML(void);
-        ~Canvas_SFML(void) {}
+        ~Canvas_SFML(void);
 
         bool isOpen(void);
         void display(void);
@@ -22,7 +22,7 @@ namespace fug {
         sf::Window* getWindow(void);
 
     private:
-        sf::Window window_;
+        sf::Window _window;
     };
 }
 
