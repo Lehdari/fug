@@ -8,11 +8,18 @@
 namespace fug {
 
     struct TestResource1_Init_Default {
-
+        int a;
+        int b;
     };
 
     struct TestResource2_Init_TestResource1 {
+        float a;
+        float b;
+    };
 
+    struct TestResource3_Init_TestResource2 {
+        double a;
+        double b;
     };
 
 

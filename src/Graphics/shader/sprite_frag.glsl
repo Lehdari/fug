@@ -16,7 +16,7 @@ void main()
     // Diffuse color
     vec3 diffuseCol = texture(diffuseSampler, texVar).xyz;
     
-    sumCol += lightIntensity * diffuseCol;
+    vec3 sumCol = lightIntensity * diffuseCol;
     
     fragColor = vec4(sumCol, 1);
 }

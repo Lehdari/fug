@@ -32,6 +32,8 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
     }));
 }
 
+class Binary;   //  TEMP
+
 template<typename T_Resource>
 ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourceId)
 {
@@ -66,7 +68,7 @@ void BasicResourceManager::registerPointer(ResourcePointer<T_Resource>* pointer)
 
     resourcePointers.push_back(pointer);
 
-    printf("registerPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());
+    //printf("registerPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());
 }
 
 template <typename T_Resource>
@@ -80,7 +82,7 @@ void BasicResourceManager::unRegisterPointer(ResourcePointer<T_Resource>* pointe
                                        pointer),
                            resourcePointers.end());
 
-    printf("unRegisterPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());    //  TEMP
+    //printf("unRegisterPointer, counter: %llu\n", (unsigned long long)resourcePointers.size());    //  TEMP
 }
 
 
@@ -94,13 +96,15 @@ void BasicResourceManager::initResource(ResourceInfo& resourceInfo)
     resources.emplace_back();
     auto& resource = resources.back();
     auto resourceTypeId = getTypeId<T_Resource>();
+    auto initInfoTypeId = getTypeId<T_InitInfo>();
 
     //  reassign all init info pointers and resource pointer pointers
     //  if resources vector gets reallocated
     if (resources.size() > capacity) {
         for (auto& rInfo : _resourceInfos) {
-            if (rInfo.second.resourceTypeId == resourceTypeId)
+            if (rInfo.second.initInfoTypeId == initInfoTypeId && rInfo.second.resource != nullptr)
                 rInfo.second.resource = &resources[rInfo.second.resourceLoc];
+
         }
 
         //  ResourcePointer pointers

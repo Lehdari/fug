@@ -60,9 +60,7 @@ namespace fug {
 
         template <typename T_Component>
         using CIter = typename std::vector<T_Component>::iterator;
-/*
-        void addComponents(uint64_t pos);
-*/
+
         template <typename T_FirstComponent,
                   typename T_SecondComponent,
                   typename... T_Components>
@@ -72,15 +70,7 @@ namespace fug {
 
         template <typename T_Component>
         void addComponents(T_Component&& component);
-/*
-        template <typename T_FirstComponent, typename... T_Components>
-        void setComponents(uint64_t pos,
-                           T_FirstComponent&& firstComponent,
-                           T_Components&&... components);
 
-        template <typename T_Component>
-        void setComponents(uint64_t pos, T_Component&& component);
-*/
         void removeComponents(uint64_t pos);
 
         template <typename T_FirstComponent,

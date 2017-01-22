@@ -72,18 +72,22 @@ void fug::sceneTest(void) {
 
 void fug::resourceTest(void) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
-        (1, TestResource1_Init_Default());
+        (1, {1, 2}, {101, 102, 103});
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (2, {2, 3}, {111, 112, 113});
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (3, {3, 4}, {121, 122, 123});
 
-    auto tr1Ptr1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
-    printf("get: %p\n", tr1Ptr1.get());
 
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource2, TestResource2_Init_TestResource1>
-        (2, TestResource2_Init_TestResource1(), {1});
+        (4, {4.5f, 5.5f}, {3});
+
+    auto r1p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(3);
 
     //auto tr1Ptr2 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
     //printf("get: %p\n", tr1Ptr2.get());
 
-    FUG_RESOURCE_MANAGER.getResource<TestResource2>(2);
+    //auto r2p1 = FUG_RESOURCE_MANAGER.getResource<TestResource2>(4);
 
 
 /*
@@ -142,7 +146,7 @@ void fug::gfxResourceTest(void) {
 
     TEST("Binary");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (5, BinaryInitInfo_File{"test.glsl"});
+        (5, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
 
 #if 1
     auto srcResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
@@ -168,7 +172,7 @@ void fug::gfxResourceTest(void) {
 
     TEST("Texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (8, BinaryInitInfo_File{"test.png"});
+        (8, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
         (9, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
                                    0, 0, 0, 0}, {8}, {});
@@ -213,12 +217,12 @@ void fug::drawTest()
 {
     Canvas_SFML c;
     sf::Window* wPtr = c.getWindow();
-    
+
     // Load resources
-    
+
     // Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (100, BinaryInitInfo_File{"../res/texture/test.png"});
+    (100, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
     (101, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
         GL_CLAMP_TO_BORDER,
@@ -227,32 +231,32 @@ void fug::drawTest()
         GL_NEAREST},
      {100}, {}, true);
     printf("Texture!\n");
-    
+
     // ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (102, BinaryInitInfo_File{"../src/Graphics/shader/sprite_vert.glsl"});
     printf("First glsl!\n");
-    
-    
+
+
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
     (103, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
         GL_VERTEX_SHADER}, {102}, {});
     printf("First shaderobj!\n");
-    
+
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (104, BinaryInitInfo_File{"../src/Graphics/shader/sprite_frag.glsl"});
     printf("Second glsl!\n");
-    
-    
+
+
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
     (105, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
         GL_FRAGMENT_SHADER}, {104}, {});
     printf("Second shaderobj!\n");
-    
+
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
         (106, ShaderProgramInitInfo_Default{}, {103,105}, {});
     printf("Shader Program!\n");
-    
+
     // SpriteMaterial
     FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMaterial, SpriteMaterialInitInfo_Default>
     (107, SpriteMaterialInitInfo_Default{{"diffuse"},
@@ -262,19 +266,19 @@ void fug::drawTest()
                                         32, 32},
                                         {}, {106,101});
     printf("SpriteMaterial!\n");
-    
+
     // SpriteMesh
     FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMesh, SpriteMeshInitInfo_Default>
     (108, SpriteMeshInitInfo_Default(), {}, {107});
     printf("SpriteMesh!\n");
-    
+
     // SpriteMeshComponent
     auto meshResPtr = FUG_RESOURCE_MANAGER.getResource<SpriteMesh>(108);
     SpriteMeshComponent meshComp(meshResPtr);
     printf("SpriteMeshComponent!\n");
-    
-    
-    
+
+
+
     bool running = true;
     while (running)
     {
@@ -293,13 +297,13 @@ void fug::drawTest()
                 glViewport(0, 0, event.size.width, event.size.height);
             }
         }
-        
+
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         // draw...
         meshComp.draw(Matrix4Glf::Identity(), 0, 0);
-        
+
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
     }

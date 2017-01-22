@@ -12,13 +12,23 @@ namespace fug {
         FUG_RESOURCE_INIT_DESTROY_DECL
 
         int a;
+        int b;
     };
 
     class FUG_RESOURCE(TestResource2) {
     public:
         FUG_RESOURCE_INIT_DESTROY_DECL
 
-        int a;
+        float a;
+        float b;
+    };
+
+    class FUG_RESOURCE(TestResource3) {
+    public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+
+        double a;
+        double b;
     };
 
 }
