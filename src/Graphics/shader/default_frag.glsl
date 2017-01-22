@@ -37,5 +37,5 @@ void main()
     
     sumCol += lightIntensity * (diffuse + specular);
     
-    fragColor = vec4(sumCol, 1);
+    fragColor = vec4(diffuseCol, 1);
 }
