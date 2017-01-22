@@ -49,3 +49,13 @@ const Matrix4Glf Camera::getWorldToClip(void) const
 {
     return _projection * _orientation;
 }
+
+const Matrix4Glf Camera::getView(void) const
+{
+    return  _orientation;
+}
+
+const Matrix4Glf Camera::getProj(void) const
+{
+    return _projection;
+}

@@ -6,7 +6,7 @@ layout(location = 1) in vec3 norm0;
 layout(location = 2) in vec2 tex0;
 
 // Transformations
-uniform mat4 uModelToWorld;
+uniform mat4 uModelToClip;
 uniform mat4 uModelToCam;
 uniform mat4 uNormalToCam;
 

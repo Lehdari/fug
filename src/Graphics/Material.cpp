@@ -5,7 +5,7 @@ using namespace fug;
 Material::Material(void) {}
 
 void Material::useMaterial(const Matrix4Glf& model, const Matrix4Glf& camera,
-                           const Matrix4Glf& proj, const GLint& frameRow, const GLint& frameColumn) const
+                           const Matrix4Glf& proj) const
 {
     Matrix4Glf modelToCam = camera * model;
     Matrix4Glf modelToClip = proj * modelToCam;

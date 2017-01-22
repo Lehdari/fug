@@ -4,19 +4,19 @@
 
 #include <Core/MathTypes.hpp>
 #include <Core/Visitor.hpp>
-#include <Graphics/SpriteMeshComponent.hpp>
+#include <Graphics/MeshComponent.hpp>
 #include <Graphics/Camera.hpp>
 
 namespace fug {
 
     // NOTE: a second component here containing animation frame info!!
-    class Renderer : public Visitor<Renderer, SpriteMeshComponent>{
+    class Renderer : public Visitor<Renderer, MeshComponent>{
     public:
         Renderer(const Vector3Glf& position, const Vector3Glf& forward, const Vector3Glf& up,
                  const float& fov, const float& aspectRatio,
                  const float& near, const float& far);
         
-        bool operator()(SpriteMeshComponent& component);
+        bool operator()(MeshComponent& component);
         
     private:
         Camera _cam;
@@ -26,4 +26,4 @@ namespace fug {
 } // namespace fug
 
 
-#endif // FUG_GRAPHICS_BASICCAMERA_HPP
+#endif // FUG_GRAPHICS_RENDERER_HPP

@@ -18,8 +18,7 @@ namespace fug {
 
         Material(void);
 
-        void useMaterial(const Matrix4Glf& model, const Matrix4Glf& vie, const Matrix4Glf& proj,
-                         const GLint& frameRow, const GLint& frameColumn) const;
+        void useMaterial(const Matrix4Glf& model, const Matrix4Glf& vie, const Matrix4Glf& proj) const;
 
         GLuint getShaderId(void) const;
 

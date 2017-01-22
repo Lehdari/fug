@@ -11,7 +11,7 @@ Renderer::Renderer(const Vector3Glf& position, const Vector3Glf& forward, const 
     ;
 }
 
-bool Renderer::operator()(SpriteMeshComponent& component) {
-    component.draw(_cam.getWorldToClip(), 0, 0);
+bool Renderer::operator()(MeshComponent& component) {
+    component.draw(_cam.getView(), _cam.getProj());
     return true;
 }

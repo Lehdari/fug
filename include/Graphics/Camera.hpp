@@ -18,13 +18,15 @@ namespace fug {
 
         const Vector3Glf& getPosition(void) const;
         const Matrix4Glf getWorldToClip(void) const;
+        const Matrix4Glf getView(void) const;
+        const Matrix4Glf getProj(void) const;
     
     private:
         //  Vectors for orientation matrix
         Vector3Glf _position;
         Vector3Glf _forward;
         Vector3Glf _up;
-
+        
         //  Values for projection matrix
         float _fov;
         float _aspectRatio;
