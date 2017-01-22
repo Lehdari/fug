@@ -192,16 +192,18 @@ bool BasicScene<T_SceneComponents...>::iterate(
     CIter<T_Components>&... restIters,
     EId& maxId)
 {
-    for (;maxId > firstIter->_entityId && firstIter != firstVector.end(); ++firstIter);
-    maxId = firstIter->_entityId;
+    for (;firstIter != firstVector.end() && maxId > firstIter->_entityId; ++firstIter);
+    if (firstIter != firstVector.end())
+        maxId = firstIter->_entityId;
 
     if (firstIter == firstVector.end() || !iterate<T_SecondComponent, T_Components...>
         (secondVector, restVectors..., secondIter, restIters..., maxId))
         return false;
 
-    for (;maxId > firstIter->_entityId && firstIter != firstVector.end();) {
-        for (;maxId > firstIter->_entityId && firstIter != firstVector.end(); ++firstIter);
-        maxId = firstIter->_entityId;
+    for (;firstIter != firstVector.end() && maxId > firstIter->_entityId;) {
+        for (;firstIter != firstVector.end() && maxId > firstIter->_entityId; ++firstIter);
+        if (firstIter != firstVector.end())
+            maxId = firstIter->_entityId;
 
         if (firstIter == firstVector.end() || !iterate<T_SecondComponent, T_Components...>
             (secondVector, restVectors..., secondIter, restIters..., maxId))
@@ -218,9 +220,20 @@ bool BasicScene<T_SceneComponents...>::iterate(
     CIter<T_Component>& iter,
     EId& maxId)
 {
-    for (;maxId > iter->_entityId && iter != vector.end(); ++iter);
-    maxId = iter->_entityId;
-    if (iter == vector.end())
+    //for (;iter != vector.end() && maxId > iter->_entityId; ++iter);
+    //std::cerr << "BENISBIBBELSsadjlhasdkjashklashkashjdlkjashdljkashdjklhasjdklhasjkldhaslkdhjalsfbndsbf" << std::endl;
+    while (iter < vector.end()) {
+        //std::cerr << "entityId:" << iter->_entityId << std::endl;
+        if (maxId > iter->_entityId)
+            break;
+        ++iter;
+    }
+
+    if (iter != vector.end())
+        maxId = iter->_entityId;
+    else
         return false;
     return true;
 }
+
+
