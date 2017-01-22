@@ -4,7 +4,6 @@
 uniform mat3 uNormalToCam;
 
 // Material
-uniform vec3 uDiffuseCol;
 uniform vec3 uSpecularCol;
 uniform float uSpecularExp;
 
@@ -38,5 +37,5 @@ void main()
     
     sumCol += lightIntensity * (diffuse + specular);
     
-    fragColor = vec4(diffuseCol, 1);
+    fragColor = vec4(sumCol, 1);
 }

@@ -24,6 +24,9 @@
 #include "Graphics/Canvas.hpp"
 #include "Graphics/Canvas_SFML.hpp"
 
+#include "Graphics/Material.hpp"
+#include "Graphics/Material_Init.hpp"
+
 #include "Graphics/Renderer.hpp"
 
 #include "Graphics/ShaderObject.hpp"
@@ -245,32 +248,25 @@ void fug::drawTest()
         GL_NEAREST,
         GL_NEAREST},
      {100}, {}, true);
-    printf("Texture!\n");
 
-    // ShaderProgram
+    // Sprite ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (102, BinaryInitInfo_File{"../src/Graphics/shader/sprite_vert.glsl"});
-    printf("First glsl!\n");
 
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
     (103, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
         GL_VERTEX_SHADER}, {102}, {});
-    printf("First shaderobj!\n");
 
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (104, BinaryInitInfo_File{"../src/Graphics/shader/sprite_frag.glsl"});
-    printf("Second glsl!\n");
-
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
     (105, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
         GL_FRAGMENT_SHADER}, {104}, {});
-    printf("Second shaderobj!\n");
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
         (106, ShaderProgramInitInfo_Default{}, {103,105}, {});
-    printf("Shader Program!\n");
 
     // SpriteMaterial
     FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMaterial, SpriteMaterialInitInfo_Default>
@@ -280,18 +276,42 @@ void fug::drawTest()
                                         {"uFrameRow", "uFrameColumn"},
                                         32, 32},
                                         {}, {106,101});
-    printf("SpriteMaterial!\n");
-
+    
     // SpriteMesh
     FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMesh, SpriteMeshInitInfo_Default>
     (108, SpriteMeshInitInfo_Default(), {}, {107});
-    printf("SpriteMesh!\n");
 
     // SpriteMeshComponent
     auto meshResPtr = FUG_RESOURCE_MANAGER.getResource<SpriteMesh>(108);
     SpriteMeshComponent meshComp(meshResPtr);
-    printf("SpriteMeshComponent!\n");
+    
+    // Default ShaderProgram
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+    (109, BinaryInitInfo_File{"../src/Graphics/shader/default_vert.glsl"});
 
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
+    (110, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
+        GL_VERTEX_SHADER}, {109}, {});
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
+    (111, BinaryInitInfo_File{"../src/Graphics/shader/default_frag.glsl"});
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
+    (112, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
+        GL_FRAGMENT_SHADER}, {110}, {});
+
+    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
+    (113, ShaderProgramInitInfo_Default{}, {110,112}, {});
+
+    // Material
+    FUG_RESOURCE_MANAGER.addResourceInfo<Material, MaterialInitInfo_Default>
+    (114, MaterialInitInfo_Default{{"diffuse"},
+                                   {"uModelToClip", "uModelToCam", "uNormalToCam"},
+                                   {"uSpecularCol"},
+                                   {"uSpecularExp"},
+                                   Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
+                                   {}, {113,101});
+    
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
