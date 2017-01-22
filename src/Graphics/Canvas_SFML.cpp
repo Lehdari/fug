@@ -15,8 +15,8 @@ Canvas_SFML::Canvas_SFML(void)
     settings.majorVersion = 3;
     settings.minorVersion = 3;
 
-    window_.create(sf::VideoMode(1280, 720), "fug", sf::Style::Default, settings);
-    window_.setFramerateLimit(60);
+    _window.create(sf::VideoMode(1280, 720), "fug", sf::Style::Default, settings);
+    _window.setFramerateLimit(60);
     
     // Load gl-functions (glLoadGen-header)
     if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
@@ -29,29 +29,25 @@ Canvas_SFML::Canvas_SFML(void)
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-    
+}
+
+Canvas_SFML::~Canvas_SFML()
+{
+    if (_window.isOpen()) _window.close();
 }
 
 bool Canvas_SFML::isOpen(void) {
-    return window_.isOpen();
+    return _window.isOpen();
 }
 
 void Canvas_SFML::display(void) {
-    window_.display();
+    _window.display();
 }
 
 void Canvas_SFML::close(void) {
-    window_.close();
+    _window.close();
 }
 
-/*std::shared_ptr<EventBase> Cucca::Canvas_SFML::pollEvent(void) {
-    sf::Event event;
-    if (window_.pollEvent(event))
-        return std::shared_ptr<EventBase>(new Event<sf::Event>(event));
-    else
-        return std::shared_ptr<EventBase>(nullptr);
-}*/
-
 sf::Window* Canvas_SFML::getWindow(void) {
-    return &window_;
+    return &_window;
 }
