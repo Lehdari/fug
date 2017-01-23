@@ -12,7 +12,12 @@ namespace fug {
 
     class Component {
     public:
+        Component(void);
         friend SceneImplementation;
+
+        Component(Component const&) = delete;
+        Component(Component &&);
+
 
         template <typename T_Component>
         static const CId& typeId(void);
