@@ -193,14 +193,7 @@ bool BasicScene::iterate(std::vector<T_Component>& vector,
                          CIter<T_Component>& iter,
                          EId& maxId)
 {
-    //for (;iter != vector.end() && maxId > iter->_entityId; ++iter);
-    //std::cerr << "BENISBIBBELSsadjlhasdkjashklashkashjdlkjashdljkashdjklhasjdklhasjkldhaslkdhjalsfbndsbf" << std::endl;
-    while (iter < vector.end()) {
-        //std::cerr << "entityId:" << iter->_entityId << std::endl;
-        if (maxId > iter->_entityId)
-            break;
-        ++iter;
-    }
+    for (;iter != vector.end() && maxId > iter->_entityId; ++iter);
 
     if (iter != vector.end())
         maxId = iter->_entityId;
