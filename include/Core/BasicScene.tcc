@@ -65,7 +65,8 @@ void BasicScene::print(void) {
 #endif
 
 
-int BasicScene::findEntity(const EId& entityId, EntityIterator& it, const EntityIterator& endIt)
+int BasicScene::findEntity(const EId& entityId, EntityIterator& it,
+                           const EntityIterator& endIt)
 {
     if (it->id == entityId)
         return 0;
@@ -94,8 +95,9 @@ void BasicScene::addComponents(T_FirstComponent&& firstComponent,
     auto& v = accessComponents<T_FirstComponent>();
     v.push_back(std::forward<T_FirstComponent>(firstComponent));
     v.back()._entityId = _entityId;
-    addComponents<T_SecondComponent, T_Components...>(std::forward<T_SecondComponent>(secondComponent),
-                                                      std::forward<T_Components>(restComponents)...);
+    addComponents<T_SecondComponent, T_Components...>
+        (std::forward<T_SecondComponent>(secondComponent),
+         std::forward<T_Components>(restComponents)...);
 }
 
 template <typename T_Component>
