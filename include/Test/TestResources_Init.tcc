@@ -4,7 +4,7 @@ FUG_RESOURCE_INIT(TestResource1, TestResource1_Init_Default)
     printf("InitInfo: a: %d b: %d\n", initInfo.a, initInfo.b);
     printf("InitResources: {");
     for (auto& r : initResources)
-        printf("%llu,", r);
+        printf("%llu,", (long long unsigned)r);
     printf("}\n");
 }
 
@@ -20,7 +20,7 @@ FUG_RESOURCE_INIT(TestResource2, TestResource2_Init_TestResource1)
     printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
     printf("InitResources: {");
     for (auto& r : initResources)
-        printf("%llu,", r);
+        printf("%llu,", (long long unsigned)r);
     printf("}\n");
 
     auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource1>(initResources[0]);
@@ -43,7 +43,7 @@ FUG_RESOURCE_INIT(TestResource3, TestResource3_Init_TestResource2)
     printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
     printf("InitResources: {");
     for (auto& r : initResources)
-        printf("%llu,", r);
+        printf("%llu,", (long long unsigned)r);
     printf("}\n");
 
     auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource2>(initResources[0]);
