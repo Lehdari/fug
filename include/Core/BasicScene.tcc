@@ -6,12 +6,6 @@ std::vector<typename BasicScene<T_SceneComponents...>::Entity>
     BasicScene<T_SceneComponents...>::_entities;
 
 template <typename... T_SceneComponents>
-std::tuple<std::vector<T_SceneComponents>&...>
-    BasicScene<T_SceneComponents...>::_components =
-        std::tie(BasicScene<T_SceneComponents...>::accessComponents<T_SceneComponents>()...);
-
-
-template <typename... T_SceneComponents>
 EId BasicScene<T_SceneComponents...>::addEntity(void)
 {
     _entities.emplace_back(++_entityId);
@@ -107,7 +101,7 @@ void BasicScene<T_SceneComponents...>::addComponents(T_FirstComponent&& firstCom
                                                      T_SecondComponent&& secondComponent,
                                                      T_Components&&... restComponents)
 {
-    auto& v = accessComponents<T_FirstComponent>();//std::get<std::vector<T_FirstComponent>&>(_components);
+    auto& v = accessComponents<T_FirstComponent>();
     v.push_back(std::forward<T_FirstComponent>(firstComponent));
     v.back()._entityId = _entityId;
     addComponents<T_SecondComponent, T_Components...>(std::forward<T_SecondComponent>(secondComponent),
@@ -118,7 +112,7 @@ template <typename... T_SceneComponents>
 template <typename T_Component>
 void BasicScene<T_SceneComponents...>::addComponents(T_Component&& component)
 {
-    auto& v = accessComponents<T_Component>();//std::get<std::vector<T_FirstComponent>&>(_components);
+    auto& v = accessComponents<T_Component>();
     v.push_back(std::forward<T_Component>(component));
     v.back()._entityId = _entityId;
 }
@@ -135,7 +129,7 @@ template <typename T_FirstComponent,
           typename... T_Components>
 void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
-    auto& v = std::get<std::vector<T_FirstComponent>&>(_components);
+    auto& v = accessComponents<T_FirstComponent>();
     v.erase(v.begin()+pos);
     removeComponents<T_SecondComponent, T_Components...>(pos);
 }
@@ -144,7 +138,7 @@ template <typename... T_SceneComponents>
 template <typename T_Component>
 void BasicScene<T_SceneComponents...>::removeComponents(uint64_t pos)
 {
-    auto& v = std::get<std::vector<T_Component>&>(_components);
+    auto& v = accessComponents<T_Component>();
     v.erase(v.begin()+pos);
 }
 

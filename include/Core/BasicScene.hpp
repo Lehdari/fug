@@ -55,8 +55,6 @@ namespace fug {
         template <typename T_Component>
         static std::vector<T_Component>& accessComponents(void);
 
-        static std::tuple<std::vector<T_SceneComponents>&...>   _components;
-
 
         template <typename T_Component>
         using CIter = typename std::vector<T_Component>::iterator;
