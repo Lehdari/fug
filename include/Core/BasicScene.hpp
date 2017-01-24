@@ -18,7 +18,6 @@ namespace fug {
 
 
     //Basic Scene CRTP implementation, see Scene.hpp
-    template <typename... T_SceneComponents>
     class BasicScene : public SceneBase<SceneImplementation> {
     public:
         struct Entity {
