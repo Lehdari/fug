@@ -14,4 +14,13 @@ Component::Component(void) :
 {
 }
 
+Component& Component::operator=(Component&& other)
+{
+    if (this == &other)
+        return *this;
+    _entityId = other._entityId;
+    other._entityId = 0;
+    return *this;
+}
+
 CId Component::_typeId = CId();

@@ -15,9 +15,9 @@ namespace fug {
         Component(void);
         friend SceneImplementation;
 
-        Component(Component const&) = delete;
-        Component(Component &&);
-
+        Component(Component const& other) = delete;
+        Component(Component&& other);
+        Component& operator=(Component&& other);
 
         template <typename T_Component>
         static const CId& typeId(void);
