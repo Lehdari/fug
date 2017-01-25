@@ -3,12 +3,11 @@
 
 
 #include <Core/MathTypes.hpp>
-#include "Core/Component.hpp"
 
 
 namespace fug {
 
-    class TransformComponent : public Component {
+    class TransformComponent {
     public:
         TransformComponent() : transform() {}
         Matrix4f transform;

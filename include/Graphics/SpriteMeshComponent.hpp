@@ -2,14 +2,13 @@
 #define FUG_GRAPHICS_SPRITEMESHCOMPONENT_HPP
 
 
-#include <Core/Component.hpp>
 #include <Graphics/SpriteMesh.hpp>
 #include <Core/MathTypes.hpp>
 
 
 namespace fug {
 
-    class SpriteMeshComponent : public Component {
+    class SpriteMeshComponent {
     public:
         SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh);
 

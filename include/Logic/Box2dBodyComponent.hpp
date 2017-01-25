@@ -3,12 +3,11 @@
 
 
 #include <Box2D/Box2D.h>
-#include "Core/Component.hpp"
 
 
 namespace fug {
 
-    class Box2dBodyComponent : public Component {
+    class Box2dBodyComponent {
     public:
         Box2dBodyComponent();
         Box2dBodyComponent(b2Body* body);

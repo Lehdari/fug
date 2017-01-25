@@ -68,6 +68,10 @@ void fug::sceneTest(void) {
 
     FUG_SCENE.print();
 
+    FUG_SCENE.removeEntity(nid[2]);
+
+    FUG_SCENE.print();
+
     TestVisitor1 visitor1;
     TestVisitor2 visitor2;
     TestVisitor3 visitor3;
@@ -81,7 +85,6 @@ void fug::sceneTest(void) {
 
 
     FUG_SCENE.removeEntity(nid[2]);
-    FUG_SCENE.removeEntity(nid[5]);
 
     FUG_SCENE.print();
 }

@@ -2,14 +2,13 @@
 #define FUG_GRAPHICS_MESHCOMPONENT_HPP
 
 
-#include <Core/Component.hpp>
 #include <Graphics/Mesh.hpp>
 #include <Core/MathTypes.hpp>
 
 
 namespace fug {
 
-    class MeshComponent : public Component {
+    class MeshComponent {
     public:
         MeshComponent(ResourcePointer<Mesh>& mesh);
 

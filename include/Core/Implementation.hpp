@@ -10,6 +10,7 @@
 #define FUG_IMPLEMENTATION_EVENT_MANAGER    BasicEventManager
 #define FUG_IMPLEMENTATION_RESOURCE_MANAGER BasicResourceManager
 
+
 namespace fug {
 
     class FUG_IMPLEMENTATION_SCENE;

@@ -16,8 +16,7 @@ Box2dBodyComponent::Box2dBodyComponent(b2Body* body) :
     body(body)
 {}
 
-Box2dBodyComponent::Box2dBodyComponent(Box2dBodyComponent&& other) :
-    Component(std::move(other))
+Box2dBodyComponent::Box2dBodyComponent(Box2dBodyComponent&& other)
 {
     body = other.body;
     other.body = nullptr;

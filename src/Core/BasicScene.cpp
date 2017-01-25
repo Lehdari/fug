@@ -1,5 +1,6 @@
 #include "Core/BasicScene.hpp"
 
+
 using namespace fug;
 
 EId BasicScene::_entityId = EId();
@@ -14,14 +15,16 @@ EId BasicScene::addEntity(void)
     return _entityId;
 }
 
-void BasicScene::removeEntity(const EntityId& id)
+void BasicScene::removeEntity(const EId& entityId)
 {
     auto it = _entities.begin();
-    findEntity(id, it);
+    findEntity(entityId, it);
     if (it == _entities.end())
         return;
 
-    removeComponents(it-_entities.begin());
+    //  remove components
+    for (auto& rf : it->removePtrs)
+        (this->*rf)(entityId);
 
     _entities.erase(it);
 }
@@ -45,10 +48,3 @@ int BasicScene::findEntity(const EId& entityId, EntityIterator& it,
     }
     return 1;
 }
-
-void BasicScene::removeComponents(uint64_t pos)
-{
-    removeComponents(pos);
-}
-
-

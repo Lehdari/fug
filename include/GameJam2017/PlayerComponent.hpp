@@ -3,12 +3,11 @@
 
 
 #include <cstdint>
-#include "Core/Component.hpp"
 
 
 namespace fug {
 
-    class PlayerComponent : public Component {
+    class PlayerComponent {
     public:
         uint8_t playerId;
     };

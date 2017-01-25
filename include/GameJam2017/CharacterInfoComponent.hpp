@@ -2,12 +2,9 @@
 #define FUG_CHARACTER_INFO_COMPONENT_HPP
 
 
-#include "Core/Component.hpp"
-
-
 namespace fug {
 
-    class CharacterInfoComponent : public Component {
+    class CharacterInfoComponent {
     public:
         bool placeholder;
     };
