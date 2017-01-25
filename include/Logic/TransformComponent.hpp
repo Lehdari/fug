@@ -2,7 +2,7 @@
 #define FUG_TRANSFORM_COMPONENT_HPP
 
 
-#include <Core/MathTypes.hpp>
+#include "Core/MathTypes.hpp"
 
 
 namespace fug {

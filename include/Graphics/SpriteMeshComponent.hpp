@@ -2,8 +2,8 @@
 #define FUG_GRAPHICS_SPRITEMESHCOMPONENT_HPP
 
 
-#include <Graphics/SpriteMesh.hpp>
-#include <Core/MathTypes.hpp>
+#include "Graphics/SpriteMesh.hpp"
+#include "Core/MathTypes.hpp"
 
 
 namespace fug {

@@ -1,7 +1,10 @@
 #ifndef FUG_GRAPHICS_CAMERA_HPP
 #define FUG_GRAPHICS_CAMERA_HPP
 
-#include <Core/MathTypes.hpp>
+
+#include "Core/MathTypes.hpp"
+#include "Core/Macros.hpp"
+
 
 namespace fug {
 

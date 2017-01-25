@@ -2,8 +2,8 @@
 #define FUG_GRAPHICS_MESHCOMPONENT_HPP
 
 
-#include <Graphics/Mesh.hpp>
-#include <Core/MathTypes.hpp>
+#include "Graphics/Mesh.hpp"
+#include "Core/MathTypes.hpp"
 
 
 namespace fug {
