@@ -95,7 +95,6 @@ void BasicResourceManager::initResource(ResourceInfo& resourceInfo)
     //  add the new resource
     resources.emplace_back();
     auto& resource = resources.back();
-    auto resourceTypeId = getTypeId<T_Resource>();
     auto initInfoTypeId = getTypeId<T_InitInfo>();
 
     //  reassign all init info pointers and resource pointer pointers
