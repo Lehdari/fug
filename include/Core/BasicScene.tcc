@@ -1,15 +1,3 @@
-EId BasicScene::_entityId;
-
-std::vector<typename BasicScene::Entity>
-    BasicScene::_entities;
-
-EId BasicScene::addEntity(void)
-{
-    _entities.emplace_back(++_entityId);
-
-    return _entityId;
-}
-
 template <typename... T_Components>
 EId BasicScene::addEntity(T_Components&&... components)
 {
@@ -17,18 +5,6 @@ EId BasicScene::addEntity(T_Components&&... components)
     addComponents(std::forward<T_Components>(components)...);
 
     return _entityId;
-}
-
-void BasicScene::removeEntity(const EntityId& id)
-{
-    auto it = _entities.begin();
-    findEntity(id, it);
-    if (it == _entities.end())
-        return;
-
-    removeComponents(it-_entities.begin());
-
-    _entities.erase(it);
 }
 
 template <typename T_Visitor, typename... T_Components>
@@ -57,26 +33,6 @@ void BasicScene::accept(Visitor<T_Visitor, T_Components...>& visitor)
     }
 }
 
-#ifdef FUG_DEBUG
-void BasicScene::print(void) {
-    for (auto it = _entities.begin(); it<_entities.end(); ++it)
-        std::cout << "Id: " << it->id << std::endl;
-}
-#endif
-
-
-int BasicScene::findEntity(const EId& entityId, EntityIterator& it,
-                           const EntityIterator& endIt)
-{
-    if (it->id == entityId)
-        return 0;
-
-    for (++it; it<endIt; ++it) {
-        if (it->id == entityId)
-            return 0;
-    }
-    return 1;
-}
 
 template <typename T_Component>
 std::vector<T_Component>& BasicScene::accessComponents(void)
@@ -106,11 +62,6 @@ void BasicScene::addComponents(T_Component&& component)
     auto& v = accessComponents<T_Component>();
     v.push_back(std::forward<T_Component>(component));
     v.back()._entityId = _entityId;
-}
-
-void BasicScene::removeComponents(uint64_t pos)
-{
-    removeComponents(pos);
 }
 
 template <typename T_FirstComponent,
