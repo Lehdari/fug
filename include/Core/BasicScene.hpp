@@ -5,14 +5,14 @@
 #include <vector>
 #include <tuple>
 #include <unordered_map>
-#ifdef FUG_DEBUG
-#include <iostream>
-#endif
 
 #include "Scene.hpp"
 #include "Core/Macros.hpp"
 #include "Core/Component.hpp"
 
+#ifdef FUG_DEBUG
+#include <iostream>
+#endif
 
 namespace fug {
 
