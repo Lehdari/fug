@@ -22,7 +22,7 @@ namespace fug {
         ResourcePointer<SpriteMesh> _mesh;
     };
 
-} // namespace fug 
+} // namespace fug
 
 
 #endif // FUG_GRAPHICS_SPRITEMESHCOMPONENT_HPP

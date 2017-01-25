@@ -21,7 +21,7 @@ namespace fug {
         ResourcePointer<Mesh> mesh_;
     };
 
-} // namespace fug  
+} // namespace fug
 
 
 #endif // FUG_GRAPHICS_MESHCOMPONENT_HPP

@@ -200,19 +200,19 @@ void fug::eventTest(void) {
 
 	std::cout << "Testing events\n\n";
 
-	{	
+	{
 		TEST("flushing new mailbox")
 		std::cout << "(should not be flushed)" << std::endl;
 		FUG_EVENT_MANAGER.flushEvents<CustomEventType>();
-		
+
 		TEST("pushing to new mailbox")
 		FUG_EVENT_MANAGER.pushEvent(CustomEventType());
 	}
 
-	{	
+	{
 		TEST("pushing to new specific port")
 		FUG_EVENT_MANAGER.pushEvent(std::string("YAAAAAAAAAAAAAAAAARGH"), 123);
-	
+
 		TEST("getMailbox")
 		auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(123);
 
@@ -264,7 +264,7 @@ void fug::eventTest(void) {
 			std::cout << begin->data << "  ";
 		}
 		std::cout << std::endl;
-		
+
 		TEST("flush")
 		FUG_EVENT_MANAGER.flushEvents<uint64_t>(123);
 		mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
@@ -283,7 +283,7 @@ void fug::eventTest(void) {
 		TEST("dereferencing")
 		(*end).data = 321;
 		TEST_INEQ((*end).data, 123)
-		
+
 	}
 }
 
@@ -329,7 +329,7 @@ void fug::drawTest()
                                         {"uFrameRow", "uFrameColumn"},
                                         32, 32},
                                         {}, {106,101});
-    
+
     // SpriteMesh
     FUG_RESOURCE_MANAGER.addResourceInfo<SpriteMesh, SpriteMeshInitInfo_Default>
     (108, SpriteMeshInitInfo_Default(), {}, {107});
@@ -337,7 +337,7 @@ void fug::drawTest()
     // SpriteMeshComponent
     auto spriteMeshResPtr = FUG_RESOURCE_MANAGER.getResource<SpriteMesh>(108);
     SpriteMeshComponent spriteMeshComp(spriteMeshResPtr);
-    
+
     // Default ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (109, BinaryInitInfo_File{"../src/Graphics/shader/default_vert.glsl"});
@@ -375,25 +375,25 @@ void fug::drawTest()
                                    {"uSpecularExp"},
                                    Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
                                    {}, {113,115}, true);
-    
+
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
     (117, BinaryInitInfo_File{"../res/meshes/kuutio.obj"});
     FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Binary>
     (118, VertexDataInitInfo_Binary{VertexDataInitInfo_Binary::SOURCE_BINARY_OBJ},
         {117}, {}, true);
-    
+
     // Cube Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
     (119, MeshInitInfo_Default(), {118}, {116});
-    
+
     // Cube MeshComponent
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
     MeshComponent cubeMeshComp(cubeMeshResPtr);
-    
+
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
-    
+
     SpriteRenderer spriteRenderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
@@ -427,7 +427,7 @@ void fug::drawTest()
             if (column == 0) anim = anim < 7 ? anim + 1 : 0;
         }
         // draw...
-        
+
         TransformComponent transform;
         transform.transform << 1.f, 0.f, 0.f, 1.f,
                                0.f, 1.f, 0.f, -1.f,
@@ -452,5 +452,5 @@ void fug::unitTest(void) {
     //gfxResourceTest();
 	eventTest();
 	drawTest();
-    
+
 }

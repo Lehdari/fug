@@ -16,9 +16,9 @@ namespace fug {
         Renderer(const Vector3Glf& position, const Vector3Glf& forward, const Vector3Glf& up,
                  const float& fov, const float& aspectRatio,
                  const float& near, const float& far);
-        
+
         bool operator()(MeshComponent& mesh, TransformComponent& transform);
-        
+
     private:
         Camera _cam;
 
