@@ -14,6 +14,9 @@
 #define FUG_EVENT_MANAGER       fug::EventManager::instance()
 #define FUG_RESOURCE_MANAGER    fug::ResourceManager::instance()
 
+//  Undef some idiotic windows-specific macros so they can be used as variables
+#undef near
+#undef far
 
 
 #endif // FUG_MACROS_HPP
