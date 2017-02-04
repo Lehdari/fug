@@ -3,8 +3,14 @@
 
 using namespace fug;
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    unitTest();
+    if (argc == 1) {
+        FUG_TESTER.run();
+    } else {
+        for (int i = 1; i < argc; ++i)
+            FUG_TESTER.run(argv[i]);
+    }
+
     return 0;
 }

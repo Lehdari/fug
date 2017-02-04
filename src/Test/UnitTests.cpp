@@ -52,7 +52,44 @@
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init.hpp"
 
-void fug::sceneTest(void) {
+
+void fug::Tester::addTest(const std::string& testName,
+                          const std::function<void(void)> testFunc)
+{
+    _testFuncs[testName] = testFunc;
+}
+
+void fug::Tester::run(std::pair<std::string, std::function<void(void)>> test)
+{
+    /* TODO: Dont't print anything unless things fail */
+    printf("Running test: %s\n", test.first.c_str());
+    test.second();
+}
+
+void fug::Tester::run(void)
+{
+    for (const auto& test: _testFuncs)
+        run(test);
+}
+
+void fug::Tester::run(const std::string& testName)
+{
+    auto test = _testFuncs.find(testName);
+
+    if (test == _testFuncs.end())
+        fprintf(stderr, "Could not find test: \"%s\"\n", testName.c_str());
+    else
+        run(*test);
+}
+
+fug::UnitTest::UnitTest(const std::string& testName,
+                        const std::function<void(void)> testFunc)
+{
+    FUG_TESTER.addTest(testName, testFunc);
+}
+
+FUG_UNIT_TEST(sceneTest) {
+    using namespace fug;
     EId nid[10] = {0};
     uint64_t i = 0;
 
@@ -89,7 +126,8 @@ void fug::sceneTest(void) {
     FUG_SCENE.print();
 }
 
-void fug::resourceTest(void) {
+FUG_UNIT_TEST(resourceTest) {
+    using namespace fug;
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (1, {1, 2}, {101, 102, 103});
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
@@ -158,7 +196,8 @@ void fug::resourceTest(void) {
 */
 }
 
-void fug::gfxResourceTest(void) {
+FUG_UNIT_TEST(gfxResourceTest) {
+    using namespace fug;
     // Assumes a test file
     fug::Canvas_SFML canvas;
     canvas.display();
@@ -196,7 +235,8 @@ void fug::gfxResourceTest(void) {
 }
 
 
-void fug::eventTest(void) {
+FUG_UNIT_TEST(eventTest) {
+    using namespace fug;
 
 	std::cout << "Testing events\n\n";
 
@@ -283,12 +323,13 @@ void fug::eventTest(void) {
 		TEST("dereferencing")
 		(*end).data = 321;
 		TEST_INEQ((*end).data, 123)
+    }
 
-	}
 }
 
-void fug::drawTest()
+FUG_UNIT_TEST(drawTest)
 {
+    using namespace fug;
     Canvas_SFML c;
     sf::Window* wPtr = c.getWindow();
 
@@ -444,13 +485,4 @@ void fug::drawTest()
         wPtr->display();
         frame++;
     }
-}
-
-void fug::unitTest(void) {
-    sceneTest();
-    resourceTest();
-    //gfxResourceTest();
-	eventTest();
-	drawTest();
-
 }
