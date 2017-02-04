@@ -10,7 +10,6 @@ endif()
 find_package(Eigen3 REQUIRED)
 find_package(SFML 2 REQUIRED system window graphics network audio)
 find_package(OpenGL REQUIRED)
-find_package(Box2D REQUIRED)
 
 file(GLOB_RECURSE CORE_SRC_FILES src/Core/*.cpp)
 file(GLOB_RECURSE CORE_INCLUDE_FILES include/Core/*.{hpp,tcc})
@@ -39,7 +38,6 @@ add_library(fug-logic
 )
 target_link_libraries(fug-logic
     fug-core
-    ${BOX2D_LIBRARIES}
 )
 target_include_directories(fug-logic PRIVATE ${EIGEN3_INCLUDE_DIR})
 set_property(TARGET fug-logic PROPERTY CXX_STANDARD 14)
@@ -81,6 +79,5 @@ target_link_libraries(fgj
     fug-core
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
-    ${BOX2D_LIBRARIES}
 )
 set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
