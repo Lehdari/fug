@@ -16,12 +16,12 @@ file(GLOB_RECURSE CORE_SRC_FILES src/Core/*.cpp)
 file(GLOB_RECURSE CORE_INCLUDE_FILES include/Core/*.{hpp,tcc})
 file(GLOB_RECURSE LOGIC_SRC_FILES src/Logic/*.cpp)
 file(GLOB_RECURSE LOGIC_INCLUDE_FILES include/Logic/*.{hpp,tcc})
-file(GLOB_RECURSE GRAPHICS_SRC_FILES lib/glLoadGen/gl_core_3_3.c src/Graphics/*.cpp)
-file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES lib/glLoadGen/gl_core_3_3.h src/Graphics/*.cpp)
+file(GLOB_RECURSE GRAPHICS_SRC_FILES ext/glLoadGen/gl_core_3_3.c src/Graphics/*.cpp)
+file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES ext/glLoadGen/gl_core_3_3.h src/Graphics/*.cpp)
 file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
-include_directories(include lib/)
+include_directories(include ext/)
 
 
 add_library(fug-core
