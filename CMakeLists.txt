@@ -17,7 +17,8 @@ file(GLOB_RECURSE LOGIC_SRC_FILES src/Logic/*.cpp)
 file(GLOB_RECURSE LOGIC_INCLUDE_FILES include/Logic/*.{hpp,tcc})
 file(GLOB_RECURSE GRAPHICS_SRC_FILES ext/glLoadGen/gl_core_3_3.c src/Graphics/*.cpp)
 file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES ext/glLoadGen/gl_core_3_3.h src/Graphics/*.cpp)
-file(GLOB_RECURSE GAME_SRC_FILES src/GameJam2017/*.cpp src/game_main.cpp)
+# TODO Make this scale better for multiple demos
+file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
 include_directories(include ext/)
