@@ -50,6 +50,7 @@ add_library(fug-graphics
 )
 target_link_libraries(fug-graphics
     fug-core
+    ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
 target_include_directories(fug-graphics PRIVATE ${EIGEN3_INCLUDE_DIR})
