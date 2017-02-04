@@ -3,7 +3,8 @@ project(fug)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    list(APPEND "~/cmake_modules" "${CMAKE_CURRENT_SOURCE_DIR}")
+    set(CMAKE_MACOSX_RPATH ON)
+    list(APPEND CMAKE_MODULE_PATH "~/cmake_modules")
 endif()
 
 find_package(Eigen3 REQUIRED)
