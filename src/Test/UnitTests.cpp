@@ -6,10 +6,6 @@
 #include "Test/TestVisitors.hpp"
 #include "Test/TestComponents.hpp"
 
-#define TEST(M) std::cout<<"Testing "<<M<<" ... "<<std::endl;
-#define TEST_EQ(F,S) if(F!=S)throw;
-#define TEST_INEQ(F,S) if(F==S)throw;
-
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
 #include "Core/ResourceManager.hpp"
@@ -52,27 +48,48 @@
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init.hpp"
 
-
-void fug::Tester::addTest(const std::string& testName,
-                          const std::function<void(void)> testFunc)
+fug::UnitTest::UnitTest(const std::string& testName,
+                        fug::UnitTest::T_TestFunc testFunc) :
+    _testFunc(testFunc),
+    _testName(testName)
 {
-    _testFuncs[testName] = testFunc;
+    FUG_TESTER.addTest(testName, *this);
 }
 
-void fug::Tester::run(std::pair<std::string, std::function<void(void)>> test)
+void fug::UnitTest::operator()(void)
+{
+    _testFunc(*this);
+}
+
+void fug::UnitTest::fail(unsigned line, const std::string& msg) const
+{
+    fprintf(stderr, "Test: \"%s\" failed at: %u, with: \"%s\"\n",
+            _testName.c_str(), line, msg.c_str());
+    FUG_TESTER.fail();
+}
+
+void fug::Tester::addTest(const std::string& testName,
+                          const fug::UnitTest& test)
+{
+    _testFuncs.insert(std::make_pair(testName, test));
+}
+
+void fug::Tester::run(std::pair<std::string, fug::UnitTest> test,
+                      bool dieOnFail)
 {
     /* TODO: Dont't print anything unless things fail */
-    printf("Running test: %s\n", test.first.c_str());
+    fprintf(stderr, "Running test: %s\n", test.first.c_str());
+    _dieOnFail = dieOnFail;
     test.second();
 }
 
-void fug::Tester::run(void)
+void fug::Tester::run(bool dieOnFail)
 {
     for (const auto& test: _testFuncs)
-        run(test);
+        run(test, dieOnFail);
 }
 
-void fug::Tester::run(const std::string& testName)
+void fug::Tester::run(const std::string& testName, bool dieOnFail)
 {
     auto test = _testFuncs.find(testName);
 
@@ -82,10 +99,10 @@ void fug::Tester::run(const std::string& testName)
         run(*test);
 }
 
-fug::UnitTest::UnitTest(const std::string& testName,
-                        const std::function<void(void)> testFunc)
+void fug::Tester::fail(void)
 {
-    FUG_TESTER.addTest(testName, testFunc);
+    if (_dieOnFail)
+        throw;
 }
 
 FUG_UNIT_TEST(sceneTest) {
@@ -202,7 +219,7 @@ FUG_UNIT_TEST(gfxResourceTest) {
     fug::Canvas_SFML canvas;
     canvas.display();
 
-    TEST("Binary");
+    FUG_TEST_CASE("Binary");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
         (5, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
 
@@ -215,18 +232,18 @@ FUG_UNIT_TEST(gfxResourceTest) {
     printf("%s\n", srcResPtr->getBufferPtr());
 #endif
 
-    TEST("ShaderObject");
+    FUG_TEST_CASE("ShaderObject");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
         (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
                                         GL_FRAGMENT_SHADER}, {5}, {});
     auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     printf("%s: get: %p\n", __func__, srcResPtr1.get());
 
-    TEST("ShaderProgram");
+    FUG_TEST_CASE("ShaderProgram");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
         (7, ShaderProgramInitInfo_Default{}, {6}, {});
 
-    TEST("Texture");
+    FUG_TEST_CASE("Texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
         (8, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
@@ -241,41 +258,41 @@ FUG_UNIT_TEST(eventTest) {
 	std::cout << "Testing events\n\n";
 
 	{
-		TEST("flushing new mailbox")
+		FUG_TEST_CASE("flushing new mailbox")
 		std::cout << "(should not be flushed)" << std::endl;
 		FUG_EVENT_MANAGER.flushEvents<CustomEventType>();
 
-		TEST("pushing to new mailbox")
+		FUG_TEST_CASE("pushing to new mailbox")
 		FUG_EVENT_MANAGER.pushEvent(CustomEventType());
 	}
 
 	{
-		TEST("pushing to new specific port")
+		FUG_TEST_CASE("pushing to new specific port")
 		FUG_EVENT_MANAGER.pushEvent(std::string("YAAAAAAAAAAAAAAAAARGH"), 123);
 
-		TEST("getMailbox")
+		FUG_TEST_CASE("getMailbox")
 		auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(123);
 
-		TEST("Mailbox")
+		FUG_TEST_CASE("Mailbox")
 		auto mailbox2(mailbox);
 		auto mailbox3 = mailbox2;
 		auto mailbox4 = std::move(mailbox2);
 		auto mailbox5(std::move(mailbox4));
 
 
-		TEST("begin, end");
+		FUG_TEST_CASE("begin, end");
 		auto begin = mailbox.begin();
 		auto end = mailbox.end();
 		std::cout << " -> " << begin << std::endl
 				  << " -> " << end << std::endl;
 
-		TEST("iteration")
+		FUG_TEST_CASE("iteration")
 		for (; begin != end; ++begin) {
 			std::cout << begin->data << "  ";
 		}
 		std::cout << std::endl;
 
-		TEST("flush")
+		FUG_TEST_CASE("flush")
 		FUG_EVENT_MANAGER.flushEvents<std::string>(123);
 		mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(123);
 		begin = mailbox.begin();
@@ -288,7 +305,7 @@ FUG_UNIT_TEST(eventTest) {
 	}
 
 	{
-		TEST("filling a mailbox")
+		FUG_TEST_CASE("filling a mailbox")
 		for (uint64_t i = 1; i<11; i++) {
 			FUG_EVENT_MANAGER.pushEvent(10*i, 123);
 		}
@@ -305,7 +322,7 @@ FUG_UNIT_TEST(eventTest) {
 		}
 		std::cout << std::endl;
 
-		TEST("flush")
+		FUG_TEST_CASE("flush")
 		FUG_EVENT_MANAGER.flushEvents<uint64_t>(123);
 		mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
 		begin = mailbox.begin();
@@ -316,13 +333,13 @@ FUG_UNIT_TEST(eventTest) {
 		}
 		std::cout << std::endl;
 
-		TEST("accessing")
+		FUG_TEST_CASE("accessing")
 		end->data = 123;
-		TEST_EQ(end->data, 123)
+		FUG_TEST(end->data == 123UL);
 
-		TEST("dereferencing")
+		FUG_TEST_CASE("dereferencing")
 		(*end).data = 321;
-		TEST_INEQ((*end).data, 123)
+		FUG_TEST(end->data != 123UL);
     }
 
 }

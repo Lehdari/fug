@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
         FUG_TESTER.run();
     } else {
         for (int i = 1; i < argc; ++i)
-            FUG_TESTER.run(argv[i]);
+            FUG_TESTER.run(argv[i], true);
     }
 
     return 0;
