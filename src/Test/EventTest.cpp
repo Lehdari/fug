@@ -3,23 +3,19 @@
 #include "Core/EventManager.hpp"
 #include "Core/Utility.hpp"
 
+#include <sstream>
+
 struct CustomEventType {
     std::string someMessage;
     unsigned someRevision;
 };
 
-#define TestEvent1 Event<uint64_t>
-#define TestEvent2 Event<std::string>
-#define TestEvent3 Event<CustomEventType>
-
 FUG_UNIT_TEST(eventTest) {
     using namespace fug;
-
-	std::cout << "Testing events\n\n";
+    std::stringstream ss("");
 
 	{
 		FUG_TEST_CASE("flushing new mailbox")
-		std::cout << "(should not be flushed)" << std::endl;
 		FUG_EVENT_MANAGER.flushEvents<CustomEventType>();
 
 		FUG_TEST_CASE("pushing to new mailbox")
@@ -27,8 +23,11 @@ FUG_UNIT_TEST(eventTest) {
 	}
 
 	{
-		FUG_TEST_CASE("pushing to new specific port")
-		FUG_EVENT_MANAGER.pushEvent(std::string("YAAAAAAAAAAAAAAAAARGH"), 123);
+        FUG_TEST_CASE("pushing to new specific port");
+        std::string strs[] = {"Hello", " I'm ", "Mailbox"};
+        for (auto s : strs) {
+            FUG_EVENT_MANAGER.pushEvent(s, 123);
+        }
 
 		FUG_TEST_CASE("getMailbox")
 		auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(123);
@@ -39,67 +38,67 @@ FUG_UNIT_TEST(eventTest) {
 		auto mailbox4 = std::move(mailbox2);
 		auto mailbox5(std::move(mailbox4));
 
+        FUG_TEST_CASE("begin- and end-iterators");
+        auto begin = mailbox.begin();
+        auto end = mailbox.end();
+        std::cout << " -> " << begin << std::endl
+                  << " -> " << end << std::endl;
 
-		FUG_TEST_CASE("begin, end");
-		auto begin = mailbox.begin();
-		auto end = mailbox.end();
-		std::cout << " -> " << begin << std::endl
-				  << " -> " << end << std::endl;
+        FUG_TEST_CASE("forward iteration");
+        while (begin != end) { ss << (begin++)->data; }
+        FUG_TEST(ss.str() == "Hello I'm Mailbox");
+        ss.str("");
 
-		FUG_TEST_CASE("iteration")
-		for (; begin != end; ++begin) {
-			std::cout << begin->data << "  ";
-		}
-		std::cout << std::endl;
+        FUG_TEST_CASE("backward iteration");
+        do { ss << (--end)->data; } while (begin != end);
+        FUG_TEST(ss.str() == "Mailbox I'm Hello");
+        ss.str("");
 
-		FUG_TEST_CASE("flush")
-		FUG_EVENT_MANAGER.flushEvents<std::string>(123);
-		mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(123);
-		begin = mailbox.begin();
-		end = mailbox.end();
-		std::cout << "should be empty:" << std::endl;
-		for (; begin != end; ++begin) {
-			std::cout << begin->data << "  ";
-		}
-		std::cout << std::endl;
+        FUG_TEST_CASE("flush");
+        FUG_EVENT_MANAGER.flushEvents<std::string>(123);
+        for (auto& ev : FUG_EVENT_MANAGER.getMailbox<std::string>(123)) {
+            ss << ev.data;
+        }
+        FUG_TEST(ss.str() == "");
 	}
 
-	{
-		FUG_TEST_CASE("filling a mailbox")
-		for (uint64_t i = 1; i<11; i++) {
-			FUG_EVENT_MANAGER.pushEvent(10*i, 123);
-		}
+	{    
+        FUG_TEST_CASE("another port with same type - overflowing the mailbox");
+        std::string strs[] =
+            {"WRONG", "WRONG", "WRONG", "WRONG", "WRONG", "WRONG", "WRONG",
+             "I'm", " The", " Second ", "Mailbox"};
 
-		auto mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
+        for (auto s : strs) {
+            FUG_EVENT_MANAGER.pushEvent(s, 777);
+        }
 
-		auto begin = mailbox.begin();
-		auto end = mailbox.end();
-		std::cout << " -> " << begin << std::endl
-				  << " -> " << end << std::endl;
+        FUG_TEST_CASE("begin- and end-iterators");
+        auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(777);
+        auto begin = mailbox.begin();
+        auto end = mailbox.end();
+        std::cout << " -> " << begin << std::endl
+                  << " -> " << end << std::endl;
 
-		for (; begin != end; ++begin) {
-			std::cout << begin->data << "  ";
-		}
-		std::cout << std::endl;
+        for (auto& ev : FUG_EVENT_MANAGER.getMailbox<std::string>(777)) {
+            ss << ev.data;
+        }
+        FUG_TEST(ss.str() == "I'm The Second Mailbox");
+        ss.str("");
 
-		FUG_TEST_CASE("flush")
-		FUG_EVENT_MANAGER.flushEvents<uint64_t>(123);
-		mailbox = FUG_EVENT_MANAGER.getMailbox<uint64_t>(123);
-		begin = mailbox.begin();
-		end = mailbox.end();
-		std::cout << "should be empty:" << std::endl;
-		for (; begin != end; ++begin) {
-			std::cout << begin->data << "  ";
-		}
-		std::cout << std::endl;
+        FUG_TEST_CASE("flush");
+        FUG_EVENT_MANAGER.flushEvents<std::string>(777);
+        for (auto& ev : FUG_EVENT_MANAGER.getMailbox<std::string>(777)) {
+            ss << ev.data;
+        }
+        FUG_TEST(ss.str() == "");
 
-		FUG_TEST_CASE("accessing")
-		end->data = 123;
-		FUG_TEST(end->data == 123UL);
+        auto iter = FUG_EVENT_MANAGER.getMailbox<std::string>(777).end();
 
-		FUG_TEST_CASE("dereferencing")
-		(*end).data = 321;
-		FUG_TEST(end->data != 123UL);
+        FUG_TEST_CASE("accessing");
+        FUG_TEST(iter->data != "");
+
+        FUG_TEST_CASE("dereferencing");
+        FUG_TEST((*iter).data != "");
     }
 
 }
