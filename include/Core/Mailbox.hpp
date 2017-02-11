@@ -26,13 +26,16 @@ namespace fug {
 		MailboxIterator<T_Event> const& end();
 
     private:
-		Mailbox(MailboxIterator<T_Event>, MailboxIterator<T_Event>);
+        Mailbox() = delete;
+		Mailbox(MailboxIterator<T_Event> const&, MailboxIterator<T_Event> const&);
 
-		MailboxIterator<T_Event> _begin;
-		MailboxIterator<T_Event> _end;
-
-		static std::function<void(Mailbox<T_Event>*)>    _registerMailbox;
-        static std::function<void(Mailbox<T_Event>*)>    _unRegisterMailbox;
+		const MailboxIterator<T_Event>* _begin;
+		const MailboxIterator<T_Event>* _end;
+		
+        EventPort _port;
+		
+		static std::function<void(Mailbox<T_Event>*)> _registerMailbox;
+        static std::function<void(Mailbox<T_Event>*)> _unRegisterMailbox;
     };
     
 	#include "Mailbox.tcc"

@@ -1,7 +1,7 @@
 
 template <typename T_Event>
-Mailbox<T_Event>::Mailbox(MailboxIterator<T_Event> begin, MailboxIterator<T_Event> end) :
-	_begin(begin), _end(end)
+Mailbox<T_Event>::Mailbox(MailboxIterator<T_Event> const& begin, MailboxIterator<T_Event> const& end) :
+	_begin(&begin), _end(&end), _port(_begin->_port)
 {
 	_registerMailbox(this);
 }
@@ -14,7 +14,7 @@ Mailbox<T_Event>::~Mailbox()
 
 template <typename T_Event>
 Mailbox<T_Event>::Mailbox(Mailbox const& other) :
-	_begin(other._begin), _end(other._end)
+	_begin(other._begin), _end(other._end), _port(other._port)
 {
 	_registerMailbox(this);
 }
@@ -22,10 +22,10 @@ Mailbox<T_Event>::Mailbox(Mailbox const& other) :
 
 template <typename T_Event>
 Mailbox<T_Event>::Mailbox(Mailbox<T_Event>&& other) :
-	_begin(other._begin), _end(other._end)
+	_begin(other._begin), _end(other._end), _port(other._port)
 {
-	other._begin = MailboxIterator<T_Event>();
-	other._end = MailboxIterator<T_Event>();
+	other._begin = nullptr;
+	other._end = nullptr;
 	_registerMailbox(this);
 }
 
@@ -47,8 +47,8 @@ Mailbox<T_Event>& Mailbox<T_Event>::operator=(Mailbox<T_Event>&& other)
 	_begin = other._begin;
 	_end = other._end;
 	_registerMailbox(this);
-	other._begin = MailboxIterator<T_Event>();
-	other._end = MailboxIterator<T_Event>();
+	other._begin = nullptr;
+	other._end = nullptr;
 
 	return *this;
 }
@@ -56,11 +56,11 @@ Mailbox<T_Event>& Mailbox<T_Event>::operator=(Mailbox<T_Event>&& other)
 template <typename T_Event>
 MailboxIterator<T_Event> const& Mailbox<T_Event>::begin()
 {
-	return _begin;
+	return *_begin;
 }
 
 template <typename T_Event>
 MailboxIterator<T_Event> const& Mailbox<T_Event>::end()
 {
-	return _end;
+	return *_end;
 }

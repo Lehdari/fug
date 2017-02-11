@@ -15,6 +15,18 @@ namespace fug {
     class BasicEventManager : public EventManagerBase<BasicEventManager> {
 
 	friend class EventManagerBase<BasicEventManager>;	
+	
+    template <typename T_Event>
+	struct MailboxState {
+        
+        EventPort port;
+		MailboxSize_t start;
+		MailboxSize_t end;
+
+		MailboxIterator<T_Event> begin_iter;
+		MailboxIterator<T_Event> end_iter;
+	};
+
 
 	public:
 		BasicEventManager() {}
@@ -31,13 +43,13 @@ namespace fug {
 	private:
 
 		template <typename T_Event>
-		std::vector<Event<T_Event>>& getEventVector(EventPort const&);
+		std::vector<Event<T_Event>>& getEventVector();
 
 		template <typename T_Event>
-		std::unordered_map<EventPort, std::vector<Mailbox<T_Event>*>>& getMailboxPointers();
-	
+		std::unordered_map<EventPort, MailboxState<T_Event>>& accessMailboxStates();
+
 		template <typename T_Event>
-		std::unordered_map<EventPort, MailboxInfo>& getMailboxInfos();
+		MailboxState<T_Event>& getMailboxState(EventPort const&);
 
 		template <typename T_Event>
 		void registerMailbox(Mailbox<T_Event>*);
