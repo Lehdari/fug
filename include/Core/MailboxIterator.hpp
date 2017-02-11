@@ -39,18 +39,19 @@ namespace fug {
 
 		// dereferencing
 		Event<T_Event> const& operator*(void) const;
-		Event<T_Event>& operator*(void); 
 
 		// member access
 		const Event<T_Event>* operator->(void) const;
-		Event<T_Event>* operator->(void);
 
 	private:
-		MailboxIterator();
+		MailboxIterator() = delete;
+        MailboxIterator(const std::vector<Event<T_Event>>*, EventPort const&, MailboxSize_t, MailboxSize_t, MailboxSize_t);
+		
+		const std::vector<Event<T_Event>>* _vec;
+		EventPort _port;
 
-		std::vector<Event<T_Event>>* _vec;
-
-		MailboxInfo _info;
+		MailboxSize_t _first;
+		MailboxSize_t _last;
 		MailboxSize_t _index;
 
 		#ifdef FUG_DEBUG

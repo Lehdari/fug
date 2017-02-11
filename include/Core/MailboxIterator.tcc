@@ -1,14 +1,18 @@
 
 template <typename T_Event>
-MailboxIterator<T_Event>::MailboxIterator() :
-	_vec(nullptr), _info({EventPort(),0,0,0,0}), _index(0)
+MailboxIterator<T_Event>::MailboxIterator(const std::vector<Event<T_Event>>* vec,
+                                          EventPort const& port,
+                                          MailboxSize_t first_index,
+                                          MailboxSize_t last_index,
+                                          MailboxSize_t start_index) :
+    _vec(vec), _port(port), _first(first_index), _last(last_index), _index(start_index)
 {}
 
 template <typename T_Event>
 MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator++()
 {
-	if (_index == _info.end) {
-		_index = _info.start;
+	if (_index == _last) {
+		_index = _first;
 	}
 	else {
 		_index++;
@@ -27,8 +31,8 @@ MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++(int)
 template <typename T_Event>
 MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator--()
 {
-	if (_index == _info.start) {
-		_index = _info.end;
+	if (_index == _first) {
+		_index = _last;
 	}
 	else {
 		_index--;
@@ -47,13 +51,13 @@ MailboxIterator<T_Event> MailboxIterator<T_Event>::operator--(int)
 template <typename T_Event>
 bool MailboxIterator<T_Event>::operator==(MailboxIterator const& other)
 {
-	return other._index == _index && other._info.port == _info.port;
+	return other._index == _index && other._port == _port;
 }
 
 template <typename T_Event>
 bool MailboxIterator<T_Event>::operator!=(MailboxIterator const& other)
 {
-	return other._index != _index || other._info.port != _info.port;
+	return other._index != _index || other._port != _port;
 }
 
 template <typename T_Event>
@@ -63,19 +67,7 @@ Event<T_Event> const& MailboxIterator<T_Event>::operator*() const
 }
 
 template <typename T_Event>
-Event<T_Event>& MailboxIterator<T_Event>::operator*()
-{
-	return (*_vec)[_index];
-}
-
-template <typename T_Event>
 const Event<T_Event>* MailboxIterator<T_Event>::operator->() const
-{
-	return &(*_vec)[_index];
-}
-
-template <typename T_Event>
-Event<T_Event>* MailboxIterator<T_Event>::operator->() 
 {
 	return &(*_vec)[_index];
 }
@@ -87,12 +79,9 @@ Event<T_Event>* MailboxIterator<T_Event>::operator->()
 template <typename T_Event>
 std::ostream& operator<<(std::ostream& os, MailboxIterator<T_Event> const& it)
 {
-	os << util::str(it) << " (port " << it._info.port << ") with"
+	os << util::str(it) << " (port " << it._port << ") with"
 	   << " index " << it._index
-	   << ", start " << it._info.start
-	   << ", end " << it._info.end
-	   << ", head " << it._info.head
-	   << ", tail " << it._info.tail;
+	   << ", bounds [" << it._first << " " << it._last << "]";
 	return os;
 }
 #endif
