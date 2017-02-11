@@ -1,7 +1,3 @@
-#ifdef FUG_DEBUG
-#undef FUG_MAILBOX_SIZE
-#define FUG_MAILBOX_SIZE 5
-#endif
 
 template <typename T_Event>
 Mailbox<T_Event> BasicEventManager::getMailbox(EventPort const& port) 

@@ -3,6 +3,9 @@
 
 #ifdef FUG_DEBUG
 #include "Utility.hpp"
+#define FUG_MAILBOX_SIZE 5
+#else
+#define FUG_MAILBOX_SIZE 1024
 #endif
 
 #include <unordered_map>
