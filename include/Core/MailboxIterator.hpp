@@ -7,15 +7,6 @@
 
 namespace fug {
 	
-	struct MailboxInfo {
-		
-		EventPort port;
-		MailboxSize_t start;
-		MailboxSize_t end;
-		MailboxSize_t head;
-		MailboxSize_t tail;
-	};
-
 	template <typename T_Event>
 	class MailboxIterator {
 
