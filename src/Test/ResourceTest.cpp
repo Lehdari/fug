@@ -96,16 +96,15 @@ FUG_UNIT_TEST(gfxResourceTest) {
 
     FUG_TEST_CASE("Binary");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (5, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
+        (5, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
 
-#if 1
+#if 0
     auto srcResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     //auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
 
     printf("%s: get: %p\n", __func__, srcResPtr.get());
     printf("%s, resource pointer buffer: %p\n", __func__, srcResPtr->getBufferPtr());
     printf("%s\n", srcResPtr->getBufferPtr());
-#endif
 
     FUG_TEST_CASE("ShaderObject");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
@@ -117,13 +116,14 @@ FUG_UNIT_TEST(gfxResourceTest) {
     FUG_TEST_CASE("ShaderProgram");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
         (7, ShaderProgramInitInfo_Default{}, {6}, {});
+#endif
 
     FUG_TEST_CASE("Texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
         (8, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
         (9, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
-                                   0, 0, 0, 0}, {8}, {});
+                                   0, 0, 0, 0}, {5}, {});
 }
 
 
