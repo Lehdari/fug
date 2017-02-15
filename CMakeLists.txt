@@ -35,6 +35,8 @@ file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES
 
 # TODO Make this scale better for multiple demos
 file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*)
+file(GLOB_RECURSE DRAW_TEST_SRC_FILES demo/TexturedCube/*)
+
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 
 include_directories(include ext/)
@@ -98,3 +100,17 @@ target_link_libraries(fgj
     ${SFML_LIBRARIES}
 )
 set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
+
+add_executable(textured_cube ${DRAW_TEST_SRC_FILES})
+target_include_directories(textured_cube
+    PRIVATE ${EIGEN3_INCLUDE_DIR}
+    PRIVATE ${SFML_INCLUDE_DIRS}
+)
+target_link_libraries(textured_cube
+    fug-graphics
+    fug-logic
+    fug-core
+    ${OPENGL_LIBRARIES}
+    ${SFML_LIBRARIES}
+)
+set_property(TARGET textured_cube PROPERTY CXX_STANDARD 14)
