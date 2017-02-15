@@ -32,31 +32,30 @@ void BasicResourceManager::addResourceInfo(const RId& resourceId,
     }));
 }
 
-class Binary;   //  TEMP
-
 template<typename T_Resource>
 ResourcePointer<T_Resource> BasicResourceManager::getResource(const RId& resourceId)
 {
-    try {
-        auto& resourceInfo = _resourceInfos.at(resourceId);
+    ResourceInfo* resourceInfo = nullptr;
 
-        //  check if the type matches the id
-        auto resourceTypeId = getTypeId<T_Resource>();
-        if (resourceInfo.resourceTypeId != resourceTypeId)
-            throw "BasicResourceManager: resource id does not match the given type";
+    //  check if info for given id exists
+    if (_resourceInfos.count(resourceId) == 1)
+        resourceInfo = &_resourceInfos.at(resourceId);
+    else
+        throw "BasicResourceManager: no resource info for given resource id";
 
-        //  if the resource don't exist, it has to be loaded first
-        if (resourceInfo.resource == nullptr)
-            loadResource(resourceId, true);
+    //  check if the type matches the id
+    auto resourceTypeId = getTypeId<T_Resource>();
+    if (resourceInfo->resourceTypeId != resourceTypeId)
+        throw "BasicResourceManager: resource id does not match the given type";
 
-        //  new resource is initialized and its position is stored in the info,
-        //  time to create the resource pointer and return it
-        return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo.resource),
-                                           resourceId);
-    }
-    catch(...) {
-        return ResourcePointer<T_Resource>();
-    }
+    //  if the resource don't exist, it has to be loaded first
+    if (resourceInfo->resource == nullptr)
+        loadResource(resourceId, true);
+
+    //  new resource is initialized and its position is stored in the info,
+    //  time to create the resource pointer and return it
+    return ResourcePointer<T_Resource>(static_cast<T_Resource*>(resourceInfo->resource),
+                                       resourceId);
 }
 
 
