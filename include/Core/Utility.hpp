@@ -22,17 +22,25 @@ class noncopyable {
 		noncopyable& operator=(noncopyable const&);
 };
 
-// Returns human-readable versions of types' printable representations
+// Returns human-readable version of type's printable representation
 template <typename Type>
-std::string str() {
-	int status;
-	char* demangled = abi::__cxa_demangle(typeid(Type).name(), NULL, NULL, &status);
-	if (!status) {
-		auto ret = std::string(demangled);
-		free(demangled);
-		return ret;
-	}
-	return "???";
+std::string str()
+{
+    const char* name = typeid(Type).name();
+
+#ifdef _WIN32
+    return std::string(name);
+#else
+    int status;
+
+    char* demangled = abi::__cxa_demangle(name, NULL, NULL, &status);
+    if (!demangled)
+        return std::string(name);
+
+    auto ret = std::string(demangled);
+    free(demangled);
+    return ret;
+#endif
 }
 
 // Overload for the function above, for printing a variable's type
