@@ -12,8 +12,8 @@ FUG_UNIT_TEST(demangleTest)
 {
     float f;
 
-    FUG_TEST(fug::util::str<int>() == "int");
-    FUG_TEST(fug::util::str<decltype(f)>() == "float");
+    FUG_TEST_EQ(fug::util::str<int>(), "int");
+    FUG_TEST_EQ(fug::util::str<decltype(f)>(), "float");
 
     FUG_TEST(fug::util::str<decltype(func1)>() == "int (int)");
     FUG_TEST(fug::util::str<decltype(func2)>() ==
