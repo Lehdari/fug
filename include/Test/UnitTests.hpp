@@ -2,6 +2,7 @@
 #define FUG_UNIT_TESTS_HPP
 
 #include <functional>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 
@@ -26,6 +27,14 @@
         if (!(testExpr)) \
             unitTest.fail(__LINE__, (msg)); \
     } while (0)
+
+#define FUG_TEST_EQ(testExpr, corrExpr) \
+    do { \
+        std::ostringstream err; \
+        err << testExpr << " == " << corrExpr; \
+        FUG_TEST_MSG((testExpr) == (corrExpr), err.str()); \
+    } while (0)
+
 
 #define FUG_TESTER fug::Tester::instance()
 
