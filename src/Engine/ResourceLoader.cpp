@@ -1,3 +1,6 @@
+#include "Core/Resource.hpp"
+#include "Core/ResourceInitInfoMap.hpp"
+
 #include "Engine/ResourceLoader.hpp"
 
 #include <fstream>
@@ -18,7 +21,7 @@ void ResourceLoader::load(void) const {
 
     for (auto& resource : root["Resource"]) {
         std::string initInfoType = resource["initInfo"]["type"];
-        printf("%s\n", initInfoType.c_str());
-        //(FUG_RESOURCE_INIT_INFO_MAP.at(initInfoType))(resource);
+        printf("type: %s\n", initInfoType.c_str());
+        FUG_RESOURCE_INIT_INFO_MAP.getInitFunc(initInfoType)(resource);
     }
 }
