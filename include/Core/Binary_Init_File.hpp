@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <string>
 
+#include "Core/ResourceInitInfoMap.hpp"
 #include "Core/ResourceManager.hpp"
 
 namespace fug {
@@ -13,9 +14,8 @@ namespace fug {
 
     FUG_RESOURCE_INITINFO_INIT(Binary, BinaryInitInfo_File)
     {
-        struct BinaryInitInfo_File initInfo;
-        initInfo.fileName = "";
-        return initInfo;
+        std::string fileName = json["fileName"];
+        initInfo.fileName = std::string(FUG_RES_DIRECTORY) + fileName;
     }
 
     FUG_RESOURCE_INIT(Binary, BinaryInitInfo_File) {
