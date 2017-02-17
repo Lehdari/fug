@@ -34,10 +34,13 @@ file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES
 )
 
 # TODO Make this scale better for multiple demos
-file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*)
-file(GLOB_RECURSE DRAW_TEST_SRC_FILES demo/TexturedCube/*)
+file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*.cpp)
+file(GLOB_RECURSE GAME_INCLUDE_FILES include/GameJam2017/*.hpp)
+
+file(GLOB_RECURSE DRAW_TEST_SRC_FILES demo/TexturedCube/*.cpp)
 
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
+file(GLOB_RECURSE TEST_INCLUDE_FILES include/Test/*.hpp)
 
 include_directories(include ext/)
 
@@ -74,7 +77,10 @@ target_include_directories(fug-graphics PRIVATE ${EIGEN3_INCLUDE_DIR})
 set_property(TARGET fug-graphics PROPERTY CXX_STANDARD 14)
 
 
-add_executable(fug ${TEST_SRC_FILES})
+add_executable(fug
+    ${TEST_SRC_FILES}
+    ${TEST_INCLUDE_FILES}
+)
 target_include_directories(fug
     PRIVATE ${EIGEN3_INCLUDE_DIR}
     PRIVATE ${SFML_INCLUDE_DIRS}
@@ -87,7 +93,10 @@ target_link_libraries(fug
 )
 set_property(TARGET fug PROPERTY CXX_STANDARD 14)
 
-add_executable(fgj ${GAME_SRC_FILES})
+add_executable(fgj
+    ${GAME_SRC_FILES}
+    ${GAME_INCLUDE_FILES}
+)
 target_include_directories(fgj
     PRIVATE ${EIGEN3_INCLUDE_DIR}
     PRIVATE ${SFML_INCLUDE_DIRS}
