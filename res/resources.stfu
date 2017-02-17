@@ -1,0 +1,44 @@
+{"Binary": {
+	"id": "binary_shader_default_vert",
+	"initInfo": {
+		"fileName": "shader/default_vert.glsl"
+	}
+}}
+
+{"Binary": {
+	"id": "binary_shader_default_frag",
+	"initInfo": {
+		"fileName": "shader/default_frag.glsl"
+	}
+}}
+
+{"ShaderObject": {
+	"id": "shaderobject_default_vert",
+	"initInfo": {
+		"source": "BINARY",
+		"type": "GL_VERTEX_SHADER"
+	},
+	"initResources": [
+		"binary_shader_default_frag"
+	]
+}}
+
+{"ShaderObject": {
+	"id": "shaderobject_default_frag",
+	"initInfo": {
+		"source": "BINARY",
+		"type": "GL_FRAGMENT_SHADER"
+	},
+	"initResources": [
+		"binary_shader_default_vert"
+	]
+}}
+
+{"ShaderProgram": {
+	"id": "shaderprogram_default",
+	"initInfo": {},
+	"initResources": [
+		"shaderobject_default_vert"
+		"shaderobject_default_frag"
+	]
+}}
