@@ -33,6 +33,12 @@ file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES
     ext/glLoadGen/gl_core_3_3.h
 )
 
+file(GLOB_RECURSE ENGINE_SRC_FILES src/Engine/*.cpp)
+file(GLOB_RECURSE ENGINE_INCLUDE_FILES
+    include/Engine/*.hpp
+    include/Engine/*.tcc
+)
+
 # TODO Make this scale better for multiple demos
 file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*.cpp)
 file(GLOB_RECURSE GAME_INCLUDE_FILES include/GameJam2017/*.hpp)
@@ -49,7 +55,7 @@ add_library(fug-core
     ${CORE_SRC_FILES}
     ${CORE_INCLUDE_FILES}
 )
-target_include_directories(fug-core PRIVATE ${EIGEN3_INCLUDE_DIR})
+target_include_directories(fug-core PUBLIC ${EIGEN3_INCLUDE_DIR})
 set_property(TARGET fug-core PROPERTY CXX_STANDARD 14)
 
 add_library(fug-logic
@@ -60,7 +66,6 @@ add_library(fug-logic
 target_link_libraries(fug-logic
     fug-core
 )
-target_include_directories(fug-logic PRIVATE ${EIGEN3_INCLUDE_DIR})
 set_property(TARGET fug-logic PROPERTY CXX_STANDARD 14)
 
 add_library(fug-graphics
@@ -73,8 +78,18 @@ target_link_libraries(fug-graphics
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
-target_include_directories(fug-graphics PRIVATE ${EIGEN3_INCLUDE_DIR})
 set_property(TARGET fug-graphics PROPERTY CXX_STANDARD 14)
+
+add_library(fug-engine
+    SHARED
+    ${ENGINE_SRC_FILES}
+    ${ENGINE_INCLUDE_FILES}
+)
+target_link_libraries(fug-engine
+    fug-logic
+    fug-graphics
+)
+set_property(TARGET fug-engine PROPERTY CXX_STANDARD 14)
 
 
 add_executable(fug
@@ -102,9 +117,7 @@ target_include_directories(fgj
     PRIVATE ${SFML_INCLUDE_DIRS}
 )
 target_link_libraries(fgj
-    fug-graphics
-    fug-logic
-    fug-core
+    fug-engine
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
@@ -116,9 +129,7 @@ target_include_directories(textured_cube
     PRIVATE ${SFML_INCLUDE_DIRS}
 )
 target_link_libraries(textured_cube
-    fug-graphics
-    fug-logic
-    fug-core
+    fug-engine
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
