@@ -50,6 +50,10 @@ file(GLOB_RECURSE TEST_INCLUDE_FILES include/Test/*.hpp)
 
 include_directories(include ext/)
 
+# Definition for res/ directory
+add_definitions(-DFUG_RES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/res/")
+
+# Libraries
 add_library(fug-core
     SHARED
     ${CORE_SRC_FILES}
@@ -91,7 +95,7 @@ target_link_libraries(fug-engine
 )
 set_property(TARGET fug-engine PROPERTY CXX_STANDARD 14)
 
-
+# Applications
 add_executable(fug
     ${TEST_SRC_FILES}
     ${TEST_INCLUDE_FILES}
@@ -101,8 +105,7 @@ target_include_directories(fug
     PRIVATE ${SFML_INCLUDE_DIRS}
 )
 target_link_libraries(fug
-    fug-graphics
-    fug-core
+    fug-engine
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
