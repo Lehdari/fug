@@ -5,7 +5,7 @@
 #include "Graphics/Texture.hpp"
 #include "Core/Binary.hpp"
 
-#include <SFML/Graphics/Image.hpp>
+#include <stb_image.h>
 
 namespace fug {
     struct TextureInitInfo_Binary {
@@ -29,23 +29,28 @@ namespace fug {
             return;
         }
 
-        sf::Image img;
-
         auto buffer = FUG_RESOURCE_MANAGER.getResource<Binary>(initResources[0]);
-        img.loadFromMemory(buffer->getBufferPtr(), buffer->getBufferSize());
+
+        int32_t w, h;
+        int channels;
+        uint8_t* pixels = stbi_load_from_memory(reinterpret_cast<const unsigned char*>(buffer->getBufferPtr()),
+                                                buffer->getBufferSize(),
+                                                &w, &h, &channels, 4);
 
         glGenTextures(1, &textureId_);
         glBindTexture(GL_TEXTURE_2D, textureId_);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y,
-                     0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
-        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, initInfo.wrapS);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, initInfo.wrapT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, initInfo.minFiltering);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, initInfo.magFiltering);
         glGenerateMipmap(GL_TEXTURE_2D);
-        
-        _textureSize = Vector2Glf(img.getSize().x, img.getSize().y);
+
+        _textureSize = Vector2Glf(w, h);
+
+        stbi_image_free(pixels);
     }
 
     FUG_RESOURCE_DESTROY(Texture, TextureInitInfo_Binary)
