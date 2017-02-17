@@ -8,6 +8,12 @@ namespace fug {
     struct ShaderObjectInitInfo_Text {
         GLenum type;
     };
+    FUG_RESOURCE_INITINFO_INIT(ShaderObject, ShaderObjectInitInfo_Text)
+    {
+        /* TODO */
+        static struct ShaderObjectInitInfo_Text initInfo;
+        return initInfo;
+    }
     FUG_RESOURCE_INIT(ShaderObject, ShaderObjectInitInfo_Text) {
         if (initResources.size() == 0) {
             objectId_ = 0;

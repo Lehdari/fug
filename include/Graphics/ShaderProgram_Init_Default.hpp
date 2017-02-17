@@ -1,12 +1,17 @@
 #ifndef SHADER_PROGRAM_INIT_DEFAULT_HPP
 #define SHADER_PROGRAM_INIT_DEFAULT_HPP
 
+#include "Core/ResourceInitInfoMap.hpp"
+
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/ShaderObject.hpp"
 
 namespace fug {
     struct ShaderProgramInitInfo_Default {
     };
+    FUG_RESOURCE_INITINFO_INIT(ShaderProgram, ShaderProgramInitInfo_Default)
+    {
+    }
     FUG_RESOURCE_INIT(ShaderProgram, ShaderProgramInitInfo_Default)
     {
         if (initResources.size() == 0)
