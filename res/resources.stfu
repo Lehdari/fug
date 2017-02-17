@@ -5,7 +5,9 @@
 		"initInfo": {
 			"type": "BinaryInitInfo_File",
 			"fileName": "shader/default_vert.glsl"
-		}
+		},
+		"initResources": [],
+		"depResources": []
 	},
 
 	{	"type": "Binary",
@@ -13,7 +15,9 @@
 		"initInfo": {
 			"type": "BinaryInitInfo_File",
 			"fileName": "shader/default_frag.glsl"
-		}
+		},
+		"initResources": [],
+		"depResources": []
 	},
 
 	{	"type": "ShaderObject",
@@ -25,7 +29,8 @@
 		},
 		"initResources": [
 			"binary_shader_default_frag"
-		]
+		],
+		"depResources": []
 	},
 
 	{	"type": "ShaderObject",
@@ -37,7 +42,8 @@
 		},
 		"initResources": [
 			"binary_shader_default_vert"
-		]
+		],
+		"depResources": []
 	},
 
 	{	"type": "ShaderProgram",
@@ -48,7 +54,8 @@
 		"initResources": [
 			"shaderobject_default_vert",
 			"shaderobject_default_frag"
-		]
+		],
+		"depResources": []
 	}
 ]
 }
