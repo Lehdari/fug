@@ -9,7 +9,7 @@
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/ShaderObject.hpp"
-#include "Graphics/ShaderObject_Init_Binary.hpp"
+#include "Graphics/ShaderObject_Init_Text.hpp"
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/ShaderProgram_Init_Default.hpp"
 #include "Graphics/Texture.hpp"

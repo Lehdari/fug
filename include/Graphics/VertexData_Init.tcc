@@ -1,6 +1,6 @@
-FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Binary) {
+FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
     switch (initInfo.source) {
-    case VertexDataInitInfo_Binary::SOURCE_BINARY_OBJ:
+    case VertexDataInitInfo_Text::SOURCE_BINARY_OBJ:
         {
             if (initResources.size() == 0)
                 return; // TODO_EXCEPTION: maybe throw an exception instead?
@@ -10,7 +10,7 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Binary) {
             normals_.clear();
             indices_.clear();
 
-            auto buffer = FUG_RESOURCE_MANAGER.getResource<Binary>(initResources[0])->getBufferPtr();
+            auto buffer = FUG_RESOURCE_MANAGER.getResource<Text>(initResources[0])->getBufferPtr();
             char lineHeader[32];
             std::vector<std::array<float, 4>> positions;
             std::vector<std::array<float, 3>> texCoords;
@@ -113,4 +113,4 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Binary) {
     }
 }
 
-FUG_RESOURCE_DESTROY(VertexData, VertexDataInitInfo_Binary) {}
+FUG_RESOURCE_DESTROY(VertexData, VertexDataInitInfo_Text) {}

@@ -1,37 +1,37 @@
-#ifndef BINARY_INIT_FILE_HPP
-#define BINARY_INIT_FILE_HPP
+#ifndef TEXT_INIT_FILE_HPP
+#define TEXT_INIT_FILE_HPP
 
 #include <cstdio>
 #include <string>
 
 namespace fug {
-    struct BinaryInitInfo_File  {
+    struct TextInitInfo_File  {
         std::string fileName;
     };
 
-    FUG_RESOURCE_INIT(Binary, BinaryInitInfo_File) {
+    FUG_RESOURCE_INIT(Text, TextInitInfo_File) {
         FILE *fp = fopen(initInfo.fileName.c_str(), "rb");
         if (!fp) {
-            throw "Binary: open failed";
+            throw "Text: open failed";
         }
         if (fseek(fp, 0, SEEK_END) < 0) {
             fclose(fp);
-            throw "Binary: fseek failed";
+            throw "Text: fseek failed";
         }
         size_ = ftell(fp);
         if (fseek(fp, 0, SEEK_SET) < 0) {
             fclose(fp);
-            throw "Binary: fseek failed";
+            throw "Text: fseek failed";
         }
-        buffer_ = new unsigned char[size_ + 1];
+        buffer_ = new char[size_ + 1];
         if (fread(buffer_, 1, size_, fp) < size_) {
             fclose(fp);
-            throw "Binary: read failed";
+            throw "Text: read failed";
         }
         buffer_[size_] = '\0';
     }
 
-    FUG_RESOURCE_DESTROY(Binary, BinaryInitInfo_File) {
+    FUG_RESOURCE_DESTROY(Text, TextInitInfo_File) {
         if (buffer_) {
             delete[] buffer_;
             buffer_ = nullptr;
@@ -40,4 +40,4 @@ namespace fug {
     }
 }
 
-#endif // BINARY_INIT_FILE_HPP
+#endif // TEXT_INIT_FILE_HPP

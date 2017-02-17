@@ -12,10 +12,10 @@ namespace fug {
         Binary(void);
         Binary(const Binary& other);
         ~Binary(void);
-        const char *getBufferPtr(void) const;
+        const unsigned char *getBufferPtr(void) const;
         size_t getBufferSize(void) const;
     private:
-        char* buffer_;
+        unsigned char* buffer_;
         size_t size_;
     };
 }

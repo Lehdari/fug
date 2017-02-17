@@ -1,34 +1,34 @@
-#include "Core/Binary.hpp"
+#include "Core/Text.hpp"
 
 #include <cstring>
 #include <cstdio>
 
 using namespace fug;
 
-Binary::Binary(void) :
+Text::Text(void) :
     buffer_(nullptr),
     size_(0)
 {
 }
 
-Binary::Binary(const Binary& other)
+Text::Text(const Text& other)
 {
-    buffer_ = new unsigned char[other.size_];
+    buffer_ = new char[other.size_];
     memcpy(buffer_, other.buffer_, other.size_);
     size_ = other.size_;
 }
 
-const unsigned char *Binary::getBufferPtr(void) const
+const char *Text::getBufferPtr(void) const
 {
     return buffer_;
 }
 
-size_t Binary::getBufferSize(void) const
+size_t Text::getBufferSize(void) const
 {
     return size_;
 }
 
-Binary::~Binary(void)
+Text::~Text(void)
 {
     if (buffer_)
         delete[] buffer_;
