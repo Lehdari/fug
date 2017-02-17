@@ -4,10 +4,19 @@
 #include <cstdio>
 #include <string>
 
+#include "Core/ResourceManager.hpp"
+
 namespace fug {
     struct BinaryInitInfo_File  {
         std::string fileName;
     };
+
+    FUG_RESOURCE_INITINFO_INIT(Binary, BinaryInitInfo_File)
+    {
+        struct BinaryInitInfo_File initInfo;
+        initInfo.fileName = "";
+        return initInfo;
+    }
 
     FUG_RESOURCE_INIT(Binary, BinaryInitInfo_File) {
         FILE *fp = fopen(initInfo.fileName.c_str(), "rb");
