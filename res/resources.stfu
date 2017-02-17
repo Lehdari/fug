@@ -19,9 +19,9 @@
 	{	"type": "ShaderObject",
 		"id": "shaderobject_default_vert",
 		"initInfo": {
-			"type": "ShaderObjectInitInfo_Default",
+			"type": "ShaderObjectInitInfo_Binary",
 			"source": "BINARY",
-			"type": "GL_VERTEX_SHADER"
+			"shaderType": "GL_VERTEX_SHADER"
 		},
 		"initResources": [
 			"binary_shader_default_frag"
@@ -31,9 +31,9 @@
 	{	"type": "ShaderObject",
 		"id": "shaderobject_default_frag",
 		"initInfo": {
-			"type": "ShaderObjectInitInfo_Default",
+			"type": "ShaderObjectInitInfo_Binary",
 			"source": "BINARY",
-			"type": "GL_FRAGMENT_SHADER"
+			"shaderType": "GL_FRAGMENT_SHADER"
 		},
 		"initResources": [
 			"binary_shader_default_vert"
