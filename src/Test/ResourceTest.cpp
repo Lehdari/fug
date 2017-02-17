@@ -3,6 +3,7 @@
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
 #include "Core/Resource.hpp"
+#include "Core/ResourceIdMap.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
 
@@ -116,18 +117,28 @@ namespace fug {
 
 FUG_UNIT_TEST(resourceTest) {
     using namespace fug;
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
-        (1, {1, 2}, {101, 102, 103});
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
-        (2, {2, 3}, {111, 112, 113});
-    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
-        (3, {3, 4}, {121, 122, 123});
 
+    auto id1 = FUG_RESOURCE_ID_MAP.getId("test1");
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (id1, {1, 2}, {101, 102, 103});
 
+    auto id2 = FUG_RESOURCE_ID_MAP.getId("test2");
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (id2, {2, 3}, {111, 112, 113});
+
+    auto id3 = FUG_RESOURCE_ID_MAP.getId("test3");
+    FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
+        (id3, {3, 4}, {121, 122, 123});
+
+    auto id4 = FUG_RESOURCE_ID_MAP.getId("test3");
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource2, TestResource2_Init_TestResource1>
-        (4, {4.5f, 5.5f}, {3});
+        (id4, {4.5f, 5.5f}, {3});
 
-    auto r1p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(3);
+    auto r2p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id2);
+    auto r3p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id3);
+    auto r3p2 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id3);
+    auto r1p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id1);
+    auto r4p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id4);
 
     //auto tr1Ptr2 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
     //printf("get: %p\n", tr1Ptr2.get());
@@ -191,8 +202,10 @@ FUG_UNIT_TEST(gfxResourceTest) {
     canvas.display();
 
     FUG_TEST_CASE("Binary");
+    auto texBinId = FUG_RESOURCE_ID_MAP.getId("purjoBin");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (5, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
+        (texBinId, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
+    auto texBinPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(texBinId);
 
 #if 0
     auto srcResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
@@ -205,9 +218,9 @@ FUG_UNIT_TEST(gfxResourceTest) {
     FUG_TEST_CASE("ShaderObject");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
         (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
-                                        GL_FRAGMENT_SHADER}, {5}, {});
-    auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
-    printf("%s: get: %p\n", __func__, srcResPtr1.get());
+                                            GL_FRAGMENT_SHADER}, {5}, {});
+   auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
+   printf("%s: get: %p\n", __func__, srcResPtr1.get());
 
     FUG_TEST_CASE("ShaderProgram");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
@@ -215,11 +228,11 @@ FUG_UNIT_TEST(gfxResourceTest) {
 #endif
 
     FUG_TEST_CASE("Texture");
-    FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (8, BinaryInitInfo_File{"../res/textures/test_purjo.glsl"});
+    auto texId = FUG_RESOURCE_ID_MAP.getId("purjoTex");
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
-        (9, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
-                                   0, 0, 0, 0}, {5}, {});
+        (texId, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
+                                   0, 0, 0, 0}, {texBinId}, {}, true);
+    auto texPtr = FUG_RESOURCE_MANAGER.getResource<Texture>(texId);
 }
 
 
