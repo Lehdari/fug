@@ -1,9 +1,16 @@
 #include "Test/UnitTests.hpp"
 
-#include "Test/TestEvents.hpp"
 #include "Core/EventManager.hpp"
 #include "Core/Utility.hpp"
 
+struct CustomEventType {
+    std::string someMessage;
+    unsigned someRevision;
+};
+
+#define TestEvent1 Event<uint64_t>
+#define TestEvent2 Event<std::string>
+#define TestEvent3 Event<CustomEventType>
 
 FUG_UNIT_TEST(eventTest) {
     using namespace fug;

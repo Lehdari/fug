@@ -2,8 +2,75 @@
 
 #include "Core/Scene.hpp"
 
-#include "Test/TestComponents.hpp"
-#include "Test/TestVisitors.hpp"
+namespace fug {
+
+    class TestComponent1 {
+    public:
+        int a;
+        int b;
+    };
+
+    class TestComponent2 {
+    public:
+        float   a;
+        float   b;
+    };
+
+    class TestComponent3 {
+    public:
+        double  a;
+        double  b;
+    };
+
+    class TestVisitor1 : public Visitor<TestVisitor1, TestComponent1> {
+    public:
+        bool operator()(TestComponent1& component)
+        {
+            component.a++;
+            component.b--;
+            printf("TestVisitor1, TestComponent1: [%d, %d]\n", component.a, component.b);
+            return true;
+        }
+    };
+
+    class TestVisitor2 : public Visitor<TestVisitor2, TestComponent1,
+    TestComponent2> {
+    public:
+        bool operator()(TestComponent1& component1,
+                        TestComponent2& component2)
+        {
+            component1.a++;
+            component1.b--;
+            component2.a += 1.0f;
+            component2.b -= 1.0f;
+            printf("TestVisitor2, TestComponent1: [%d, %d]\n", component1.a, component1.b);
+            printf("TestVisitor2, TestComponent2: [%0.2f, %0.2f]\n", component2.a, component2.b);
+            return true;
+        }
+    };
+
+    class TestVisitor3 : public Visitor<TestVisitor3, TestComponent1,
+    TestComponent2,
+    TestComponent3> {
+    public:
+        bool operator()(TestComponent1& component1,
+                        TestComponent2& component2,
+                        TestComponent3& component3)
+        {
+            component1.a++;
+            component1.b--;
+            component2.a += 1.0f;
+            component2.b -= 1.0f;
+            component3.a += 1.0;
+            component3.b -= 1.0;
+            printf("TestVisitor3, TestComponent1: [%d, %d]\n", component1.a, component1.b);
+            printf("TestVisitor3, TestComponent2: [%0.2f, %0.2f]\n", component2.a, component2.b);
+            printf("TestVisitor3, TestComponent3: [%0.2f, %0.2f]\n", component3.a, component3.b);
+            return true;
+        }
+    };
+
+}
 
 FUG_UNIT_TEST(sceneTest) {
     using namespace fug;

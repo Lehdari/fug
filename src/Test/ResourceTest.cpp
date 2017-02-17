@@ -1,12 +1,12 @@
 #include "Test/UnitTests.hpp"
 
-#include "Graphics/Canvas_SFML.hpp"
-
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
+#include "Core/Resource.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Core/ResourcePointer.hpp"
 
+#include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Binary.hpp"
 #include "Graphics/ShaderProgram.hpp"
@@ -14,9 +14,105 @@
 #include "Graphics/Texture.hpp"
 #include "Graphics/Texture_Init_Binary.hpp"
 
-#include "Test/TestResources.hpp"
-#include "Test/TestResources_Init.hpp"
+namespace fug {
 
+    class FUG_RESOURCE(TestResource1) {
+    public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+
+        int a;
+        int b;
+    };
+
+    class FUG_RESOURCE(TestResource2) {
+    public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+
+        float a;
+        float b;
+    };
+
+    class FUG_RESOURCE(TestResource3) {
+    public:
+        FUG_RESOURCE_INIT_DESTROY_DECL
+
+        double a;
+        double b;
+    };
+
+    struct TestResource1_Init_Default {
+        int a;
+        int b;
+    };
+
+    struct TestResource2_Init_TestResource1 {
+        float a;
+        float b;
+    };
+
+    struct TestResource3_Init_TestResource2 {
+        double a;
+        double b;
+    };
+
+    FUG_RESOURCE_INIT(TestResource1, TestResource1_Init_Default)
+    {
+        printf("Initializing TestResource1 with TestResource1_Init_Default\n");
+        printf("InitInfo: a: %d b: %d\n", initInfo.a, initInfo.b);
+        printf("InitResources: {");
+        for (auto& r : initResources)
+            printf("%llu,", (long long unsigned)r);
+        printf("}\n");
+    }
+
+    FUG_RESOURCE_DESTROY(TestResource1, TestResource1_Init_Default)
+    {
+        printf("Destroying TestResource1(TestResource1_Init_Default)\n");
+    }
+
+    FUG_RESOURCE_INIT(TestResource2, TestResource2_Init_TestResource1)
+    {
+        printf("Initializing TestResource1 with TestResource2_Init_TestResource1\n");
+        printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
+        printf("InitResources: {");
+        for (auto& r : initResources)
+            printf("%llu,", (long long unsigned)r);
+        printf("}\n");
+
+        auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource1>(initResources[0]);
+
+        printf("initResource[0]: a: %d b: %d\n", tr1Ptr->a, tr1Ptr->b);
+
+        a = tr1Ptr->a;
+        b = tr1Ptr->b;
+    }
+
+    FUG_RESOURCE_DESTROY(TestResource2, TestResource2_Init_TestResource1)
+    {
+        printf("Destroying TestResource1(TestResource2_Init_TestResource1)\n");
+    }
+
+    FUG_RESOURCE_INIT(TestResource3, TestResource3_Init_TestResource2)
+    {
+        printf("Initializing TestResource2 with TestResource3_Init_TestResource2\n");
+        printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
+        printf("InitResources: {");
+        for (auto& r : initResources)
+            printf("%llu,", (long long unsigned)r);
+        printf("}\n");
+
+        auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource2>(initResources[0]);
+
+        a = tr1Ptr->a;
+        b = tr1Ptr->b;
+    }
+
+    FUG_RESOURCE_DESTROY(TestResource3, TestResource3_Init_TestResource2)
+    {
+        printf("Destroying TestResource2(TestResource3_Init_TestResource2)\n");
+    }
+
+}
 
 FUG_UNIT_TEST(resourceTest) {
     using namespace fug;
