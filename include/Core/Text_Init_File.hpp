@@ -9,6 +9,12 @@ namespace fug {
         std::string fileName;
     };
 
+    FUG_RESOURCE_INITINFO_INIT(Text, TextInitInfo_File)
+    {
+        std::string fileName = json["fileName"];
+        initInfo.fileName = std::string(FUG_RES_DIRECTORY) + fileName;
+    }
+
     FUG_RESOURCE_INIT(Text, TextInitInfo_File) {
         FILE *fp = fopen(initInfo.fileName.c_str(), "rb");
         if (!fp) {
