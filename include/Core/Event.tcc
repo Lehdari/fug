@@ -3,8 +3,8 @@ template <typename T_Event>
 EventId Event<T_Event>::_id = EventId();
 
 template <typename T_Event>
-Event<T_Event>::Event(T_Event const& payload, EventPort const& port) : 
-	data(payload), info({++_id, port, false})
+Event<T_Event>::Event(T_Event const& payload, EventPort const& port, bool persistency) :
+	data(payload), info({++_id, port, persistency})
 {}
 
 #ifdef FUG_DEBUG

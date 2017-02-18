@@ -26,7 +26,7 @@ namespace fug {
 
 		// Adds a Event to its specific mailbox
 		template <typename T_Event>
-		void pushEvent(T_Event const&, EventPort const& = EventPort());
+		void pushEvent(T_Event const&, EventPort const& = EventPort(), bool = false);
 
 		// Flushes a specific mailbox
 		template <typename T_Event>

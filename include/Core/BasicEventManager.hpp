@@ -38,7 +38,7 @@ namespace fug {
 		Mailbox<T_Event> getMailbox(EventPort const& = EventPort());
 
 		template <typename T_Event>
-		void pushEvent(T_Event const&, EventPort const& = EventPort());
+		void pushEvent(T_Event const&, EventPort const& = EventPort(), bool = false);
 
 		template <typename T_Event>
 		void flushEvents(EventPort const& = EventPort());

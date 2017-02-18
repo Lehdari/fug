@@ -7,9 +7,9 @@ Mailbox<T_Event> BasicEventManager::getMailbox(EventPort const& port)
 }
 
 template <typename T_Event>
-void BasicEventManager::pushEvent(T_Event const& payload, EventPort const& port) 
+void BasicEventManager::pushEvent(T_Event const& payload, EventPort const& port, bool persistent)
 {
-	Event<T_Event> event(payload, port);
+	Event<T_Event> event(payload, port, persistent);
 
 	#ifdef FUG_DEBUG
 	std::cout << "* Pushing " << event << std::endl;
@@ -28,14 +28,21 @@ template <typename T_Event>
 void BasicEventManager::flushEvents(EventPort const& port)
 {
 	auto& state = getMailboxState<T_Event>(port);
-	
-    state.begin_iter._index = state.start;
-    state.end_iter._index = state.start;
+    auto& vec = getEventVector<T_Event>();
+
+    // loop through the events to check for persistent ones which won't be flushed
+    auto old_begin = state.begin_iter;
+    for (auto iter = old_begin; iter != state.end_iter; iter++) {
+        if (iter->info.persistent) {
+            vec.at(state.begin_iter++._index) = *iter;
+        }
+    }
+    state.end_iter = state.begin_iter;
+    state.begin_iter = old_begin;
 
 	#ifdef FUG_DEBUG
 	std::cout << "* Mailbox (" << util::str(Event<T_Event>()) << ", port " << port << ") flushed" << std::endl;
 	#endif
-
 }
 
 template <typename T_Event>
