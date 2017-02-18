@@ -1,19 +1,19 @@
 {
 "Resource": [
-	{	"type": "Binary",
+	{	"type": "Text",
 		"id": "binary_shader_default_vert",
 		"initInfo": {
-			"type": "BinaryInitInfo_File",
+			"type": "TextInitInfo_File",
 			"fileName": "shader/default_vert.glsl"
 		},
 		"initResources": [],
 		"depResources": []
 	},
 
-	{	"type": "Binary",
+	{	"type": "Text",
 		"id": "binary_shader_default_frag",
 		"initInfo": {
-			"type": "BinaryInitInfo_File",
+			"type": "TextInitInfo_File",
 			"fileName": "shader/default_frag.glsl"
 		},
 		"initResources": [],
@@ -23,7 +23,7 @@
 	{	"type": "ShaderObject",
 		"id": "shaderobject_default_vert",
 		"initInfo": {
-			"type": "ShaderObjectInitInfo_Binary",
+			"type": "ShaderObjectInitInfo_Text",
 			"source": "BINARY",
 			"shaderType": "GL_VERTEX_SHADER"
 		},
@@ -36,7 +36,7 @@
 	{	"type": "ShaderObject",
 		"id": "shaderobject_default_frag",
 		"initInfo": {
-			"type": "ShaderObjectInitInfo_Binary",
+			"type": "ShaderObjectInitInfo_Text",
 			"source": "BINARY",
 			"shaderType": "GL_FRAGMENT_SHADER"
 		},
