@@ -15,9 +15,9 @@ Mailbox<T_Event> EventManagerBase<T_Implementation>::getMailbox(EventPort const&
 
 template <typename T_Implementation>
 template <typename T_Event>
-void EventManagerBase<T_Implementation>::pushEvent(T_Event const& event, EventPort const& port) 
+void EventManagerBase<T_Implementation>::pushEvent(T_Event const& event, EventPort const& port, bool persistent) 
 {
-	static_cast<T_Implementation*>(this)->pushEvent(event, port);
+	static_cast<T_Implementation*>(this)->pushEvent(event, port, persistent);
 }
 
 template <typename T_Implementation>

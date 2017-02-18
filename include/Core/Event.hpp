@@ -11,7 +11,7 @@ namespace fug {
 	class Event {
 	
 	public:
-		Event(T_Event const& = T_Event(), EventPort const& = EventPort());
+		Event(T_Event const& = T_Event(), EventPort const& = EventPort(), bool = false);
 
 		T_Event data;
 		EventInfo info;
