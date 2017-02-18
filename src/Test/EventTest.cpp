@@ -4,6 +4,10 @@
 #include "Core/Utility.hpp"
 
 #include <sstream>
+#include <algorithm>
+#include <ctime>
+    
+int random_fun (int i) { return std::rand()%i; }
 
 struct CustomEventType {
     std::string someMessage;
@@ -12,7 +16,9 @@ struct CustomEventType {
 
 FUG_UNIT_TEST(eventTest) {
     using namespace fug;
+    
     std::stringstream ss("");
+    std::srand(unsigned(std::time(0)));
 
 	{
 		FUG_TEST_CASE("flushing new mailbox")
@@ -66,7 +72,7 @@ FUG_UNIT_TEST(eventTest) {
         FUG_TEST_CASE("another port with same type - overflowing the mailbox");
         std::string strs[] =
             {"WRONG", "WRONG", "WRONG", "WRONG", "WRONG", "WRONG", "WRONG",
-             "I'm", " The", " Second ", "Mailbox"};
+             "Hel", "lo ", "I", "'", "m", " The", " Sec", "ond ", "Mail", "box"};
 
         for (auto s : strs) {
             FUG_EVENT_MANAGER.pushEvent(s, 777);
@@ -82,7 +88,7 @@ FUG_UNIT_TEST(eventTest) {
         for (auto& ev : FUG_EVENT_MANAGER.getMailbox<std::string>(777)) {
             ss << ev.data;
         }
-        FUG_TEST(ss.str() == "I'm The Second Mailbox");
+        FUG_TEST(ss.str() == "Hello I'm The Second Mailbox");
         ss.str("");
 
         FUG_TEST_CASE("flush");
@@ -101,5 +107,31 @@ FUG_UNIT_TEST(eventTest) {
         FUG_TEST((*iter).data != "");
     }
 
+    {
+        FUG_TEST_CASE("persistent events");
+
+        std::vector<int> numbers(5);
+        numbers.resize(10, 1);
+        
+        for (auto i = 0; i < 10; i++) {
+                
+            std::random_shuffle(numbers.begin(), numbers.end(), random_fun);
+          
+            ss << "Case ";
+            for (auto& num : numbers) {
+                FUG_EVENT_MANAGER.pushEvent(num, 111, num);
+                ss << num << " ";
+            }
+            std::cout << ss.str() << std::endl;
+            ss.str("");
+
+            FUG_EVENT_MANAGER.flushEvents<int>(111);
+            for (auto& num : FUG_EVENT_MANAGER.getMailbox<int>(111)) {
+                ss << num.data;
+            }
+            FUG_TEST(ss.str() == "11111");
+            ss.str("");
+        }
+    }
 }
 

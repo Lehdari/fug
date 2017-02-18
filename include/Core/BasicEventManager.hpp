@@ -3,7 +3,7 @@
 
 #ifdef FUG_DEBUG
 #include "Utility.hpp"
-#define FUG_MAILBOX_SIZE 5
+#define FUG_MAILBOX_SIZE 11
 #else
 #define FUG_MAILBOX_SIZE 1024
 #endif
