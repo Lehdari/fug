@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <string>
 
+#include "Core/ResourceInitInfoMap.hpp"
+
 namespace fug {
     struct TextInitInfo_File  {
         std::string fileName;

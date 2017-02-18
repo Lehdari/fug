@@ -1,19 +1,26 @@
 #ifndef SHADER_OBJECT_INIT_TEXT_HPP
 #define SHADER_OBJECT_INIT_TEXT_HPP
 
-#include "Graphics/ShaderObject.hpp"
+#include "Core/ResourceInitInfoMap.hpp"
 #include "Core/Text.hpp"
+
+#include "Graphics/ShaderObject.hpp"
 
 namespace fug {
     struct ShaderObjectInitInfo_Text {
         GLenum type;
     };
+
     FUG_RESOURCE_INITINFO_INIT(ShaderObject, ShaderObjectInitInfo_Text)
     {
-        /* TODO */
-        static struct ShaderObjectInitInfo_Text initInfo;
-        return initInfo;
+        if (json["shaderType"] == "GL_FRAGMENT_SHADER")
+            initInfo.type = GL_FRAGMENT_SHADER;
+        else if (json["shaderType"] == "GL_VERTEX_SHADER")
+            initInfo.type = GL_VERTEX_SHADER;
+        else
+            throw;
     }
+
     FUG_RESOURCE_INIT(ShaderObject, ShaderObjectInitInfo_Text) {
         if (initResources.size() == 0) {
             objectId_ = 0;
