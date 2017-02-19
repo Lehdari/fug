@@ -2,23 +2,24 @@
 
 #include "Core/ResourceInitInfoMap.hpp"
 
-void fug::ResourceInitInfoMap::addInitInfo(
-    std::string initInfoName,
-    std::function<void(const json&)> func)
+using namespace fug;
+
+void ResourceInitInfoMap::addInitInfo(std::string initInfoName,
+                                      ResourceInitInfoMap::T_InfoFunc func)
 {
     /*
      * TODO: Implement a proper logging system with variable levels of
      * verbosity
-     * fprintf(stderr, "Registering initInfo for: %s\n",
-     *         initInfoName.c_str());
      */
+#if 0
+     fprintf(stderr, "Registering initInfo for: %s\n",
+             initInfoName.c_str());
+#endif
     _map.insert(std::make_pair(initInfoName, func));
 }
 
-
-
-std::function<void(const json&)> fug::ResourceInitInfoMap::getInitFunc(
-    const std::string& initInfoName)
+ResourceInitInfoMap::T_InfoFunc
+    ResourceInitInfoMap::getInitFunc(const std::string& initInfoName)
 {
     auto iter = _map.find(initInfoName);
 
@@ -29,14 +30,6 @@ std::function<void(const json&)> fug::ResourceInitInfoMap::getInitFunc(
         throw;
     }
 
-    return _map[initInfoName];
-}
-
-fug::ResourceInitInfoMapEntry::ResourceInitInfoMapEntry(
-    const std::string& initInfoName,
-    std::function<void(const json&)> func)
-{
-    fug::ResourceInitInfoMap::instance().addInitInfo(initInfoName,
-                                                     func);
+    return iter->second;
 }
 
