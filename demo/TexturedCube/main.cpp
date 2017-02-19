@@ -55,12 +55,12 @@ int main(void)
 
     // Sprite ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (102, TextInitInfo_File{"../src/Graphics/shader/sprite_vert.glsl"});
+    (102, TextInitInfo_File{"../res/shader/sprite_vert.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (103, ShaderObjectInitInfo_Text{GL_VERTEX_SHADER}, {102}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (104, TextInitInfo_File{"../src/Graphics/shader/sprite_frag.glsl"});
+    (104, TextInitInfo_File{"../res/shader/sprite_frag.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (105, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {104}, {});
 
@@ -86,13 +86,13 @@ int main(void)
 
     // Default ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (109, TextInitInfo_File{"../src/Graphics/shader/default_vert.glsl"});
+    (109, TextInitInfo_File{"../res/shader/default_vert.glsl"});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (110, ShaderObjectInitInfo_Text{GL_VERTEX_SHADER}, {109}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (111, TextInitInfo_File{"../src/Graphics/shader/default_frag.glsl"});
+    (111, TextInitInfo_File{"../res/shader/default_frag.glsl"});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (112, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {111}, {});
