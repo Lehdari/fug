@@ -1,4 +1,4 @@
-#version 410
+#version 330
 
 // Inputs
 layout(location = 0) in vec3 pos0;
