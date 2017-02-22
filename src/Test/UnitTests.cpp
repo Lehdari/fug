@@ -23,6 +23,12 @@ void fug::UnitTest::fail(unsigned line, const std::string& msg) const
     FUG_TESTER.fail();
 }
 
+fug::Tester& fug::Tester::instance(void)
+{
+    static Tester tester;
+    return tester;
+}
+
 void fug::Tester::addTest(const std::string& testName,
                           const fug::UnitTest& test)
 {

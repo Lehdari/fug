@@ -57,11 +57,7 @@ namespace fug {
         void run(bool dieOnFail = true);
         void run(const std::string& testName, bool dieOnFail = true);
         void fail(void);
-        static Tester& instance(void)
-        {
-            static Tester tester;
-            return tester;
-        }
+        static Tester& instance(void);
     private:
         std::unordered_map<std::string, UnitTest> _testFuncs;
         void run(std::pair<std::string, UnitTest> test, bool dieOnFail = true);
