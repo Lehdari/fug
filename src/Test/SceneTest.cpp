@@ -1,5 +1,6 @@
 #include "Test/UnitTests.hpp"
 
+#include "Core/Log.hpp"
 #include "Core/Scene.hpp"
 
 namespace fug {
@@ -28,7 +29,8 @@ namespace fug {
         {
             component.a++;
             component.b--;
-            printf("TestVisitor1, TestComponent1: [%d, %d]\n", component.a, component.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor1, TestComponent1: [%d, %d]\n",
+                                     component.a, component.b);
             return true;
         }
     };
@@ -43,8 +45,10 @@ namespace fug {
             component1.b--;
             component2.a += 1.0f;
             component2.b -= 1.0f;
-            printf("TestVisitor2, TestComponent1: [%d, %d]\n", component1.a, component1.b);
-            printf("TestVisitor2, TestComponent2: [%0.2f, %0.2f]\n", component2.a, component2.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor2, TestComponent1: [%d, %d]\n",
+                                     component1.a, component1.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor2, TestComponent2: [%0.2f, %0.2f]\n",
+                                     component2.a, component2.b);
             return true;
         }
     };
@@ -63,9 +67,12 @@ namespace fug {
             component2.b -= 1.0f;
             component3.a += 1.0;
             component3.b -= 1.0;
-            printf("TestVisitor3, TestComponent1: [%d, %d]\n", component1.a, component1.b);
-            printf("TestVisitor3, TestComponent2: [%0.2f, %0.2f]\n", component2.a, component2.b);
-            printf("TestVisitor3, TestComponent3: [%0.2f, %0.2f]\n", component3.a, component3.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor3, TestComponent1: [%d, %d]\n",
+                                     component1.a, component1.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor3, TestComponent2: [%0.2f, %0.2f]\n",
+                                     component2.a, component2.b);
+            FUG_LOG(LogLevel::Debug)("TestVisitor3, TestComponent3: [%0.2f, %0.2f]\n",
+                                     component3.a, component3.b);
             return true;
         }
     };
@@ -107,11 +114,11 @@ FUG_UNIT_TEST(sceneTest) {
     TestVisitor2 visitor2;
     TestVisitor3 visitor3;
 
-    printf("Visiting with TestVisitor1:\n");
+    FUG_LOG(LogLevel::Debug)("Visiting with TestVisitor1:\n");
     FUG_SCENE.accept(visitor1);
-    printf("Visiting with TestVisitor2:\n");
+    FUG_LOG(LogLevel::Debug)("Visiting with TestVisitor2:\n");
     FUG_SCENE.accept(visitor2);
-    printf("Visiting with TestVisitor3:\n");
+    FUG_LOG(LogLevel::Debug)("Visiting with TestVisitor3:\n");
     FUG_SCENE.accept(visitor3);
 
 
