@@ -12,8 +12,6 @@ using namespace fug;
 
 
 FUG_UNIT_TEST(resourceLoaderTest) {
-    std::cout << "Testing ResourceLoader\n\n";
-
     ResourceLoader resourceLoader("resources.stfu");
     resourceLoader.load();
     auto vertResPtr = FUG_RESOURCE_MANAGER.getResource<Text>
