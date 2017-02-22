@@ -17,5 +17,5 @@ FUG_UNIT_TEST(resourceLoaderTest) {
     auto vertResPtr = FUG_RESOURCE_MANAGER.getResource<Text>
         (FUG_RESOURCE_ID_MAP.getId("binary_shader_default_vert"));
     // TODO
-    //printf("%s\n", vertResPtr->getBufferPtr());
+    FUG_LOG(LogLevel::Debug)("%s\n", vertResPtr->getBufferPtr());
 }
