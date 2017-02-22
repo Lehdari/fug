@@ -11,7 +11,7 @@ using namespace nlohmann;
 
 
 ResourceLoader::ResourceLoader(const std::string& fileName) {
-    std::ifstream f(FUG_RES_DIRECTORY+fileName);
+    std::ifstream f(std::string(FUG_RES_DIRECTORY) + fileName);
     f >> _json;
 }
 
