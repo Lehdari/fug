@@ -1,5 +1,6 @@
 #include <functional>
 
+#include "Core/Log.hpp"
 #include "Core/ResourceInitInfoMap.hpp"
 
 using namespace fug;
@@ -13,14 +14,8 @@ ResourceInitInfoMap& ResourceInitInfoMap::instance(void)
 void ResourceInitInfoMap::addInitInfo(std::string initInfoName,
                                       ResourceInitInfoMap::T_InfoFunc func)
 {
-    /*
-     * TODO: Implement a proper logging system with variable levels of
-     * verbosity
-     */
-#if 0
-     fprintf(stderr, "Registering initInfo for: %s\n",
-             initInfoName.c_str());
-#endif
+     FUG_LOG(LogLevel::Debug)("Registering initInfo for: %s\n",
+                              initInfoName.c_str());
     _map.insert(std::make_pair(initInfoName, func));
 }
 
@@ -30,9 +25,8 @@ ResourceInitInfoMap::T_InfoFunc
     auto iter = _map.find(initInfoName);
 
     if (iter == _map.end()) {
-        fprintf(stderr,
-                "ResourceInitInfoMap: Could not find initInfo entry for: %s\n",
-                initInfoName.c_str());
+        FUG_LOG(LogLevel::Error)("ResourceInitInfoMap: Could not find initInfo entry for: %s\n",
+                                 initInfoName.c_str());
         throw;
     }
 
