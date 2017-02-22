@@ -47,8 +47,8 @@ FUG_UNIT_TEST(eventTest) {
         FUG_TEST_CASE("begin- and end-iterators");
         auto begin = mailbox.begin();
         auto end = mailbox.end();
-        std::cout << " -> " << begin << std::endl
-                  << " -> " << end << std::endl;
+        FUG_LOG(LogLevel::Info) << " -> " << begin << std::endl
+                                 << " -> " << end << std::endl;
 
         FUG_TEST_CASE("forward iteration");
         while (begin != end) { ss << (begin++)->data; }
@@ -82,8 +82,8 @@ FUG_UNIT_TEST(eventTest) {
         auto mailbox = FUG_EVENT_MANAGER.getMailbox<std::string>(777);
         auto begin = mailbox.begin();
         auto end = mailbox.end();
-        std::cout << " -> " << begin << std::endl
-                  << " -> " << end << std::endl;
+        FUG_LOG(LogLevel::Info) << " -> " << begin << std::endl
+                                 << " -> " << end << std::endl;
 
         for (auto& ev : FUG_EVENT_MANAGER.getMailbox<std::string>(777)) {
             ss << ev.data;
@@ -122,7 +122,7 @@ FUG_UNIT_TEST(eventTest) {
                 FUG_EVENT_MANAGER.pushEvent(num, 111, num);
                 ss << num << " ";
             }
-            std::cout << ss.str() << std::endl;
+            FUG_LOG(LogLevel::Info) << ss.str() << std::endl;
             ss.str("");
 
             FUG_EVENT_MANAGER.flushEvents<int>(111);
