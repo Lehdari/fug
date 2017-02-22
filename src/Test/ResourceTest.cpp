@@ -204,7 +204,8 @@ FUG_UNIT_TEST(gfxResourceTest) {
     FUG_TEST_CASE("Binary");
     auto texBinId = FUG_RESOURCE_ID_MAP.getId("purjoBin");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-        (texBinId, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
+        (texBinId, BinaryInitInfo_File{std::string(FUG_RES_DIRECTORY) +
+                   "../res/textures/test_purjo.png"});
     auto texBinPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(texBinId);
 
 #if 0
