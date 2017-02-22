@@ -2,6 +2,7 @@
 
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
+#include "Core/Log.hpp"
 #include "Core/Resource.hpp"
 #include "Core/ResourceIdMap.hpp"
 #include "Core/ResourceManager.hpp"
@@ -58,31 +59,34 @@ namespace fug {
 
     FUG_RESOURCE_INIT(TestResource1, TestResource1_Init_Default)
     {
-        printf("Initializing TestResource1 with TestResource1_Init_Default\n");
-        printf("InitInfo: a: %d b: %d\n", initInfo.a, initInfo.b);
-        printf("InitResources: {");
+        FUG_LOG(LogLevel::Debug)("Initializing TestResource1 with TestResource1_Init_Default\n");
+        FUG_LOG(LogLevel::Debug)("InitInfo: a: %d b: %d\n",
+                                 initInfo.a, initInfo.b);
+        FUG_LOG(LogLevel::Debug)("InitResources: {");
         for (auto& r : initResources)
-            printf("%llu,", (long long unsigned)r);
-        printf("}\n");
+            FUG_LOG(LogLevel::Debug)("%llu,", (long long unsigned)r);
+        FUG_LOG(LogLevel::Debug)("}\n");
     }
 
     FUG_RESOURCE_DESTROY(TestResource1, TestResource1_Init_Default)
     {
-        printf("Destroying TestResource1(TestResource1_Init_Default)\n");
+        FUG_LOG(LogLevel::Debug)("Destroying TestResource1(TestResource1_Init_Default)\n");
     }
 
     FUG_RESOURCE_INIT(TestResource2, TestResource2_Init_TestResource1)
     {
-        printf("Initializing TestResource1 with TestResource2_Init_TestResource1\n");
-        printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
-        printf("InitResources: {");
+        FUG_LOG(LogLevel::Debug)("Initializing TestResource1 with TestResource2_Init_TestResource1\n");
+        FUG_LOG(LogLevel::Debug)("InitInfo: a: %0.4f b: %0.4f\n",
+                                 initInfo.a, initInfo.b);
+        FUG_LOG(LogLevel::Debug)("InitResources: {");
         for (auto& r : initResources)
-            printf("%llu,", (long long unsigned)r);
-        printf("}\n");
+            FUG_LOG(LogLevel::Debug)("%llu,", (long long unsigned)r);
+        FUG_LOG(LogLevel::Debug)("}\n");
 
         auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource1>(initResources[0]);
 
-        printf("initResource[0]: a: %d b: %d\n", tr1Ptr->a, tr1Ptr->b);
+        FUG_LOG(LogLevel::Debug)("initResource[0]: a: %d b: %d\n",
+                                 tr1Ptr->a, tr1Ptr->b);
 
         a = tr1Ptr->a;
         b = tr1Ptr->b;
@@ -90,17 +94,17 @@ namespace fug {
 
     FUG_RESOURCE_DESTROY(TestResource2, TestResource2_Init_TestResource1)
     {
-        printf("Destroying TestResource1(TestResource2_Init_TestResource1)\n");
+        FUG_LOG(LogLevel::Debug)("Destroying TestResource1(TestResource2_Init_TestResource1)\n");
     }
 
     FUG_RESOURCE_INIT(TestResource3, TestResource3_Init_TestResource2)
     {
-        printf("Initializing TestResource2 with TestResource3_Init_TestResource2\n");
-        printf("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
-        printf("InitResources: {");
+        FUG_LOG(LogLevel::Debug)("Initializing TestResource2 with TestResource3_Init_TestResource2\n");
+        FUG_LOG(LogLevel::Debug)("InitInfo: a: %0.4f b: %0.4f\n", initInfo.a, initInfo.b);
+        FUG_LOG(LogLevel::Debug)("InitResources: {");
         for (auto& r : initResources)
-            printf("%llu,", (long long unsigned)r);
-        printf("}\n");
+            FUG_LOG(LogLevel::Debug)("%llu,", (long long unsigned)r);
+        FUG_LOG(LogLevel::Debug)("}\n");
 
         auto tr1Ptr = FUG_RESOURCE_MANAGER.getResource<TestResource2>(initResources[0]);
 
@@ -110,7 +114,7 @@ namespace fug {
 
     FUG_RESOURCE_DESTROY(TestResource3, TestResource3_Init_TestResource2)
     {
-        printf("Destroying TestResource2(TestResource3_Init_TestResource2)\n");
+        FUG_LOG(LogLevel::Debug)("Destroying TestResource2(TestResource3_Init_TestResource2)\n");
     }
 
 }
@@ -141,7 +145,7 @@ FUG_UNIT_TEST(resourceTest) {
     auto r4p1 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(id4);
 
     //auto tr1Ptr2 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
-    //printf("get: %p\n", tr1Ptr2.get());
+    //FUG_LOG(LogLevel::Debug)("get: %p\n", tr1Ptr2.get());
 
     //auto r2p1 = FUG_RESOURCE_MANAGER.getResource<TestResource2>(4);
 
@@ -156,40 +160,40 @@ FUG_UNIT_TEST(resourceTest) {
     FUG_RESOURCE_MANAGER.addResourceInfo<TestResource1, TestResource1_Init_Default>
         (4, TestResource1_Init_Default());
 
-    printf("Null initialization:\n");
+    FUG_LOG(LogLevel::Debug)("Null initialization:\n");
     ResourcePointer<TestResource1>   resPtr1;
     ResourcePointer<TestResource1>   resPtr2;
     ResourcePointer<TestResource1>   resPtr3;
     ResourcePointer<TestResource1>   resPtr4;
-    printf("More null initialization:\n");
+    FUG_LOG(LogLevel::Debug)("More null initialization:\n");
     //ResourcePointer<TestResource1>   resPtr5;
     //ResourcePointer<TestResource1>   resPtr6;
     //ResourcePointer<TestResource1>   resPtr7;
     //ResourcePointer<TestResource1>   resPtr8;
 
 
-    printf("Proper initialization:\n");
+    FUG_LOG(LogLevel::Debug)("Proper initialization:\n");
     auto resPtr9 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
     auto resPtr10 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(2);
     auto resPtr11 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(3);
     auto resPtr12 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(4);
-    printf("More proper initialization\n");
+    FUG_LOG(LogLevel::Debug)("More proper initialization\n");
     auto resPtr13 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(1);
     auto resPtr14 = FUG_RESOURCE_MANAGER.getResource<TestResource1>(2);
 
-    printf("Null to new:\n");
+    FUG_LOG(LogLevel::Debug)("Null to new:\n");
     auto resPtr17(resPtr1);
     auto resPtr18 = std::move(resPtr2);
     auto resPtr19 = resPtr3;
     auto resPtr20 = std::move(resPtr4);
 
-    printf("Proper to new:\n");
+    FUG_LOG(LogLevel::Debug)("Proper to new:\n");
     auto resPtr21(resPtr9);
     auto resPtr22(std::move(resPtr10));
     auto resPtr23 = resPtr11;
     auto resPtr24 = std::move(resPtr12);
 
-    printf("Proper to proper:\n");
+    FUG_LOG(LogLevel::Debug)("Proper to proper:\n");
     resPtr21 = resPtr13;
     resPtr22 = resPtr14;
 */
@@ -212,16 +216,17 @@ FUG_UNIT_TEST(gfxResourceTest) {
     auto srcResPtr = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
     //auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
 
-    printf("%s: get: %p\n", __func__, srcResPtr.get());
-    printf("%s, resource pointer buffer: %p\n", __func__, srcResPtr->getBufferPtr());
-    printf("%s\n", srcResPtr->getBufferPtr());
+    FUG_LOG(LogLevel::Debug)("%s: get: %p\n", __func__, srcResPtr.get());
+    FUG_LOG(LogLevel::Debug)("%s, resource pointer buffer: %p\n",
+                             __func__, srcResPtr->getBufferPtr());
+    FUG_LOG(LogLevel::Debug)("%s\n", srcResPtr->getBufferPtr());
 
     FUG_TEST_CASE("ShaderObject");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Binary>
         (6, ShaderObjectInitInfo_Binary{ShaderObjectInitInfo_Binary::SOURCE_GLSL,
                                             GL_FRAGMENT_SHADER}, {5}, {});
    auto srcResPtr1 = FUG_RESOURCE_MANAGER.getResource<Binary>(5);
-   printf("%s: get: %p\n", __func__, srcResPtr1.get());
+   FUG_LOG(LogLevel::Debug)("%s: get: %p\n", __func__, srcResPtr1.get());
 
     FUG_TEST_CASE("ShaderProgram");
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
