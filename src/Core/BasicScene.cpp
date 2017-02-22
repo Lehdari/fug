@@ -1,4 +1,5 @@
 #include "Core/BasicScene.hpp"
+#include "Core/Log.hpp"
 
 
 using namespace fug;
@@ -32,7 +33,7 @@ void BasicScene::removeEntity(const EId& entityId)
 #ifdef FUG_DEBUG
 void BasicScene::print(void) {
     for (auto it = _entities.begin(); it<_entities.end(); ++it)
-        std::cout << "Id: " << it->id << std::endl;
+        FUG_LOG(LogLevel::Debug) << "Id: " << it->id << std::endl;
 }
 #endif
 
