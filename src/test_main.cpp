@@ -1,3 +1,4 @@
+#include "Core/Log.hpp"
 #include "Core/Macros.hpp"
 #include "Test/UnitTests.hpp"
 
@@ -5,6 +6,8 @@ using namespace fug;
 
 int main(int argc, char *argv[])
 {
+
+    FUG_LOG.setLogLevel(LogLevel::Error);
     if (argc == 1) {
         FUG_TESTER.run();
     } else {
