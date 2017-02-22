@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <algorithm>
 
+#include "Core/Log.hpp"
 #include "Core/ResourceManager.hpp"
 
 
