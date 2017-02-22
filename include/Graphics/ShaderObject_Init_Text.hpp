@@ -1,6 +1,7 @@
 #ifndef SHADER_OBJECT_INIT_TEXT_HPP
 #define SHADER_OBJECT_INIT_TEXT_HPP
 
+#include "Core/Log.hpp"
 #include "Core/ResourceInitInfoMap.hpp"
 #include "Core/Text.hpp"
 
@@ -27,9 +28,10 @@ namespace fug {
             return;
         }
         auto src = FUG_RESOURCE_MANAGER.getResource<Text>(initResources[0]);
-        printf("%s: get: %p\n", __func__, src.get());
-        printf("res num: %lu\n", initResources[0]);
-        printf("%s: resource pointer buffer: %p\n", __func__, src->getBufferPtr());
+        FUG_LOG(LogLevel::Debug)("%s: get: %p\n", __func__, src.get());
+        FUG_LOG(LogLevel::Debug)("res num: %lu\n", initResources[0]);
+        FUG_LOG(LogLevel::Debug)("%s: resource pointer buffer: %p\n", __func__,
+                                 src->getBufferPtr());
         const char* srcPtr = src->getBufferPtr();
 
         objectId_ = glCreateShader(initInfo.type);
@@ -44,7 +46,7 @@ namespace fug {
             glGetShaderiv(objectId_, GL_INFO_LOG_LENGTH, &infoLogLength);
             char* infoLog = new char[infoLogLength];
             glGetShaderInfoLog(objectId_, infoLogLength, &infoLogLength, infoLog);
-            fprintf(stderr, "%s", infoLog);
+            FUG_LOG(LogLevel::Error)("%s", infoLog);
             glDeleteShader(objectId_);
             throw infoLog;
         }
