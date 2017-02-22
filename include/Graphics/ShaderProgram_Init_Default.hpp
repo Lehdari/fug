@@ -1,6 +1,7 @@
 #ifndef SHADER_PROGRAM_INIT_DEFAULT_HPP
 #define SHADER_PROGRAM_INIT_DEFAULT_HPP
 
+#include "Core/Log.hpp"
 #include "Core/ResourceInitInfoMap.hpp"
 
 #include "Graphics/ShaderProgram.hpp"
@@ -29,7 +30,7 @@ namespace fug {
             glGetShaderiv(programId_, GL_INFO_LOG_LENGTH, &infoLogLength);
             char *infoLog = new char[infoLogLength];
             glGetProgramInfoLog(programId_, infoLogLength, NULL, infoLog);
-            fprintf(stderr, "%s", infoLog);
+            FUG_LOG(LogLevel::Error)("%s\n", infoLog);
             throw infoLog;
         }
     }
