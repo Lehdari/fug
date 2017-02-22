@@ -27,9 +27,9 @@ namespace fug {
             static_cast<CanvasType_T*>(this)->close();
         }
 
-        /*std::shared_ptr<EventBase> pollEvent(void) {
-            return static_cast<CanvasType_T*>(this)->pollEvent();
-        }*/
+        void handleEvents(void) {
+            return static_cast<CanvasType_T*>(this)->handleEvents();
+        }
     };
 }
 
