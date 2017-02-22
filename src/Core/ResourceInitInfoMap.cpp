@@ -4,6 +4,12 @@
 
 using namespace fug;
 
+ResourceInitInfoMap& ResourceInitInfoMap::instance(void)
+{
+    static ResourceInitInfoMap resourceInitInfoMap;
+    return resourceInitInfoMap;
+}
+
 void ResourceInitInfoMap::addInitInfo(std::string initInfoName,
                                       ResourceInitInfoMap::T_InfoFunc func)
 {

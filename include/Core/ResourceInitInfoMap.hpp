@@ -33,11 +33,7 @@ namespace fug {
 
         T_InfoFunc getInitFunc( const std::string& initInfoName);
 
-        static ResourceInitInfoMap& instance(void)
-        {
-            static ResourceInitInfoMap resourceInitInfoMap;
-            return resourceInitInfoMap;
-        }
+        static ResourceInitInfoMap& instance(void);
 
     private:
         std::unordered_map<std::string, T_InfoFunc> _map;
