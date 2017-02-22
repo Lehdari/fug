@@ -9,6 +9,8 @@
 #endif
 
 #include <unordered_map>
+
+#include "Core/Log.hpp"
 #include "EventManager.hpp"
 
 
