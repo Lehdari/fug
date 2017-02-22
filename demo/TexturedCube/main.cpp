@@ -44,7 +44,7 @@ int main(void)
 
     // SpriteTexture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (100, BinaryInitInfo_File{"../res/textures/test_purjo.png"});
+    (100, BinaryInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/textures/test_purjo.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
     (101, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
         GL_CLAMP_TO_BORDER,
@@ -55,12 +55,12 @@ int main(void)
 
     // Sprite ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (102, TextInitInfo_File{"../res/shader/sprite_vert.glsl"});
+    (102, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/sprite_vert.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (103, ShaderObjectInitInfo_Text{GL_VERTEX_SHADER}, {102}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (104, TextInitInfo_File{"../res/shader/sprite_frag.glsl"});
+    (104, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/sprite_frag.glsl"});
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (105, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {104}, {});
 
@@ -86,13 +86,13 @@ int main(void)
 
     // Default ShaderProgram
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (109, TextInitInfo_File{"../res/shader/default_vert.glsl"});
+    (109, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/default_vert.glsl"});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (110, ShaderObjectInitInfo_Text{GL_VERTEX_SHADER}, {109}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (111, TextInitInfo_File{"../res/shader/default_frag.glsl"});
+    (111, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/default_frag.glsl"});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
     (112, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {111}, {});
@@ -102,7 +102,7 @@ int main(void)
 
     // Cube Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (114, BinaryInitInfo_File{"../res/textures/kuutio.png"});
+    (114, BinaryInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/textures/kuutio.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
     (115, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
         GL_CLAMP_TO_BORDER,
@@ -122,7 +122,7 @@ int main(void)
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (117, TextInitInfo_File{"../res/meshes/kuutio.obj"});
+    (117, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/kuutio.obj"});
     FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Text>
     (118, VertexDataInitInfo_Text{VertexDataInitInfo_Text::SOURCE_BINARY_OBJ},
         {117}, {}, true);
@@ -137,7 +137,7 @@ int main(void)
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (137, TextInitInfo_File{"../res/meshes/kuutio.obj"});
+    (137, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/kuutio.obj"});
     FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Text>
     (138, VertexDataInitInfo_Text{VertexDataInitInfo_Text::SOURCE_BINARY_OBJ},
         {137}, {}, true);
