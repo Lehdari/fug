@@ -81,11 +81,21 @@ FUG_UNIT_TEST(sceneTest) {
     //TestComponent1 tc12; tc12.a = 5; tc12.b = 6;
 
     //nid[i++] = FUG_SCENE.addEntity();
-    nid[i++] = FUG_SCENE.addEntity(TestComponent1(), TestComponent2(), TestComponent3());
     nid[i++] = FUG_SCENE.addEntity();
-    nid[i++] = FUG_SCENE.addEntity(std::move(tc11), TestComponent2(), TestComponent3());
-    nid[i++] = FUG_SCENE.addEntity(TestComponent1(), TestComponent3());
-    nid[i++] = FUG_SCENE.addEntity(TestComponent1(), TestComponent2());
+    FUG_SCENE.addComponent(TestComponent1());
+    FUG_SCENE.addComponent(TestComponent2());
+    FUG_SCENE.addComponent(TestComponent3());
+    nid[i++] = FUG_SCENE.addEntity();
+    nid[i++] = FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(std::move(tc11));
+    FUG_SCENE.addComponent(TestComponent2());
+    FUG_SCENE.addComponent(TestComponent3());
+    nid[i++] = FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(TestComponent1());
+    FUG_SCENE.addComponent(TestComponent3());
+    nid[i++] = FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(TestComponent1());
+    FUG_SCENE.addComponent(TestComponent2());
 
     FUG_SCENE.print();
 

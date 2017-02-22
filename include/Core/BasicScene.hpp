@@ -26,18 +26,15 @@ namespace fug {
 
             Entity(const EId& id) :
                 id(id) {}
-
-            Entity(const EId& id, std::vector<void(BasicScene::*)(const EId&)>&& removePtrs) :
-                id(id), removePtrs(removePtrs) {}
         };
 
         using EntityIterator  = typename std::vector<Entity>::iterator;
 
 
-        template<typename... T_Components>
-        EId addEntity(T_Components&&... components);
-
         EId addEntity(void);
+
+        template <typename T_Component>
+        void addComponent(T_Component&& component);
 
         void removeEntity(const EId& entityId);
 
@@ -80,16 +77,6 @@ namespace fug {
         template <typename... T_Components>
         ComponentCollection<T_Components...> accessCollection(void);
 
-
-        template <typename T_FirstComponent,
-                  typename T_SecondComponent,
-                  typename... T_Components>
-        void addComponents(T_FirstComponent&& firstComponent,
-                           T_SecondComponent&& secondComponent,
-                           T_Components&&... restComponents);
-
-        template <typename T_Component>
-        void addComponents(T_Component&& component);
 
         template <typename T_FirstComponent,
                   typename T_SecondComponent,

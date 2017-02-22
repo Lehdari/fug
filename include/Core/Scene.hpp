@@ -20,9 +20,12 @@ namespace fug {
         //  Get the singleton instance handle
         static SceneBase<T_Implementation>& instance(void);
 
-        //  Add an entity to root
-        template<typename... T_Components>
-        EId addEntity(T_Components&&... components);
+        //  Add an entity
+        EId addEntity(void);
+        
+        //  Add component to last added entity
+        template<typename T_Component>
+        void addComponent(T_Component&& component);
 
         //  Remove an entity
         void removeEntity(const EId& entity);
