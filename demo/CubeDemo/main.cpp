@@ -34,49 +34,53 @@
 #include "Graphics/Renderer.hpp"
 #include "Graphics/SpriteRenderer.hpp"
 
+#include "Core/EventManager.hpp"
+
+
 #include "main.hpp"
+#include "ControlVisitor.hpp"
 
 int main()
 {
     Canvas_SFML canvas;
-    MeshComponent cubeMeshComp = loadCubeMeshComponent();
-    TransformComponent transform;
+    MeshComponent mesh_comp = loadCubeMeshComponent();
     
-    transform.transform << 1.f, 0.f, 0.f, 1.5f,
-                           0.f, 1.f, 0.f, 1.f,
+    TransformComponent tran_comp;
+    tran_comp.transform << 1.f, 0.f, 0.f, 0.f,
+                           0.f, 1.f, 0.f, 0.f,
                            0.f, 0.f, 1.f, 1.f,
-                           0.f, 0.f, 0.f,  1.f;
+                           0.f, 0.f, 0.f, 1.f;
+
+    ControlMapComponent ctrl_comp;
+    ctrl_comp.map = {{sf::Keyboard::W, ControlMapComponent::Action::MoveUp},
+                     {sf::Keyboard::S, ControlMapComponent::Action::MoveDown},
+                     {sf::Keyboard::A, ControlMapComponent::Action::MoveLeft},
+                     {sf::Keyboard::D, ControlMapComponent::Action::MoveRight}};
+
+    ControlVisitor control_visitor;
 
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
-
-    bool is_running = true;
-    auto& win = *canvas.getWindow();
-
-    while (is_running) {
+    while (canvas.isOpen()) {
         
-        // Handle window events
-        sf::Event event;
-        while (win.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                // End the program
-                is_running = false;
-            }
-            else if (event.type == sf::Event::Resized) {
-                // Adjust the viewport when the window is resized
-                glViewport(0, 0, event.size.width, event.size.height);
-            }
-        }
+        canvas.handleEvents();
 
         // Clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 
+
+        control_visitor(tran_comp, ctrl_comp);
+
         // Draw
-        renderer(cubeMeshComp, transform);
+        renderer(mesh_comp, tran_comp);
+
 
         // End the current frame (internally swaps the front and back buffers)
-        win.display();
+        canvas.display();
+
+        // Flush event buffers
+        FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyPressed);
+        FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyReleased);
     }
     return 0;
 }
