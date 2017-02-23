@@ -35,7 +35,7 @@
 #include "Graphics/SpriteRenderer.hpp"
 
 #include "Core/EventManager.hpp"
-
+#include "Core/Scene.hpp"
 
 #include "main.hpp"
 #include "ControlVisitor.hpp"
@@ -43,7 +43,6 @@
 int main()
 {
     Canvas_SFML canvas;
-    MeshComponent mesh_comp = loadCubeMeshComponent();
     
     TransformComponent tran_comp;
     tran_comp.transform << 1.f, 0.f, 0.f, 0.f,
@@ -57,23 +56,29 @@ int main()
                      {sf::Keyboard::A, ControlMapComponent::Action::MoveLeft},
                      {sf::Keyboard::D, ControlMapComponent::Action::MoveRight}};
 
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(loadCubeMeshComponent());
+    FUG_SCENE.addComponent(std::move(tran_comp));
+    FUG_SCENE.addComponent(std::move(ctrl_comp)); 
+
     ControlVisitor control_visitor;
 
-    Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
-                      Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
+    Renderer render_visitor(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
+                            Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
     while (canvas.isOpen()) {
-        
+
+        // Handle window events
         canvas.handleEvents();
 
         // Clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        control_visitor(tran_comp, ctrl_comp);
+        // Handle input
+        FUG_SCENE.accept(control_visitor);
 
         // Draw
-        renderer(mesh_comp, tran_comp);
-
+        FUG_SCENE.accept(render_visitor);
 
         // End the current frame (internally swaps the front and back buffers)
         canvas.display();
