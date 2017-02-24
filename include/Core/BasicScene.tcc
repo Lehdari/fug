@@ -1,3 +1,4 @@
+/*
 template <typename... T_Components>
 EId BasicScene::addEntity(T_Components&&... components)
 {
@@ -8,6 +9,34 @@ EId BasicScene::addEntity(T_Components&&... components)
     addComponents(std::forward<T_Components>(components)...);
 
     return _entityId;
+}
+
+template <typename T_FirstComponent,
+          typename T_SecondComponent,
+          typename... T_Components>
+void BasicScene::addComponents(
+   T_FirstComponent&& firstComponent,
+   T_SecondComponent&& secondComponent,
+   T_Components&&... restComponents)
+{
+    auto& v = accessComponents<T_FirstComponent>();
+    v.emplace_back(ComponentWrapper<T_FirstComponent>{
+        _entityId, std::forward<T_FirstComponent>(firstComponent)});
+
+    addComponents<T_SecondComponent, T_Components...>(
+        std::forward<T_SecondComponent>(secondComponent),
+        std::forward<T_Components>(restComponents)...);
+}
+*/
+template <typename T_Component>
+void BasicScene::addComponent(T_Component&& component)
+{
+    auto& v = accessComponents<T_Component>();
+    v.emplace_back(ComponentWrapper<T_Component>{
+        _entityId, std::forward<T_Component>(component)});
+    
+    //  add function pointer for component removal
+    _entities.back().removePtrs.emplace_back(&BasicScene::removeComponents<T_Component>);
 }
 
 template <typename T_Visitor, typename... T_Components>
@@ -48,31 +77,6 @@ template <typename... T_Components>
 BasicScene::ComponentCollection<T_Components...> BasicScene::accessCollection(void)
 {
     return std::tie(accessComponents<T_Components>()...);
-}
-
-template <typename T_FirstComponent,
-          typename T_SecondComponent,
-          typename... T_Components>
-void BasicScene::addComponents(
-   T_FirstComponent&& firstComponent,
-   T_SecondComponent&& secondComponent,
-   T_Components&&... restComponents)
-{
-    auto& v = accessComponents<T_FirstComponent>();
-    v.emplace_back(ComponentWrapper<T_FirstComponent>{
-        _entityId, std::forward<T_FirstComponent>(firstComponent)});
-
-    addComponents<T_SecondComponent, T_Components...>(
-        std::forward<T_SecondComponent>(secondComponent),
-        std::forward<T_Components>(restComponents)...);
-}
-
-template <typename T_Component>
-void BasicScene::addComponents(T_Component&& component)
-{
-    auto& v = accessComponents<T_Component>();
-    v.emplace_back(ComponentWrapper<T_Component>{
-        _entityId, std::forward<T_Component>(component)});
 }
 
 template <typename T_FirstComponent,

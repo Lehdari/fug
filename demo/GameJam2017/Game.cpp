@@ -53,8 +53,10 @@ void Game::loop()
     uint64_t i = 0;
 
     std::cerr << "adding character" << std::endl;
-    nid[i++] = FUG_SCENE.addEntity(CharacterInfoComponent(), PlayerComponent(),
-        CharacterStateComponent());
+    nid[i++] = FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(CharacterInfoComponent());
+    FUG_SCENE.addComponent(PlayerComponent());
+    FUG_SCENE.addComponent(CharacterStateComponent());
 
     PlayerInputVisitor playerInputVisitor;
 
