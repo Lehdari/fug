@@ -3,7 +3,7 @@
 
 
 #include <Eigen/Dense>
-#include "glLoadGen/gl_core_3_3.h"
+#include <GL/glew.h>
 
 
 #define PI 3.14159265358979323846

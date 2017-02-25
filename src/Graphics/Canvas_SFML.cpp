@@ -1,6 +1,7 @@
 #include <Graphics/Canvas_SFML.hpp>
 //#include <Core/Event.hpp>
 
+#include <GL/glew.h>
 
 using namespace fug;
 
@@ -19,7 +20,7 @@ Canvas_SFML::Canvas_SFML(void)
     _window.setFramerateLimit(60);
     
     // Load gl-functions (glLoadGen-header)
-    if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
+    if (glewInit() != GLEW_OK) {
         throw "Loading ogl extensions failed!";
     }
     

@@ -10,6 +10,7 @@ endif()
 find_package(Eigen3 REQUIRED)
 find_package(SFML 2 REQUIRED system window graphics network audio)
 find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
 
 file(GLOB_RECURSE CORE_SRC_FILES src/Core/*.cpp)
 file(GLOB_RECURSE CORE_INCLUDE_FILES
@@ -24,13 +25,11 @@ file(GLOB_RECURSE LOGIC_INCLUDE_FILES
 )
 
 file(GLOB_RECURSE GRAPHICS_SRC_FILES
-    ext/glLoadGen/gl_core_3_3.c
     src/Graphics/*.cpp
 )
 file(GLOB_RECURSE GRAPHICS_INCLUDE_FILES
     include/Graphics/*.hpp
     include/Graphics/*.tcc
-    ext/glLoadGen/gl_core_3_3.h
 )
 
 file(GLOB_RECURSE ENGINE_SRC_FILES src/Engine/*.cpp)
@@ -77,9 +76,15 @@ add_library(fug-graphics
     ${GRAPHICS_SRC_FILES}
     ${GRAPHICS_INCLUDE_FILES}
 )
+target_include_directories(fug-graphics
+    PUBLIC
+    ${SFML_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIR}
+)
 target_link_libraries(fug-graphics
     fug-core
     ${OPENGL_LIBRARIES}
+    ${GLEW_LIBRARIES}
     ${SFML_LIBRARIES}
 )
 set_property(TARGET fug-graphics PROPERTY CXX_STANDARD 14)
@@ -117,7 +122,6 @@ add_executable(fgj
 )
 target_include_directories(fgj
     PRIVATE ${EIGEN3_INCLUDE_DIR}
-    PRIVATE ${SFML_INCLUDE_DIRS}
 )
 target_link_libraries(fgj
     fug-engine

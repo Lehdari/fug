@@ -3,7 +3,7 @@
 
 
 
-#include "glLoadGen/gl_core_3_3.h"
+#include <GL/glew.h>
 #include <Core/ResourceManager.hpp>
 #include <Core/MathTypes.hpp>
 #include <Graphics/Material.hpp>

@@ -1,7 +1,7 @@
 #ifndef FUG_GRAPHICS_VERTEXDATA_HPP
 #define FUG_GRAPHICS_VERTEXDATA_HPP
 
-#include "glLoadGen/gl_core_3_3.h"
+#include <GL/glew.h>
 #include <Core/Resource.hpp>
 
 #include <vector>

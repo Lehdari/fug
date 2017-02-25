@@ -2,7 +2,6 @@
 #define FUG_GRAPHICS_CANVAS_SFML_HPP
 
 
-#include "glLoadGen/gl_core_3_3.h"
 #include <Graphics/Canvas.hpp>
 #include <SFML/Window.hpp>
 
