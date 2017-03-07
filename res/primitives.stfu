@@ -84,6 +84,50 @@
 			"shaderprogram_default",
 			"texture_white"
 		]
+	},
+
+	{	"type": "Text",
+		"id": "text_cube_obj",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "meshes/cube.obj"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "VertexData",
+		"id": "vertexdata_cube",
+		"initInfo": {
+			"type": "VertexDataInitInfo_Text",
+			"source": "SOURCE_BINARY_OBJ"
+		},
+		"initResources": [
+			"text_cube_obj"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Text",
+		"id": "text_quad_obj",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "meshes/quad.obj"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "VertexData",
+		"id": "vertexdata_quad",
+		"initInfo": {
+			"type": "VertexDataInitInfo_Text",
+			"source": "SOURCE_BINARY_OBJ"
+		},
+		"initResources": [
+			"text_quad_obj"
+		],
+		"depResources": []
 	}
 ]
 }

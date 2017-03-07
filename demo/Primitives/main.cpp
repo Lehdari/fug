@@ -41,31 +41,21 @@ int main(void)
 
     auto whiteMaterialID = FUG_RESOURCE_ID_MAP.getId("material_white");
 
-    // Cube VertexData
-    FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (117, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/cube.obj"});
-    FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Text>
-    (118, VertexDataInitInfo_Text{VertexDataInitInfo_Text::SOURCE_BINARY_OBJ},
-        {117}, {}, true);
-
+    auto vertDataID = FUG_RESOURCE_ID_MAP.getId("vertexdata_cube");
+    
     // Cube Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (119, MeshInitInfo_Default(), {118}, {whiteMaterialID});
+    (119, MeshInitInfo_Default(), {vertDataID}, {whiteMaterialID});
 
     // Cube MeshComponent
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
     MeshComponent cubeMeshComp(cubeMeshResPtr);
 
-    // Quad VertexData
-    FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (137, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/quad.obj"});
-    FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Text>
-    (138, VertexDataInitInfo_Text{VertexDataInitInfo_Text::SOURCE_BINARY_OBJ},
-        {137}, {}, true);
+    vertDataID = FUG_RESOURCE_ID_MAP.getId("vertexdata_quad");
 
     // Quad Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (139, MeshInitInfo_Default(), {138}, {whiteMaterialID});
+    (139, MeshInitInfo_Default(), {vertDataID}, {whiteMaterialID});
 
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(139);

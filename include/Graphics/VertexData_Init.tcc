@@ -1,3 +1,11 @@
+FUG_RESOURCE_INITINFO_INIT(VertexData, VertexDataInitInfo_Text) {
+    if (json["source"] == "SOURCE_BINARY_OBJ") {
+        initInfo.source = VertexDataInitInfo_Text::SOURCE_BINARY_OBJ;
+    } else {
+        throw;
+    }
+}
+
 FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
     switch (initInfo.source) {
     case VertexDataInitInfo_Text::SOURCE_BINARY_OBJ:
