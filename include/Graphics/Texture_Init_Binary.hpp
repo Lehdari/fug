@@ -18,6 +18,19 @@ namespace fug {
         GLint magFiltering;
     };
 
+    FUG_RESOURCE_INITINFO_INIT(Texture, TextureInitInfo_Binary)
+    {
+        if (json["source"] == "SOURCE_BINARY_PNG") {
+            initInfo.source = TextureInitInfo_Binary::SOURCE_BINARY_PNG;
+        } else {
+            throw;
+        }
+        initInfo.wrapS = fug::getGLenum(json["wrapS"]);
+        initInfo.wrapT = fug::getGLenum(json["wrapT"]);
+        initInfo.minFiltering = fug::getGLenum(json["minFiltering"]);
+        initInfo.magFiltering = fug::getGLenum(json["magFiltering"]);
+    }
+
     FUG_RESOURCE_INIT(Texture, TextureInitInfo_Binary)
     {
         if (initResources.size() == 0) {

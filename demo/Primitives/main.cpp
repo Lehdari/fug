@@ -39,12 +39,8 @@ int main(void)
     ResourceLoader resourceLoader("primitives.stfu");
     resourceLoader.load();
 
-    // White Texture
-    FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Color>
-    (115, TextureInitInfo_Color{Vector4Glf(1.f,1.f,1.f,1.f)},
-     {}, {}, true);
-
-    auto shaderProgID = FUG_RESOURCE_ID_MAP.getId("shaderprogram_default");
+    auto shaderProgResID = FUG_RESOURCE_ID_MAP.getId("shaderprogram_default");
+    auto textureResID = FUG_RESOURCE_ID_MAP.getId("texture_white");
 
     // White Material
     FUG_RESOURCE_MANAGER.addResourceInfo<Material, MaterialInitInfo_Default>
@@ -53,7 +49,7 @@ int main(void)
                                    {"uSpecularCol"},
                                    {"uSpecularExp"},
                                    Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
-                                   {}, {shaderProgID,115}, true);
+                                   {}, {shaderProgResID,textureResID}, true);
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>

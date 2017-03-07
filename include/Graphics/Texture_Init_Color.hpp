@@ -9,6 +9,12 @@ namespace fug {
         Vector4Glf color;
     };
 
+    FUG_RESOURCE_INITINFO_INIT(Texture, TextureInitInfo_Color)
+    {
+        auto c = json["color"];
+        initInfo.color = Vector4Glf(c[0], c[1], c[2], c[3]);
+    }
+
     FUG_RESOURCE_INIT(Texture, TextureInitInfo_Color)
     {
         glGenTextures(1, &textureId_);

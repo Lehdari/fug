@@ -56,6 +56,16 @@
 			"shaderobject_default_frag"
 		],
 		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_white",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [1.0,1.0,1.0,1.0]
+		},
+		"initResources": [],
+		"depResources": []
 	}
 ]
 }
