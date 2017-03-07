@@ -58,7 +58,7 @@ int main(void)
 
     // Cube Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (114, BinaryInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/textures/kuutio.png"});
+    (114, BinaryInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/textures/cube.png"});
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>
     (115, TextureInitInfo_Binary{TextureInitInfo_Binary::SOURCE_BINARY_PNG,
         GL_CLAMP_TO_BORDER,
@@ -78,7 +78,7 @@ int main(void)
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (117, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/kuutio.obj"});
+    (117, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/meshes/cube.obj"});
     FUG_RESOURCE_MANAGER.addResourceInfo<VertexData, VertexDataInitInfo_Text>
     (118, VertexDataInitInfo_Text{VertexDataInitInfo_Text::SOURCE_BINARY_OBJ},
         {117}, {}, true);
