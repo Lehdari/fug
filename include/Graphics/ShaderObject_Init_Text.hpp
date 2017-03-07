@@ -6,6 +6,7 @@
 #include "Core/Text.hpp"
 
 #include "Graphics/ShaderObject.hpp"
+#include "Graphics/GLenumMap.hpp"
 
 namespace fug {
     struct ShaderObjectInitInfo_Text {
@@ -14,12 +15,7 @@ namespace fug {
 
     FUG_RESOURCE_INITINFO_INIT(ShaderObject, ShaderObjectInitInfo_Text)
     {
-        if (json["shaderType"] == "GL_FRAGMENT_SHADER")
-            initInfo.type = GL_FRAGMENT_SHADER;
-        else if (json["shaderType"] == "GL_VERTEX_SHADER")
-            initInfo.type = GL_VERTEX_SHADER;
-        else
-            throw;
+        initInfo.type = fug::getGLenum(json["shaderType"]);
     }
 
     FUG_RESOURCE_INIT(ShaderObject, ShaderObjectInitInfo_Text) {
