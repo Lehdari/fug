@@ -28,7 +28,7 @@
 			"shaderType": "GL_VERTEX_SHADER"
 		},
 		"initResources": [
-			"binary_shader_default_frag"
+			"binary_shader_default_vert"
 		],
 		"depResources": []
 	},
@@ -41,7 +41,7 @@
 			"shaderType": "GL_FRAGMENT_SHADER"
 		},
 		"initResources": [
-			"binary_shader_default_vert"
+			"binary_shader_default_frag"
 		],
 		"depResources": []
 	},
@@ -56,7 +56,6 @@
 			"shaderobject_default_frag"
 		],
 		"depResources": []
-	},
-
+	}
 ]
 }

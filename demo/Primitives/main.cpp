@@ -5,6 +5,8 @@
 #include "Core/Text.hpp"
 #include "Core/Text_Init_File.hpp"
 
+#include "Engine/ResourceLoader.hpp"
+
 #include "Graphics/Material.hpp"
 #include "Graphics/Material_Init.hpp"
 
@@ -34,26 +36,15 @@ int main(void)
 
     // Load resources
 
-    // Default ShaderProgram
-    FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (109, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/default_vert.glsl"});
-
-    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
-    (110, ShaderObjectInitInfo_Text{GL_VERTEX_SHADER}, {109}, {});
-
-    FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
-    (111, TextInitInfo_File{std::string(FUG_RES_DIRECTORY) + "../res/shader/default_frag.glsl"});
-
-    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderObject, ShaderObjectInitInfo_Text>
-    (112, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {111}, {});
-
-    FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
-    (113, ShaderProgramInitInfo_Default{}, {110,112}, {}, true);
+    ResourceLoader resourceLoader("primitives.stfu");
+    resourceLoader.load();
 
     // White Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Color>
     (115, TextureInitInfo_Color{Vector4Glf(1.f,1.f,1.f,1.f)},
      {}, {}, true);
+
+    auto shaderProgID = FUG_RESOURCE_ID_MAP.getId("shaderprogram_default");
 
     // White Material
     FUG_RESOURCE_MANAGER.addResourceInfo<Material, MaterialInitInfo_Default>
@@ -62,7 +53,7 @@ int main(void)
                                    {"uSpecularCol"},
                                    {"uSpecularExp"},
                                    Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
-                                   {}, {113,115}, true);
+                                   {}, {shaderProgID,115}, true);
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
