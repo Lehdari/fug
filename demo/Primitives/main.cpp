@@ -35,30 +35,17 @@ int main(void)
     sf::Window* wPtr = c.getWindow();
 
     // Load resources
-
     ResourceLoader resourceLoader("primitives.stfu");
     resourceLoader.load();
 
-    auto whiteMaterialID = FUG_RESOURCE_ID_MAP.getId("material_white");
-
-    auto vertDataID = FUG_RESOURCE_ID_MAP.getId("vertexdata_cube");
-    
-    // Cube Mesh
-    FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (119, MeshInitInfo_Default(), {vertDataID}, {whiteMaterialID});
-
     // Cube MeshComponent
-    auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
+    auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
+                            FUG_RESOURCE_ID_MAP.getId("mesh_cube"));
     MeshComponent cubeMeshComp(cubeMeshResPtr);
 
-    vertDataID = FUG_RESOURCE_ID_MAP.getId("vertexdata_quad");
-
-    // Quad Mesh
-    FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (139, MeshInitInfo_Default(), {vertDataID}, {whiteMaterialID});
-
     // Quad MeshComponent
-    auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(139);
+    auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
+                            FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
     MeshComponent quadMeshComp(quadMeshResPtr);
 
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),

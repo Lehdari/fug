@@ -1,3 +1,6 @@
+FUG_RESOURCE_INITINFO_INIT(Mesh, MeshInitInfo_Default) {
+}
+
 FUG_RESOURCE_INIT(Mesh, MeshInitInfo_Default) {
     if (initResources.size() < 1 || depResources.size() < 1)
     return;

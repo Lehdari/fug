@@ -108,6 +108,19 @@
 		"depResources": []
 	},
 
+	{	"type": "Mesh",
+		"id": "mesh_cube",
+		"initInfo": {
+			"type": "MeshInitInfo_Default"
+		},
+		"initResources": [
+			"vertexdata_cube"
+		],
+		"depResources": [
+			"material_white"
+		]
+	},
+
 	{	"type": "Text",
 		"id": "text_quad_obj",
 		"initInfo": {
@@ -128,6 +141,19 @@
 			"text_quad_obj"
 		],
 		"depResources": []
+	},
+
+	{	"type": "Mesh",
+		"id": "mesh_quad",
+		"initInfo": {
+			"type": "MeshInitInfo_Default"
+		},
+		"initResources": [
+			"vertexdata_quad"
+		],
+		"depResources": [
+			"material_white"
+		]
 	}
 ]
 }
