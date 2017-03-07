@@ -1,3 +1,14 @@
+FUG_RESOURCE_INITINFO_INIT(Material, MaterialInitInfo_Default)
+{
+    for (auto& u : json["uniformSampler2DNames"]) initInfo.uniformSampler2DNames.push_back(u);
+    for (auto& u : json["uniformMat4Names"]) initInfo.uniformMat4Names.push_back(u);
+    for (auto& u : json["uniformVec3Names"]) initInfo.uniformVec3Names.push_back(u);
+    for (auto& u : json["uniformFloatNames"]) initInfo.uniformFloatNames.push_back(u);
+    auto c = json["specularColor"];
+    initInfo.specularColor = Vector3f(c[0], c[1], c[2]);
+    initInfo.specularExp = json["specularExp"];
+}
+
 FUG_RESOURCE_INIT(Material, MaterialInitInfo_Default) {
     if (depResources.size() < 1)
         return;

@@ -39,17 +39,7 @@ int main(void)
     ResourceLoader resourceLoader("primitives.stfu");
     resourceLoader.load();
 
-    auto shaderProgResID = FUG_RESOURCE_ID_MAP.getId("shaderprogram_default");
-    auto textureResID = FUG_RESOURCE_ID_MAP.getId("texture_white");
-
-    // White Material
-    FUG_RESOURCE_MANAGER.addResourceInfo<Material, MaterialInitInfo_Default>
-    (116, MaterialInitInfo_Default{{"diffuseSampler"},
-                                   {"uModelToClip", "uModelToCam", "uNormalToCam"},
-                                   {"uSpecularCol"},
-                                   {"uSpecularExp"},
-                                   Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
-                                   {}, {shaderProgResID,textureResID}, true);
+    auto whiteMaterialID = FUG_RESOURCE_ID_MAP.getId("material_white");
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>
@@ -60,7 +50,7 @@ int main(void)
 
     // Cube Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (119, MeshInitInfo_Default(), {118}, {116});
+    (119, MeshInitInfo_Default(), {118}, {whiteMaterialID});
 
     // Cube MeshComponent
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
@@ -75,7 +65,7 @@ int main(void)
 
     // Quad Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (139, MeshInitInfo_Default(), {138}, {116});
+    (139, MeshInitInfo_Default(), {138}, {whiteMaterialID});
 
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(139);

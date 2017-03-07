@@ -66,6 +66,24 @@
 		},
 		"initResources": [],
 		"depResources": []
+	},
+
+	{	"type": "Material",
+		"id": "material_white",
+		"initInfo": {
+			"type": "MaterialInitInfo_Default",
+			"uniformSampler2DNames": ["diffuseSampler"],
+			"uniformMat4Names": ["uModelToClip", "uModelToCam", "uNormalToCam"],
+			"uniformVec3Names": ["uSpecularCol"],
+			"uniformFloatNames": ["uSpecularExp"],
+			"specularColor": [0.1, 0.1, 0.1],
+			"specularExp": 0.5
+		},
+		"initResources": [],
+		"depResources": [
+			"shaderprogram_default",
+			"texture_white"
+		]
 	}
 ]
 }
