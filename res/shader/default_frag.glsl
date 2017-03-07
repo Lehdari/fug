@@ -1,8 +1,5 @@
 #version 330
 
-// Transformation
-uniform mat4 uNormalToCam;
-
 // Material
 uniform vec3 uSpecularCol;
 uniform float uSpecularExp;
@@ -17,8 +14,9 @@ in vec2 texVar;
 
 out vec4 fragColor;
 
-const float lightIntensity = 0.8f;
-const vec3 toLight = vec3(0, 0, -1);
+const vec3 ambientLight = vec3(0.2, 0.2, 0.2);
+const float dirLightIntensity = 0.8f;
+const vec3 toLightCam = normalize(vec3(0, 0, -1));
 
 void main()
 {
@@ -26,16 +24,19 @@ void main()
     vec3 diffuseCol = texture(diffuseSampler, texVar).xyz;
 
     // Lighting
-    vec3 sumCol = vec3(0);
+    vec3 N = normalize(normVar);
+    float diffuseLight = max(0, dot(N, toLightCam));
 
-    vec3 N = normalize((uNormalToCam * vec4(normVar, 0)).xyz);
-    vec3 diffuse = diffuseCol.xyz * max(0, dot(N, toLight));
+    float specularLight = 0;
+    if (diffuseLight > 0) {
+        vec3 V = -normalize(posVar);
+        vec3 h = normalize(V + toLightCam);
+        specularLight = pow(max(0, dot(N, h)), uSpecularExp);
+    }
 
-    vec3 V = -normalize(posVar);
-    vec3 h = normalize(V + toLight);
-    vec3 specular = uSpecularCol * pow(max(0, dot(N, h)), uSpecularExp);
+    vec3 sumCol = diffuseCol.xyz * (ambientLight +
+                                    dirLightIntensity * diffuseLight +
+                                    uSpecularCol * specularLight);
 
-    sumCol += lightIntensity * (diffuse + specular);
-
-    fragColor = vec4(diffuseCol, 1);
+    fragColor = vec4(sumCol, 1);
 }

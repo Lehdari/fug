@@ -18,7 +18,7 @@ out vec2 texVar;
 void main()
 {
     posVar = (uModelToCam * vec4(pos0, 1)).xyz;
-    normVar = (uNormalToCam * vec4(norm0, 0.f)).xyz;
+    normVar = (uNormalToCam * vec4(norm0, 0)).xyz;
     texVar = tex0;
     gl_Position  = uModelToClip * vec4(pos0, 1);
 }
