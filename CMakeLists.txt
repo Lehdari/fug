@@ -44,7 +44,9 @@ file(GLOB_RECURSE ENGINE_INCLUDE_FILES
 file(GLOB_RECURSE GAME_SRC_FILES demo/GameJam2017/*.cpp)
 file(GLOB_RECURSE GAME_INCLUDE_FILES include/GameJam2017/*.hpp)
 
-file(GLOB_RECURSE DRAW_TEST_SRC_FILES demo/TexturedCube/*.cpp)
+file(GLOB_RECURSE TEXTURED_CUBE_SRC_FILES demo/TexturedCube/*.cpp)
+
+file(GLOB_RECURSE PRIMITIVES_SRC_FILES demo/Primitives/*.cpp)
 
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 file(GLOB_RECURSE TEST_INCLUDE_FILES include/Test/*.hpp)
@@ -132,7 +134,7 @@ target_link_libraries(fgj
 )
 set_property(TARGET fgj PROPERTY CXX_STANDARD 14)
 
-add_executable(textured_cube ${DRAW_TEST_SRC_FILES})
+add_executable(textured_cube ${TEXTURED_CUBE_SRC_FILES})
 target_include_directories(textured_cube
     PRIVATE ${EIGEN3_INCLUDE_DIR}
     PRIVATE ${SFML_INCLUDE_DIRS}
@@ -144,3 +146,15 @@ target_link_libraries(textured_cube
     ${SFML_LIBRARIES}
 )
 set_property(TARGET textured_cube PROPERTY CXX_STANDARD 14)
+
+add_executable(primitives ${PRIMITIVES_SRC_FILES})
+target_include_directories(primitives
+    PRIVATE ${EIGEN3_INCLUDE_DIR}
+    PRIVATE ${SFML_INCLUDE_DIRS}
+)
+target_link_libraries(primitives
+    fug-engine
+    ${OPENGL_LIBRARIES}
+    ${SFML_LIBRARIES}
+)
+set_property(TARGET primitives PROPERTY CXX_STANDARD 14)
