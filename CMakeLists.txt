@@ -12,6 +12,8 @@ find_package(SFML 2 REQUIRED system window graphics network audio)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
+add_subdirectory(ext/imgui-fug)
+
 file(GLOB_RECURSE CORE_SRC_FILES src/Core/*.cpp)
 file(GLOB_RECURSE CORE_INCLUDE_FILES
     include/Core/*.hpp

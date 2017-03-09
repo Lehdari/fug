@@ -1,0 +1,20 @@
+# Library
+add_library(imgui-fug
+    SHARED
+    imgui/imgui.cpp
+    imgui/imgui_draw.cpp
+    imgui/imgui_demo.cpp
+    imgui_impl_sfml_gl3.cpp
+)
+target_include_directories(imgui-fug
+    PUBLIC
+    imgui
+    ${EIGEN3_INCLUDE_DIR}
+    ${SFML_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIR}
+)
+target_link_libraries(imgui-fug
+    ${OPENGL_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    ${SFML_LIBRARIES}
+)
