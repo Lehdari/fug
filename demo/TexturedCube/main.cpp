@@ -1,3 +1,6 @@
+#include "imgui-fug/imgui/imgui.h"
+#include "imgui-fug/imgui_impl_sfml_gl3.h"
+
 #include "Core/ResourceManager.hpp"
 
 #include "Core/Binary.hpp"
@@ -32,6 +35,8 @@ int main(void)
     Canvas_SFML c;
     sf::Window* wPtr = c.getWindow();
 
+    // Bind imgui
+    ImGui_ImplSFMLGL3_Init(wPtr);
 
     // Load resources
 
@@ -90,6 +95,7 @@ int main(void)
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
     bool running = true;
+    ImVec4 pos(0.f, 0.f, 0.f, 0.f);
     while (running)
     {
         // handle events
@@ -106,6 +112,23 @@ int main(void)
                 // adjust the viewport when the window is resized
                 glViewport(0, 0, event.size.width, event.size.height);
             }
+            else
+            {
+                ImGui_ImplSFMLGL3_HandleEvent(event);
+            }
+
+        }
+
+        // Simple imgui-window
+        ImGui_ImplSFMLGL3_NewFrame();
+        // mousepos could be passed to imgui before event-handling and check this
+        // to not pass mouse-events to program if hovering
+        ImGui::GetIO().MouseDrawCursor = ImGui::IsMouseHoveringAnyWindow();
+        {
+            ImGui::SliderFloat("x", &pos.x, -2.f, 2.f);
+            ImGui::SliderFloat("y", &pos.y, -2.f, 2.f);
+            ImGui::SliderFloat("z", &pos.z, -2.f, 2.f);
+            ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 
         // clear the buffers
@@ -120,6 +143,7 @@ int main(void)
                                0.f, 0.f, 0.f,   1.f;
         renderer(cubeMeshComp, transform);
 
+        ImGui::Render();
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
     }

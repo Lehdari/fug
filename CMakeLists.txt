@@ -139,6 +139,7 @@ target_include_directories(textured_cube
 )
 target_link_libraries(textured_cube
     fug-engine
+    imgui-fug
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
