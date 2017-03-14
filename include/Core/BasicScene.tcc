@@ -118,6 +118,20 @@ void BasicScene::initIterators(
                                                       secondIter, restIters...);
 }
 
+#ifdef _WIN32
+template <typename T_FirstComponent,
+          typename T_SecondComponent>
+void BasicScene::initIterators(
+    ComponentVector<T_FirstComponent>& firstVector,
+    ComponentVector<T_SecondComponent>& secondVector,
+    ComponentIter<T_FirstComponent>& firstIter,
+    ComponentIter<T_SecondComponent>& secondIter)
+{
+    firstIter = firstVector.begin();
+    initIterators<T_SecondComponent>(secondVector, secondIter);
+}
+#endif // _WIN32
+
 template <typename T_Component>
 void BasicScene::initIterators(ComponentVector<T_Component>& vector,
                                ComponentIter<T_Component>& iter)
@@ -157,6 +171,38 @@ bool BasicScene::iterate(
 
     return true;
 }
+
+#ifdef _WIN32
+template <typename T_FirstComponent,
+          typename T_SecondComponent>
+bool BasicScene::iterate(
+    ComponentVector<T_FirstComponent>& firstVector,
+    ComponentVector<T_SecondComponent>& secondVector,
+    ComponentIter<T_FirstComponent>& firstIter,
+    ComponentIter<T_SecondComponent>& secondIter,
+    EId& maxId)
+{
+    for (;firstIter != firstVector.end() && maxId > firstIter->entityId; ++firstIter);
+    if (firstIter != firstVector.end())
+        maxId = firstIter->entityId;
+
+    if (firstIter == firstVector.end() || !iterate<T_SecondComponent>
+        (secondVector, secondIter, maxId))
+        return false;
+
+    for (;firstIter != firstVector.end() && maxId > firstIter->entityId;) {
+        for (;firstIter != firstVector.end() && maxId > firstIter->entityId; ++firstIter);
+        if (firstIter != firstVector.end())
+            maxId = firstIter->entityId;
+
+        if (firstIter == firstVector.end() || !iterate<T_SecondComponent>
+            (secondVector, secondIter, maxId))
+            return false;
+    }
+
+    return true;
+}
+#endif // _WIN32
 
 template <typename T_Component>
 bool BasicScene::iterate(

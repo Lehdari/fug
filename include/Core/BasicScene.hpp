@@ -97,9 +97,28 @@ namespace fug {
                                          ComponentIter<T_SecondComponent>& secondIter,
                                          ComponentIter<T_Components>&... restIters);
 
+#ifdef _WIN32
+        template <typename T_FirstComponent,
+                  typename T_SecondComponent>
+        inline static void initIterators(ComponentVector<T_FirstComponent>& firstVector,
+                                         ComponentVector<T_SecondComponent>& secondVector,
+                                         ComponentIter<T_FirstComponent>& firstIter,
+                                         ComponentIter<T_SecondComponent>& secondIter);
+#endif // _WIN32
+
         template <typename T_Component>
         inline static void initIterators(ComponentVector<T_Component>& vector,
                                          ComponentIter<T_Component>& iter);
+
+#ifdef _WIN32
+        template <typename T_FirstComponent,
+                  typename T_SecondComponent>
+        inline static bool iterate(ComponentVector<T_FirstComponent>& firstVector,
+                                   ComponentVector<T_SecondComponent>& secondVector,
+                                   ComponentIter<T_FirstComponent>& firstIter,
+                                   ComponentIter<T_SecondComponent>& secondIter,
+                                   EId& maxId);
+#endif // _WIN32
 
         template <typename T_FirstComponent,
                   typename T_SecondComponent,
