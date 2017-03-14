@@ -3,7 +3,10 @@
 
 #include <cstdlib>
 #include <string>
+
+#ifndef _WIN32
 #include <cxxabi.h>
+#endif // _WIN32
 
 
 namespace fug {
