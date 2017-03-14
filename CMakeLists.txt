@@ -52,7 +52,7 @@ file(GLOB_RECURSE CUBE_DEMO_SRC_FILES demo/CubeDemo/*.cpp)
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 file(GLOB_RECURSE TEST_INCLUDE_FILES include/Test/*.hpp)
 
-include_directories(include ext/)
+include_directories(include ext/ ${CMAKE_BINARY_DIR}/export)
 
 # Definition for res/ directory
 add_definitions(-DFUG_RES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/res/")
@@ -62,6 +62,11 @@ add_library(fug-core
     SHARED
     ${CORE_SRC_FILES}
     ${CORE_INCLUDE_FILES}
+)
+include(GenerateExportHeader)
+generate_export_header(fug-core
+    EXPORT_MACRO_NAME FUG_CORE_EXPORT
+    EXPORT_FILE_NAME export/fug_core_export.hpp
 )
 target_include_directories(fug-core
     PUBLIC

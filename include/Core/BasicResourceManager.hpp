@@ -9,6 +9,7 @@
 #include "Core/Log.hpp"
 #include "Core/ResourceManager.hpp"
 
+#include "fug_core_export.hpp"
 
 namespace fug {
 
@@ -90,7 +91,7 @@ namespace fug {
             accessResourcePointerPointers(void);
 
 
-        static uint64_t _typeId;
+        static FUG_CORE_EXPORT uint64_t _typeId;
         template <typename T_Resource>
         static uint64_t getTypeId(void);
     };

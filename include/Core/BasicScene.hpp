@@ -14,6 +14,8 @@
 #include <iostream>
 #endif
 
+#include "fug_core_export.hpp"
+
 namespace fug {
 
 
@@ -46,8 +48,8 @@ namespace fug {
         #endif
 
     private:
-        static EId                  _entityId;    //  running entity id, should last to end of the known universe
-        static std::vector<Entity>  _entities;     //  vector for entitys
+        static FUG_CORE_EXPORT EId                  _entityId;    //  running entity id, should last to end of the known universe
+        static FUG_CORE_EXPORT std::vector<Entity>  _entities;     //  vector for entitys
 
         //  Find entity by id
         int findEntity(const EId& entityId, EntityIterator& it,
