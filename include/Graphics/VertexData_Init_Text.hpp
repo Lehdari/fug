@@ -1,5 +1,5 @@
-#ifndef FUG_GRAPHICS_VERTEXDATA_INIT_HPP
-#define FUG_GRAPHICS_VERTEXDATA_INIT_HPP
+#ifndef FUG_GRAPHICS_VERTEXDATA_INIT_TEXT_HPP
+#define FUG_GRAPHICS_VERTEXDATA_INIT_TEXT_HPP
 
 
 #include <Core/ResourceManager.hpp>
@@ -19,9 +19,9 @@ namespace fug {
         } source;
     };
 
-#include "VertexData_Init.tcc"
+#include "VertexData_Init_Text.tcc"
 
 } // namespace fug
 
 
-#endif // FUG_GRAPHICS_VERTEXDATA_INIT_HPP
+#endif // FUG_GRAPHICS_VERTEXDATA_INIT_TEXT_HPP

@@ -24,7 +24,7 @@
 #include "Graphics/Texture_Init_Binary.hpp"
 
 #include "Graphics/VertexData.hpp"
-#include "Graphics/VertexData_Init.hpp"
+#include "Graphics/VertexData_Init_Text.hpp"
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/Renderer.hpp"
