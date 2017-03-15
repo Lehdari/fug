@@ -121,6 +121,30 @@
 		]
 	},
 
+	{	"type": "VertexData",
+		"id": "vertexdata_uvsphere",
+		"initInfo": {
+			"type": "VertexDataInitInfo_UVSphere",
+            "segments": 16,
+            "rings": 8
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Mesh",
+		"id": "mesh_uvsphere",
+		"initInfo": {
+			"type": "MeshInitInfo_Default"
+		},
+		"initResources": [
+			"vertexdata_uvsphere"
+		],
+		"depResources": [
+			"material_white"
+		]
+	},
+
 	{	"type": "Text",
 		"id": "text_quad_obj",
 		"initInfo": {

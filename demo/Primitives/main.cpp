@@ -24,6 +24,7 @@
 
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init_Text.hpp"
+#include "Graphics/VertexData_Init_UVSphere.hpp"
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/Renderer.hpp"
@@ -42,6 +43,11 @@ int main(void)
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_cube"));
     MeshComponent cubeMeshComp(cubeMeshResPtr);
+
+    // UVSphere MeshComponent
+    auto UVSphereMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
+                            FUG_RESOURCE_ID_MAP.getId("mesh_uvsphere"));
+    MeshComponent UVSphereMeshComp(UVSphereMeshResPtr);
 
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
@@ -81,6 +87,11 @@ int main(void)
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
         renderer(cubeMeshComp, transform);
+        transform.transform << 1.f, 0.f, 0.f, -2.5f,
+                               0.f, 1.f, 0.f,  1.5f,
+                               0.f, 0.f, 1.f,  1.5f,
+                               0.f, 0.f, 0.f,   1.f;
+        renderer(UVSphereMeshComp, transform);
         transform.transform << 1.f, 0.f, 0.f, -2.5f,
                                0.f, 1.f, 0.f, -1.5f,
                                0.f, 0.f, 1.f,  1.5f,
