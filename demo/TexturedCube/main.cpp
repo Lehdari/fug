@@ -96,6 +96,8 @@ int main(void)
 
     bool running = true;
     ImVec4 pos(0.f, 0.f, 0.f, 0.f);
+    float rotX = 0.f;
+    float rotY = 0.f;
     while (running)
     {
         // handle events
@@ -128,6 +130,8 @@ int main(void)
             ImGui::SliderFloat("x", &pos.x, -2.f, 2.f);
             ImGui::SliderFloat("y", &pos.y, -2.f, 2.f);
             ImGui::SliderFloat("z", &pos.z, -2.f, 2.f);
+            ImGui::SliderFloat("rotX", &rotX, -PI, PI);
+            ImGui::SliderFloat("rotY", &rotY, -PI, PI);
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 
@@ -136,11 +140,24 @@ int main(void)
 
         // draw...
 
+        Matrix4Glf translation;
+        translation << 1.f, 0.f, 0.f, pos.x,
+                       0.f, 1.f, 0.f, pos.y,
+                       0.f, 0.f, 1.f, pos.z,
+                       0.f, 0.f, 0.f,   1.f;
+        Matrix4Glf rotXMat;
+        rotXMat << 1.f,        0.f,         0.f, 0.f,
+                   0.f, cosf(rotX), -sinf(rotX), 0.f,
+                   0.f, sinf(rotX),  cosf(rotX), 0.f,
+                   0.f,        0.f,         0.f, 1.f;
+        Matrix4Glf rotYMat;
+        rotYMat <<  cosf(rotY), 0.f, sinf(rotY), 0.f,
+                           0.f, 1.f,        0.f, 0.f,
+                   -sinf(rotY), 0.f, cosf(rotY), 0.f,
+                           0.f, 0.f,        0.f, 1.f;
+
         TransformComponent transform;
-        transform.transform << 1.f, 0.f, 0.f, pos.x,
-                               0.f, 1.f, 0.f, pos.y,
-                               0.f, 0.f, 1.f, pos.z,
-                               0.f, 0.f, 0.f,   1.f;
+        transform.transform = translation * rotXMat * rotYMat;
         renderer(cubeMeshComp, transform);
 
         ImGui::Render();
