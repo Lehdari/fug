@@ -4,13 +4,14 @@
 
 #include "Core/Visitor.hpp"
 #include "MotionComponent.hpp"
+#include "Logic/TransformComponent.hpp"
 
 namespace fug {
     
-    class MotionVisitor : public Visitor<MotionVisitor, MotionComponent> {
+    class MotionVisitor : public Visitor<MotionVisitor, MotionComponent, TransformComponent> {
     
     public:
-        void operator()(MotionComponent&);
+        void operator()(MotionComponent&, TransformComponent&);
 
     private:
         void induceCircularMotion(MotionComponent&);

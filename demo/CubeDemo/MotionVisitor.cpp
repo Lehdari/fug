@@ -3,11 +3,14 @@
 
 using namespace fug;
 
-void MotionVisitor::operator() (MotionComponent& motion)
+void MotionVisitor::operator() (MotionComponent& motion, TransformComponent& trans)
 {
-    induceCircularMotion(motion);
+    induceCircularMotion(motion); // for demo
+
     motion.vel += motion.acc;
     motion.angvel *= motion.angacc;
+    trans.position += motion.vel;
+    trans.orientation *= motion.angvel;
 }
 
 void MotionVisitor::induceCircularMotion(MotionComponent& motion)
