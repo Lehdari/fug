@@ -66,11 +66,7 @@ int main()
     BeatVisitor beat_visitor(sound);
     
 
-    TransformComponent tran_comp;
-    tran_comp.transform << 1.f, 0.f, 0.f, -2.f,
-                           0.f, 1.f, 0.f, 1.f,
-                           0.f, 0.f, 1.f, 0.f,
-                           0.f, 0.f, 0.f, 1.0f;
+    TransformComponent tran_comp({-2.f, 1.f, 0.f});
 
     ControlMapComponent ctrl_comp;
     ctrl_comp.map = {{sf::Keyboard::W, ControlMapComponent::Action::MoveUp},

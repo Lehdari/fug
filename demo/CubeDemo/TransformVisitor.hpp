@@ -8,10 +8,10 @@
 
 namespace fug {
     
-    class TransformVisitor : public Visitor<TransformVisitor, MotionComponent, TransformComponent> {
+    class TransformVisitor : public Visitor<TransformVisitor, TransformComponent> {
     
     public:
-        void operator()(MotionComponent&, TransformComponent&);
+        void operator()(TransformComponent&);
 
     };
 }
