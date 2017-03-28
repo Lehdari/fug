@@ -11,14 +11,17 @@ uniform mat4 uModelToCam;
 uniform mat4 uNormalToCam;
 
 // Outputs
-out vec3 posVar;
-out vec3 normVar;
-out vec2 texVar;
+struct VertexAttr {
+    vec3 pos;
+    vec3 norm;
+    vec2 tex;
+};
+out VertexAttr attrVar;
 
 void main()
 {
-    posVar = (uModelToCam * vec4(pos0, 1)).xyz;
-    normVar = (uNormalToCam * vec4(norm0, 0)).xyz;
-    texVar = tex0;
+    attrVar.pos = (uModelToCam * vec4(pos0, 1)).xyz;
+    attrVar.norm = (uNormalToCam * vec4(norm0, 0)).xyz;
+    attrVar.tex = tex0;
     gl_Position  = uModelToClip * vec4(pos0, 1);
 }
