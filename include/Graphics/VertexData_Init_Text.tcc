@@ -41,7 +41,6 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
                     std::array<float, 3> texCoord = {0.0f, 0.0f, 0.0f};
                     if (sscanf(buffer, "%f %f %f", &texCoord[0], &texCoord[1], &texCoord[2]) < 2)
                         throw "VertexData: invalid file!"; // TODO_EXCEPTION
-                        texCoord[1] = 1 - texCoord[1];
                     texCoords.push_back(std::move(texCoord));
                 }
                 else if (strcmp(lineHeader, "vn") == 0) {

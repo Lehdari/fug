@@ -50,6 +50,18 @@ namespace fug {
                                                 buffer->getBufferSize(),
                                                 &w, &h, &channels, 4);
 
+        // Flip texture vertically to OpenGL format
+        auto size = w * h * 4;
+        auto rowLen= w * 4;
+        std::vector<uint8_t> tmpRow(rowLen);
+        auto middle = h / 2 * rowLen;
+        for (auto i = 0u; i < middle; i += rowLen) {
+            auto backOffset = size - i - rowLen;
+            std::copy(pixels + backOffset, pixels + backOffset + rowLen, tmpRow.begin());
+            std::copy(pixels + i, pixels + i + rowLen, pixels + backOffset);
+            std::copy(tmpRow.begin(), tmpRow.end(), pixels + i);
+        }
+
         glGenTextures(1, &textureId_);
         glBindTexture(GL_TEXTURE_2D, textureId_);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h,
