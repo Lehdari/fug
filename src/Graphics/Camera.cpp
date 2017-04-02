@@ -22,22 +22,23 @@ void Camera::lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3G
     xAxis = up.cross(zAxis).normalized();
     yAxis = zAxis.cross(xAxis);
 
-    _orientation <<  xAxis[0] ,  xAxis[1] ,  xAxis[2] , -xAxis.dot(from) ,
-                     yAxis[0] ,  yAxis[1] ,  yAxis[2] , -yAxis.dot(from) ,
-                    -zAxis[0] , -zAxis[1] , -zAxis[2] ,  zAxis.dot(from) ,
-                         0.0f ,      0.0f ,      0.0f ,             1.0f ;
+    _orientation << xAxis[0], xAxis[1], xAxis[2], -xAxis.dot(from),
+                    yAxis[0], yAxis[1], yAxis[2], -yAxis.dot(from),
+                    zAxis[0], zAxis[1], zAxis[2], -zAxis.dot(from),
+                         0.f,      0.f,      0.f,              1.f;
 }
 
 void Camera::projection(const float& fov, const float& aspectRatio,
                         const float& near,const float& far)
 {
-    float r = tanf(fov / 2.0f) * near;
+    float r = tanf(fov / 2.0f);
     float t = r / aspectRatio;
+    float farmnear = far - near;
 
-    _projection << near/r ,   0.0f ,                   0.0f ,                      0.0f ,
-                     0.0f , near/t ,                   0.0f ,                      0.0f ,
-                     0.0f ,   0.0f , -(far+near)/(far-near) , -2.0f*far*near/(far-near) ,
-                     0.0f ,   0.0f ,                  -1.0f ,                      0.0f ;
+    _projection << 1.f / r,     0.f,                     0.f,                          0.f,
+                       0.f, 1.f / t,                     0.f,                          0.f,
+                       0.f,     0.f, (far + near) / farmnear, -2.f * far * near / farmnear,
+                       0.f,     0.f,                     1.f,                          0.f;
 }
 
 const Vector3Glf& Camera::getPosition(void) const
