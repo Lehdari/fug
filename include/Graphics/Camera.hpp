@@ -14,6 +14,7 @@ namespace fug {
         Camera(const Vector3Glf& position, const Vector3Glf& forward, const Vector3Glf& up,
                  const float& fov, const float& aspectRatio,
                  const float& near, const float& far);
+        Camera(const Camera& c);
 
         void lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up);
         void projection(const float& fov, const float& aspectRatio,
