@@ -17,9 +17,14 @@ void Mesh::draw(const Matrix4Glf& model, const Matrix4Glf& camera, const Matrix4
     
     _material->useMaterial(model, camera, proj);
     glBindVertexArray(_vertexArrayObjectId);
-
     glDrawElements(GL_TRIANGLES, _nIndices, GL_UNSIGNED_INT, (GLvoid*)0);
+    glBindVertexArray(0);
+}
 
+void Mesh::draw() const
+{
+    glBindVertexArray(_vertexArrayObjectId);
+    glDrawElements(GL_TRIANGLES, _nIndices, GL_UNSIGNED_INT, (GLvoid*)0);
     glBindVertexArray(0);
 }
 

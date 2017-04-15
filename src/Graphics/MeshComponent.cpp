@@ -19,3 +19,7 @@ ResourcePointer<Mesh> MeshComponent::getMeshPointer(void) const {
 void MeshComponent::draw(const Matrix4Glf& transform, const Matrix4Glf& view, const Matrix4Glf& proj) const {
     mesh_->draw(transform, view, proj);
 }
+
+void MeshComponent::draw() const {
+    mesh_->draw();
+}
