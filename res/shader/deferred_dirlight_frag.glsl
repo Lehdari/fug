@@ -12,6 +12,9 @@ uniform bool uOnlyDiffuse;
 uniform bool uOnlyNormal;
 uniform bool uOnlySpecular;
 
+// Input
+in vec2 rayDirVar;
+
 // Output
 out vec4 fragColor;
 
@@ -31,6 +34,7 @@ void main()
         fragColor = vec4(texture(normalMap, mapCoord).xyz, 1);
     else if (uOnlySpecular)
         fragColor = texture(specularMap, mapCoord);
-    else
-        fragColor = vec4(0,0,0,1);
+    else {
+        fragColor = vec4(-rayDirVar, 0, 1);
+    }
 }
