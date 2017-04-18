@@ -12,6 +12,12 @@ uniform bool uOnlyDiffuse;
 uniform bool uOnlyNormal;
 uniform bool uOnlySpecular;
 
+// Light uniforms
+uniform vec3 uLightDir;
+uniform vec3 uLightCol;
+uniform float uDirectInt;
+uniform float uAmbientInt;
+
 // Input
 in vec2 rayDirVar;
 
@@ -35,6 +41,25 @@ void main()
     else if (uOnlySpecular)
         fragColor = texture(specularMap, mapCoord);
     else {
-        fragColor = vec4(-rayDirVar, 0, 1);
+        vec3 diffuseCol = texture(diffuseMap, mapCoord).rgb;
+        vec3 specularCol = texture(specularMap, mapCoord).rgb;
+        float specularExp = texture(specularMap, mapCoord).a;
+        float linearDepth = texture(depthMap, mapCoord).r;
+
+        // Lighting
+        vec3 N = texture(normalMap, mapCoord).xyz;;
+        float diffuseLight = max(0, dot(N, -uLightDir));
+
+        float specularLight = 0;
+        if (diffuseLight > 0) {
+            vec3 V = normalize(vec3(-rayDirVar, 1));
+            vec3 h = normalize(V + uLightDir);
+            specularLight = pow(max(0, dot(N, h)), specularExp);
+        }
+
+        vec3 litCol = diffuseCol.xyz * (uAmbientInt +
+                                        uDirectInt * diffuseLight +
+                                        specularCol * specularLight);
+        fragColor = vec4(litCol, 1);
     }
 }

@@ -79,6 +79,22 @@ int main(void)
     GBuffer gBuffer(1280, 720,{GL_R32F, GL_RGBA16, GL_RGB32F, GL_RGBA16},
                               { GL_RED,   GL_RGBA,    GL_RGB,   GL_RGBA});
 
+    // TODO: Check why this doesn't match the quad's coordinates
+    std::vector<Vector4Glf> ndcCorners{Vector4Glf( 1.f, -1.f, 0.f, 1.f),
+                                       Vector4Glf( 1.f,  1.f, 0.f, 1.f),
+                                       Vector4Glf(-1.f, -1.f, 0.f, 1.f),
+                                       Vector4Glf(-1.f,  1.f, 0.f, 1.f)};
+    std::vector<GLfloat> hCornersBuf(8);
+    Matrix4Glf inverseProjection = cam.getProj().inverse();
+    for (auto i = 0u; i < 4; ++i) {
+        auto v = ndcCorners[i];
+        v = inverseProjection * v;
+        v /= v[3];
+        v /= v[2];
+        hCornersBuf[i*2] = v[0];
+        hCornersBuf[i*2 + 1] = v[1];
+    }
+
     bool running = true;
     ImVec4 pos(0.f, 0.f, 0.f, 0.f);
     float rotX = 0.f;
@@ -124,9 +140,9 @@ int main(void)
             ImGui::SliderFloat("z", &pos.z, -2.f, 2.f);
             ImGui::SliderFloat("rotX", &rotX, -PI, PI);
             ImGui::SliderFloat("rotY", &rotY, -PI, PI);
-            const char* renderModes[] = { "Depth", "Diffuse",
+            const char* renderModes[] = { "Shaded", "Depth", "Diffuse",
                                           "Normals", "Specular" };
-            ImGui::ListBox("", &currentMode, renderModes, 4, 4);
+            ImGui::ListBox("", &currentMode, renderModes, 5, 5);
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 
@@ -160,14 +176,16 @@ int main(void)
         gBuffer.bindRead();
         glClear(GL_COLOR_BUFFER_BIT);
         dirLight.bind(cam.getView());
+        glUniform2fv(glGetUniformLocation(dirlightPassID, "uCornerVecs"), 4,
+                     hCornersBuf.data());
         glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyDepth"),
-                    currentMode == 0);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyDiffuse"),
                     currentMode == 1);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyNormal"),
+        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyDiffuse"),
                     currentMode == 2);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlySpecular"),
+        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyNormal"),
                     currentMode == 3);
+        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlySpecular"),
+                    currentMode == 4);
         quadMeshComp.draw();
 
         ImGui::Render();
