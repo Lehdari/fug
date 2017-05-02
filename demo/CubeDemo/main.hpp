@@ -31,7 +31,7 @@ MeshComponent loadCubeMeshComponent()
 
     auto cube_bin_id = FUG_RESOURCE_ID_MAP.getId("cube_binary");
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
-    (cube_bin_id, BinaryInitInfo_File{"../res/textures/cube.png"});
+    (cube_bin_id, BinaryInitInfo_File{"../res/textures/colorkuutio.png"});
     
     auto cube_tex_id = FUG_RESOURCE_ID_MAP.getId("cube_texture");
     FUG_RESOURCE_MANAGER.addResourceInfo<Texture, TextureInitInfo_Binary>

@@ -37,9 +37,13 @@
 #include "Core/EventManager.hpp"
 #include "Core/Scene.hpp"
 
+#include "Core/MathTypes.hpp"
+
 #include "main.hpp"
 #include "ControlVisitor.hpp"
 #include "MotionVisitor.hpp"
+#include "TransformVisitor.hpp"
+
 
 int main()
 {
@@ -50,7 +54,7 @@ int main()
     tran_comp.transform << 1.f, 0.f, 0.f, -2.f,
                            0.f, 1.f, 0.f, 1.f,
                            0.f, 0.f, 1.f, 0.f,
-                           0.f, 0.f, 0.f, 1.f;
+                           0.f, 0.f, 0.f, 1.0f;
 
     ControlMapComponent ctrl_comp;
     ctrl_comp.map = {{sf::Keyboard::W, ControlMapComponent::Action::MoveUp},
@@ -63,13 +67,16 @@ int main()
     QuaternionGlf spin = {1.f, 0.01f, 0.01f, 0.01f};
     MotionComponent mot_comp(vel, acc, spin);
     
+    auto mesh_comp = loadCubeMeshComponent();
+    
     FUG_SCENE.addEntity();
-    FUG_SCENE.addComponent(loadCubeMeshComponent());
+    FUG_SCENE.addComponent(std::move(mesh_comp));
     FUG_SCENE.addComponent(std::move(mot_comp));
     FUG_SCENE.addComponent(std::move(tran_comp));
     FUG_SCENE.addComponent(std::move(ctrl_comp)); 
 
     ControlVisitor control_visitor;
+    TransformVisitor transform_visitor;
     MotionVisitor motion_visitor;
 
     Renderer render_visitor({4.f, 4.f, -4.f}, {0.f, 0.f, 0.f}, {0.f, 1.0f, 0.f}, 90.f, 1280/720.f, 1.f, 10.f);
@@ -88,15 +95,18 @@ int main()
         // Handle motions
         FUG_SCENE.accept(motion_visitor);
 
+        // Handle transforms
+        FUG_SCENE.accept(transform_visitor);
+
         // Handle renders
         FUG_SCENE.accept(render_visitor);
-
-        // End the current frame (internally swaps the front and back buffers)
-        canvas.display();
 
         // Flush event buffers
         FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyPressed);
         FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyReleased);
+       
+        // End the current frame (internally swaps the front and back buffers)
+        canvas.display();
     }
     return 0;
 }
