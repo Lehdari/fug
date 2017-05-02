@@ -37,6 +37,7 @@
 #include "Core/EventManager.hpp"
 #include "Core/Scene.hpp"
 
+#include <SFML/Audio.hpp>
 #include "Core/MathTypes.hpp"
 
 #include "main.hpp"
@@ -44,11 +45,26 @@
 #include "MotionVisitor.hpp"
 #include "TransformVisitor.hpp"
 
+#include "BeatComponent.hpp"
+#include "BeatVisitor.hpp"
+
+
 
 int main()
 {
     Canvas_SFML canvas;
+    
+    sf::SoundBuffer sbuf;
+	if (!sbuf.loadFromFile(std::string(FUG_RES_DIRECTORY) + "../res/audio/bileet.wav")) {
+		return -1;
+	}
 
+	sf::Sound sound;
+	sound.setBuffer(sbuf);
+	sound.play();
+
+    BeatVisitor beat_visitor(sound);
+    
 
     TransformComponent tran_comp;
     tran_comp.transform << 1.f, 0.f, 0.f, -2.f,
@@ -68,6 +84,10 @@ int main()
     MotionComponent mot_comp(vel, acc, spin);
     
     auto mesh_comp = loadCubeMeshComponent();
+
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(BeatComponent(BeatComponent::FlashBg, 0.3f, 0.04f));
+    FUG_SCENE.addComponent(TransformComponent());
     
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(std::move(mesh_comp));
@@ -91,6 +111,9 @@ int main()
 
         // Handle inputs
         FUG_SCENE.accept(control_visitor);
+        
+        // Handle effects
+        FUG_SCENE.accept(beat_visitor);
 
         // Handle motions
         FUG_SCENE.accept(motion_visitor);
