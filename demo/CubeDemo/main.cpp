@@ -39,15 +39,17 @@
 
 #include "main.hpp"
 #include "ControlVisitor.hpp"
+#include "MotionVisitor.hpp"
 
 int main()
 {
     Canvas_SFML canvas;
-    
+
+
     TransformComponent tran_comp;
-    tran_comp.transform << 1.f, 0.f, 0.f, 0.f,
-                           0.f, 1.f, 0.f, 0.f,
-                           0.f, 0.f, 1.f, 1.f,
+    tran_comp.transform << 1.f, 0.f, 0.f, -2.f,
+                           0.f, 1.f, 0.f, 1.f,
+                           0.f, 0.f, 1.f, 0.f,
                            0.f, 0.f, 0.f, 1.f;
 
     ControlMapComponent ctrl_comp;
@@ -56,15 +58,21 @@ int main()
                      {sf::Keyboard::A, ControlMapComponent::Action::MoveLeft},
                      {sf::Keyboard::D, ControlMapComponent::Action::MoveRight}};
 
+    Vector3Glf vel = {0.f, 0.f, 0.05f};
+    Vector3Glf acc = {0.f, 0.f, 0.f};
+    QuaternionGlf spin = {1.f, 0.01f, 0.01f, 0.01f};
+    MotionComponent mot_comp(vel, acc, spin);
+    
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(loadCubeMeshComponent());
+    FUG_SCENE.addComponent(std::move(mot_comp));
     FUG_SCENE.addComponent(std::move(tran_comp));
     FUG_SCENE.addComponent(std::move(ctrl_comp)); 
 
     ControlVisitor control_visitor;
+    MotionVisitor motion_visitor;
 
-    Renderer render_visitor(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
-                            Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
+    Renderer render_visitor({4.f, 4.f, -4.f}, {0.f, 0.f, 0.f}, {0.f, 1.0f, 0.f}, 90.f, 1280/720.f, 1.f, 10.f);
 
     while (canvas.isOpen()) {
 
@@ -74,10 +82,13 @@ int main()
         // Clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Handle input
+        // Handle inputs
         FUG_SCENE.accept(control_visitor);
 
-        // Draw
+        // Handle motions
+        FUG_SCENE.accept(motion_visitor);
+
+        // Handle renders
         FUG_SCENE.accept(render_visitor);
 
         // End the current frame (internally swaps the front and back buffers)
