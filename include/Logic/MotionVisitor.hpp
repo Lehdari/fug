@@ -3,7 +3,7 @@
 
 
 #include "Core/Visitor.hpp"
-#include "MotionComponent.hpp"
+#include "Logic/MotionComponent.hpp"
 #include "Logic/TransformComponent.hpp"
 
 namespace fug {

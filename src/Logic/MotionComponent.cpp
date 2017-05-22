@@ -1,4 +1,4 @@
-#include "MotionComponent.hpp"
+#include "Logic/MotionComponent.hpp"
 
 using namespace fug;
 

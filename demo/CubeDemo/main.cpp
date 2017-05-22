@@ -41,10 +41,10 @@
 #include "Core/MathTypes.hpp"
 
 #include "main.hpp"
-#include "ControlVisitor.hpp"
-#include "MotionVisitor.hpp"
-#include "TransformVisitor.hpp"
+#include "Logic/MotionVisitor.hpp"
+#include "Logic/TransformVisitor.hpp"
 
+#include "ControlVisitor.hpp"
 #include "BeatComponent.hpp"
 #include "BeatVisitor.hpp"
 

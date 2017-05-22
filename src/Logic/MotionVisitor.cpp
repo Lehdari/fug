@@ -1,4 +1,4 @@
-#include "MotionVisitor.hpp"
+#include "Logic/MotionVisitor.hpp"
 #include <iostream>
 
 using namespace fug;
