@@ -86,6 +86,7 @@ int main()
     FUG_SCENE.addComponent(TransformComponent());
     
     FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(BeatComponent(BeatComponent::Pulse, 0.2f, 0.02f));
     FUG_SCENE.addComponent(std::move(mesh_comp));
     FUG_SCENE.addComponent(std::move(mot_comp));
     FUG_SCENE.addComponent(std::move(tran_comp));

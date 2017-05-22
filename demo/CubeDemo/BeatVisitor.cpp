@@ -83,7 +83,7 @@ void BeatVisitor::induce(BeatComponent& beat_comp, TransformComponent& tran_comp
 {
     switch (beat_comp.behavior) {
         case BeatComponent::Pulse:
-            // TODO
+            tran_comp.scale << beat_comp._delta + 1, beat_comp._delta + 1, beat_comp._delta + 1;
             break;
         case BeatComponent::FlashBg:
             std::cout << beat_comp._delta << std::endl;
