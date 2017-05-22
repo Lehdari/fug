@@ -86,7 +86,6 @@ void BeatVisitor::induce(BeatComponent& beat_comp, TransformComponent& tran_comp
             tran_comp.scale << beat_comp._delta + 1, beat_comp._delta + 1, beat_comp._delta + 1;
             break;
         case BeatComponent::FlashBg:
-            std::cout << beat_comp._delta << std::endl;
             glClearColor(0.0f, beat_comp._delta * 2, beat_comp._delta * 2, 1.0f);
             break;
         default:
