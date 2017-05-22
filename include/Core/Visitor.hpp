@@ -3,8 +3,8 @@
 
 
 //  macro for correct CRTP usage
-#define FUG_VISITOR(VISITOR_TYPE)\
-    VISITOR_TYPE : public fug::Visitor<VISITOR_TYPE>
+#define FUG_VISITOR(VISITOR_TYPE, ...)\
+    class VISITOR_TYPE : public fug::Visitor<VISITOR_TYPE, __VA_ARGS__>
 
 
 namespace fug {
