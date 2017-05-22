@@ -1,0 +1,33 @@
+{
+	"Entities": [{
+			"name": "TestEntity1",
+			"components": [{
+					"type": "TestComponent1",
+					"a": "1.0",
+					"b": "1.1"
+				},
+				{
+					"type": "TestComponent2",
+					"a": "1.2",
+					"b": "1.3",
+					"c": "1.4"
+				}
+			]
+		},
+		{
+			"name": "TestEntity2",
+			"components": [{
+					"type": "TestComponent1",
+					"a": "2.0",
+					"b": "2.1"
+				},
+				{
+					"type": "TestComponent2",
+					"a": "2.2",
+					"b": "2.3",
+					"c": "2.4"
+				}
+			]
+		}
+	]
+}
