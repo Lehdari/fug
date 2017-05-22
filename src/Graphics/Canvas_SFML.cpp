@@ -20,6 +20,7 @@ Canvas_SFML::Canvas_SFML(void)
     _window.setFramerateLimit(60);
     
     // Load gl-functions (glLoadGen-header)
+    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         throw "Loading ogl extensions failed!";
     }
@@ -47,6 +48,33 @@ void Canvas_SFML::display(void) {
 
 void Canvas_SFML::close(void) {
     _window.close();
+}
+
+void Canvas_SFML::handleEvents(void)
+{
+    // Handle events from _window
+    sf::Event event;
+    while (_window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            // Close the window
+            close();
+        }
+        else if (event.type == sf::Event::Resized) {
+            // Adjust the viewport when the window is resized
+            glViewport(0, 0, event.size.width, event.size.height);
+        }
+        else if (event.type == sf::Event::KeyPressed) {
+            // Key pressed, fire core event
+            FUG_EVENT_MANAGER.pushEvent(event, sf::Event::KeyPressed);
+        }
+        else if (event.type == sf::Event::KeyReleased) {
+            // Key released, fire core event
+            FUG_EVENT_MANAGER.pushEvent(event, sf::Event::KeyReleased);
+        }
+        else {
+            // Unhandled event
+        }
+    }
 }
 
 sf::Window* Canvas_SFML::getWindow(void) {

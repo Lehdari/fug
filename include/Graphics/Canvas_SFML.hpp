@@ -5,6 +5,8 @@
 #include <Graphics/Canvas.hpp>
 #include <SFML/Window.hpp>
 
+#include "Core/EventManager.hpp"
+
 
 namespace fug {
 
@@ -16,7 +18,7 @@ namespace fug {
         bool isOpen(void);
         void display(void);
         void close(void);
-        //std::shared_ptr<EventBase> pollEvent(void);
+        void handleEvents(void);
 
         sf::Window* getWindow(void);
 
