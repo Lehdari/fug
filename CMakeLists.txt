@@ -63,7 +63,11 @@ add_library(fug-core
     ${CORE_SRC_FILES}
     ${CORE_INCLUDE_FILES}
 )
-target_include_directories(fug-core PUBLIC ${EIGEN3_INCLUDE_DIR})
+target_include_directories(fug-core
+    PUBLIC
+    ${EIGEN3_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIR}
+)
 set_property(TARGET fug-core PROPERTY CXX_STANDARD 14)
 
 add_library(fug-logic
