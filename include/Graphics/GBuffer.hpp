@@ -12,13 +12,16 @@ namespace fug {
                 std::vector<GLint> baseFormats);
         ~GBuffer();
 
-        void bindWrite();
-        void bindRead();
+        void startFrame();
+        void bindGeometryPass();
+        void bindLightPass();
+        void bindFinalPass();
 
     private:
         GLuint _fbo;
         std::vector<GLuint> _textures;
         GLuint _depthTexture;
+        GLuint _finalTexture;
 
     };
 

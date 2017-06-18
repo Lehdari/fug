@@ -18,10 +18,10 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, std::vector<GLint> sizedFormats,
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
     // Generate textures
-    std::vector<GLenum> drawBuffers;
     _textures.resize(sizedFormats.size());
     glGenTextures(_textures.size(), _textures.data());
     glGenTextures(1, &_depthTexture);
+    glGenTextures(1, &_finalTexture);
 
     for (auto i = 0u ; i < _textures.size() ; i++) {
         glBindTexture(GL_TEXTURE_2D, _textures[i]);
@@ -31,7 +31,6 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, std::vector<GLint> sizedFormats,
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
                                GL_TEXTURE_2D, _textures[i], 0);
-        drawBuffers.emplace_back(GL_COLOR_ATTACHMENT0 + i);
     }
 
     // Generate depth texture
@@ -41,8 +40,11 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, std::vector<GLint> sizedFormats,
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                            GL_TEXTURE_2D, _depthTexture, 0);
 
-    if (drawBuffers.size() != 0)
-        glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    // Generate final texture
+    glBindTexture(GL_TEXTURE_2D, _finalTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, resX, resY, 0, GL_RGB, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + _textures.size(),
+                           GL_TEXTURE_2D, _finalTexture, 0);
 
     GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -58,19 +60,45 @@ GBuffer::~GBuffer()
     if (_fbo != 0) glDeleteFramebuffers(1, &_fbo);
     if (_textures.size() != 0) glDeleteTextures(_textures.size(), _textures.data());
     if (_depthTexture != 0) glDeleteTextures(1, &_depthTexture);
+    if (_finalTexture != 0) glDeleteTextures(1, &_finalTexture);
 }
 
-void GBuffer::bindWrite()
+void GBuffer::startFrame()
+{
+    // Clear final texture
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0 + _textures.size());
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void GBuffer::bindGeometryPass()
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+
+    std::vector<GLenum> drawBuffers;
+    for (auto i = 0u; i < _textures.size(); ++i)
+        drawBuffers.emplace_back(GL_COLOR_ATTACHMENT0 + i);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
 }
 
-void GBuffer::bindRead()
+void GBuffer::bindLightPass()
 {
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    // Bind final texture for write
+    glDrawBuffer(GL_COLOR_ATTACHMENT0 + _textures.size());
 
-    for (auto i = 0u ; i < _textures.size(); i++) {
+    // Bind other textures for read
+    for (auto i = 0u; i < _textures.size(); ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, _textures[i]);
     }
+}
+
+void GBuffer::bindFinalPass()
+{
+    // Bind default fbo for write
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    // Bind final texture for read
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
+    glReadBuffer(GL_COLOR_ATTACHMENT0 + _textures.size());
 }

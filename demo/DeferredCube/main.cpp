@@ -173,15 +173,22 @@ int main(void)
         // TODO: Add Transform visitor here, init transform with identity?
         transf.transform = translation * rotXMat * rotYMat;
 
+        // Clear main render target
+        gBuffer.startFrame();
+
         // Geometry pass
-        gBuffer.bindWrite();
+        gBuffer.bindGeometryPass();
         GeometryPassVisitor gPVisitor(cam); // TODO: this really should be done with visitor.init() or somesuch
         gPVisitor(cubeMesh, transf); // TODO: Fix scene
 
         // Directional light pass
-        gBuffer.bindRead();
+        gBuffer.bindLightPass();
         DirectionalLightPassVisitor dlPVisitor(quadMeshResPtr, cam, hCornersBuf, currentMode); // TODO: See gPVisitor
         dlPVisitor(dirLight); // TODO: Fix scene
+
+        // Final pass
+        gBuffer.bindFinalPass();
+        glBlitFramebuffer(0, 0, 1280, 720, 0, 0, 1280, 720, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
         ImGui::Render();
         // end the current frame (internally swaps the front and back buffers)
