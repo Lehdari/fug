@@ -50,6 +50,8 @@ int main(void)
 
     // Set up scene
 
+    // TODO: Fix this on Ubuntu
+    /*
     FUG_SCENE.addEntity();
 
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
@@ -57,6 +59,11 @@ int main(void)
     FUG_SCENE.addComponent(MeshComponent(cubeMeshResPtr));
 
     FUG_SCENE.addComponent(TransformComponent());
+    */
+    auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
+                            FUG_RESOURCE_ID_MAP.getId("mesh_cube"));
+    MeshComponent cubeMesh(cubeMeshResPtr);
+    TransformComponent transf;
 
     // DirectionalLightComponent
 
@@ -164,10 +171,10 @@ int main(void)
                    -sinf(rotY), 0.f, cosf(rotY), 0.f,
                            0.f, 0.f,        0.f, 1.f;
         // TODO: Add Transform visitor here, init transform with identity?
-        // transform.transform = translation * rotXMat * rotYMat;
+        transf.transform = translation * rotXMat * rotYMat;
         gBuffer.bindWrite();
         GeometryPassVisitor gPVisitor(cam); // TODO: this really should be done with visitor.init() or somesuch
-        FUG_SCENE.accept(gPVisitor);
+        gPVisitor(cubeMesh, transf);
         glDepthMask(GL_FALSE);
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
