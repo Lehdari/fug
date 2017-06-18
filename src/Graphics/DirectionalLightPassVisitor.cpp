@@ -11,12 +11,10 @@ DirectionalLightPassVisitor::DirectionalLightPassVisitor(ResourcePointer<Mesh> q
     _hCornersBuf(hCornersBuf),
     _currentMode(currentMode)
 {
-    glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 bool DirectionalLightPassVisitor::operator()(DirectionalLightComponent& light) {

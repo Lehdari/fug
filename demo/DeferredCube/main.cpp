@@ -24,17 +24,20 @@
 #include "Graphics/ShaderProgram_Init_Default.hpp"
 
 #include "Graphics/Texture.hpp"
-#include "Graphics/Texture_Init_Binary.hpp"
+#include "Graphics/Texture_Init_Color.hpp"
 
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init_Text.hpp"
+#include "Graphics/VertexData_Init_UVSphere.hpp"
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/GeometryPassVisitor.hpp"
 #include "Graphics/DirectionalLightPassVisitor.hpp"
+#include "Graphics/PointLightPassVisitor.hpp"
 #include "Graphics/GBuffer.hpp"
 
 #include "Graphics/DirectionalLightComponent.hpp"
+#include "Graphics/PointLightComponent.hpp"
 
 int main(void)
 {
@@ -74,7 +77,31 @@ int main(void)
                                        std::vector<std::string>({"depthMap", "diffuseMap", "normalMap", "specularMap"}),
                                        "uLightDir", Vector3Glf(-1.f, -1.f, 1.f),
                                        "uLightCol", Vector3Glf(1.f, 1.f, 1.f),
-                                       "uDirectInt", 1.f, "uAmbientInt", 0.2f);
+                                       "uDirectInt", 0.f, "uAmbientInt", 0.f);
+
+    // PointLightComponent
+    auto pointLightShaderPtr = FUG_RESOURCE_MANAGER.getResource<ShaderProgram>(
+                                 FUG_RESOURCE_ID_MAP.getId("shaderprogram_deferred_pointlightpass"));
+    PointLightComponent pointLight1(pointLightShaderPtr,
+                                   std::vector<std::string>({"depthMap", "diffuseMap", "normalMap", "specularMap"}),
+                                   "uLightPos", Vector3Glf(1.f, 1.f, -1.f),
+                                   "uLightCol", Vector3Glf(1.f, 0.f, 0.f),
+                                   "uDirectInt", 0.2f, "uAttenConst", 0.f,
+                                   "uAttenLin", 0.f, "uAttenExp", 0.3f);
+    PointLightComponent pointLight2(pointLightShaderPtr,
+                                   std::vector<std::string>({"depthMap", "diffuseMap", "normalMap", "specularMap"}),
+                                   "uLightPos", Vector3Glf(-1.f, 1.f, -1.f),
+                                   "uLightCol", Vector3Glf(0.f, 1.f, 0.f),
+                                   "uDirectInt", 0.2f, "uAttenConst", 0.f,
+                                   "uAttenLin", 0.f, "uAttenExp", 0.3f);
+
+    // Stencil only -shader
+    auto stencilOnlyShaderPtr = FUG_RESOURCE_MANAGER.getResource<ShaderProgram>(
+                                 FUG_RESOURCE_ID_MAP.getId("shaderprogram_stencil_only"));
+
+    // UV-sphere resource
+    auto uvSphereMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
+                                 FUG_RESOURCE_ID_MAP.getId("mesh_uvsphere"));
 
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
@@ -180,11 +207,23 @@ int main(void)
         gBuffer.bindGeometryPass();
         GeometryPassVisitor gPVisitor(cam); // TODO: this really should be done with visitor.init() or somesuch
         gPVisitor(cubeMesh, transf); // TODO: Fix scene
+        glDepthMask(GL_FALSE);
+
+        // Stencil and point light passes
+        if (currentMode == 0) {
+            glEnable(GL_STENCIL_TEST);
+            PointLightPassVisitor plPVisitor(gBuffer, stencilOnlyShaderPtr, uvSphereMeshResPtr,
+                                             cam, hCornersBuf); // TODO: See gPVisitor
+            plPVisitor(pointLight1);
+            plPVisitor(pointLight2);
+            glDisable(GL_STENCIL_TEST);
+        }
 
         // Directional light pass
         gBuffer.bindLightPass();
         DirectionalLightPassVisitor dlPVisitor(quadMeshResPtr, cam, hCornersBuf, currentMode); // TODO: See gPVisitor
         dlPVisitor(dirLight); // TODO: Fix scene
+        glDisable(GL_BLEND);
 
         // Final pass
         gBuffer.bindFinalPass();

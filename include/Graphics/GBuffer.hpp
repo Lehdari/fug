@@ -14,6 +14,7 @@ namespace fug {
 
         void startFrame();
         void bindGeometryPass();
+        void bindStencilPass();
         void bindLightPass();
         void bindFinalPass();
 

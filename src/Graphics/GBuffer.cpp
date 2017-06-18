@@ -35,9 +35,9 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, std::vector<GLint> sizedFormats,
 
     // Generate depth texture
     glBindTexture(GL_TEXTURE_2D, _depthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, resX,
-                 resY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8, resX,
+                 resY, 0, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                            GL_TEXTURE_2D, _depthTexture, 0);
 
     // Generate final texture
@@ -80,6 +80,11 @@ void GBuffer::bindGeometryPass()
         drawBuffers.emplace_back(GL_COLOR_ATTACHMENT0 + i);
 
     glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+}
+
+void GBuffer::bindStencilPass()
+{
+    glDrawBuffer(GL_NONE);
 }
 
 void GBuffer::bindLightPass()
