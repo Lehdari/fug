@@ -40,3 +40,8 @@ void DirectionalLightComponent::bind(const Matrix4Glf& view)
     glUniform1f(_directIntULoc, _directInt);
     glUniform1f(_ambientIntULoc, _ambientInt);
 }
+
+GLuint DirectionalLightComponent::getShaderId()
+{
+    return _shader->getId();
+}

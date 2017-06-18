@@ -17,6 +17,7 @@ namespace fug {
                                   const std::string& ambientIntUniform, float ambientInt);
 
         void bind(const Matrix4Glf& view);
+        GLuint getShaderId();
 
     private:
         ResourcePointer<ShaderProgram> _shader;
