@@ -31,6 +31,7 @@
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/GeometryPassVisitor.hpp"
+#include "Graphics/DirectionalLightPassVisitor.hpp"
 #include "Graphics/GBuffer.hpp"
 
 #include "Graphics/DirectionalLightComponent.hpp"
@@ -78,7 +79,6 @@ int main(void)
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
-    MeshComponent quadMeshComp(quadMeshResPtr);
 
     Camera cam(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
@@ -172,28 +172,16 @@ int main(void)
                            0.f, 0.f,        0.f, 1.f;
         // TODO: Add Transform visitor here, init transform with identity?
         transf.transform = translation * rotXMat * rotYMat;
+
+        // Geometry pass
         gBuffer.bindWrite();
         GeometryPassVisitor gPVisitor(cam); // TODO: this really should be done with visitor.init() or somesuch
-        gPVisitor(cubeMesh, transf);
-        glDepthMask(GL_FALSE);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendEquation(GL_FUNC_ADD);
-        glBlendFunc(GL_ONE, GL_ONE);
+        gPVisitor(cubeMesh, transf); // TODO: Fix scene
+
+        // Directional light pass
         gBuffer.bindRead();
-        glClear(GL_COLOR_BUFFER_BIT);
-        dirLight.bind(cam.getView());
-        glUniform2fv(glGetUniformLocation(dirlightPassID, "uCornerVecs"), 4,
-                     hCornersBuf.data());
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyDepth"),
-                    currentMode == 1);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyDiffuse"),
-                    currentMode == 2);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlyNormal"),
-                    currentMode == 3);
-        glUniform1i(glGetUniformLocation(dirlightPassID, "uOnlySpecular"),
-                    currentMode == 4);
-        quadMeshComp.draw();
+        DirectionalLightPassVisitor dlPVisitor(quadMeshResPtr, cam, hCornersBuf, currentMode); // TODO: See gPVisitor
+        dlPVisitor(dirLight); // TODO: Fix scene
 
         ImGui::Render();
         // end the current frame (internally swaps the front and back buffers)
