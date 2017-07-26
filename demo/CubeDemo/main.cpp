@@ -34,6 +34,8 @@
 #include "Graphics/Renderer.hpp"
 #include "Graphics/SpriteRenderer.hpp"
 
+#include "Engine/ResourceLoader.hpp"
+
 #include "Core/EventManager.hpp"
 #include "Core/Scene.hpp"
 
@@ -78,8 +80,12 @@ int main()
     Vector3Glf acc = {0.f, 0.f, 0.f};
     QuaternionGlf spin = {1.f, 0.01f, 0.01f, 0.01f};
     MotionComponent mot_comp(vel, acc, spin);
-    
-    auto mesh_comp = loadCubeMeshComponent();
+
+    ResourceLoader res("cubedemo.stfu");
+    res.load();
+
+    auto mesh_comp_ptr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("cube_mesh"));
+    auto mesh_comp = MeshComponent(mesh_comp_ptr);
 
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(BeatComponent(BeatComponent::FlashBg, 0.3f, 0.04f));
