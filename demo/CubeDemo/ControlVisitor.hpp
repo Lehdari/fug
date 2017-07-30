@@ -7,7 +7,7 @@
 #include "ControlMapComponent.hpp"
 
 namespace fug {
-    // XXX why does CRTP work without the first argument not being ControlVisitor?
+
     class ControlVisitor : public Visitor<ControlVisitor, TransformComponent, ControlMapComponent> {
     
     public:
