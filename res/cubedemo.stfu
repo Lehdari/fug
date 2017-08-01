@@ -23,7 +23,6 @@
         ],
         "depResources": []
     },
-
     {
         "type": "Text",
         "id": "frag_info",
@@ -47,7 +46,6 @@
         ],
         "depResources": []
     },
-
     {	"type": "ShaderProgram",
         "id": "shader_program",
         "initInfo": {
@@ -59,6 +57,10 @@
         ],
         "depResources": []
     },
+
+
+
+
 
     {
         "type": "Binary",
@@ -86,7 +88,6 @@
         ],
         "depResources": []
     },
-
     {	"type": "Material",
         "id": "cube_material",
         "initInfo": {
@@ -104,7 +105,6 @@
             "cube_texture"
         ]
     },
-
     {	"type": "Text",
         "id": "cube_vinfo",
         "initInfo": {
@@ -125,7 +125,6 @@
         ],
         "depResources": []
     },
-
     {	"type": "Mesh",
         "id": "cube_mesh",
         "initInfo": {
@@ -136,6 +135,87 @@
         ],
         "depResources": [
             "cube_material"
+        ]
+    }, 
+
+
+
+
+
+
+    {
+        "type": "Binary",
+        "id": "floor_binary",
+        "initInfo": {
+            "type": "BinaryInitInfo_File",
+            "fileName": "textures/checkerboard.png"
+        },
+        "initResources": [],
+        "depResources": []
+    },
+    {
+        "type": "Texture",
+        "id": "floor_texture",
+        "initInfo": {
+            "type": "TextureInitInfo_Binary",
+            "source": "SOURCE_BINARY_PNG",
+            "wrapS": "GL_CLAMP_TO_BORDER",
+            "wrapT": "GL_CLAMP_TO_BORDER",
+            "minFiltering": "GL_NEAREST",
+            "magFiltering": "GL_NEAREST"
+        },
+        "initResources": [
+            "floor_binary"
+        ],
+        "depResources": []
+    },
+    {	"type": "Material",
+        "id": "floor_material",
+        "initInfo": {
+            "type": "MaterialInitInfo_Default",
+            "uniformSampler2DNames": ["diffuseSampler"],
+            "uniformMat4Names": ["uModelToClip", "uModelToCam", "uNormalToCam"],
+            "uniformVec3Names": ["uSpecularCol"],
+            "uniformFloatNames": ["uSpecularExp"],
+            "specularColor": [0.1, 0.1, 0.1],
+            "specularExp": 0.5
+        },
+        "initResources": [],
+        "depResources": [
+            "shader_program",
+            "floor_texture"
+        ]
+    },
+    {	"type": "Text",
+        "id": "floor_vinfo",
+        "initInfo": {
+            "type": "TextInitInfo_File",
+            "fileName": "meshes/quad.obj"
+        },
+        "initResources": [],
+        "depResources": []
+    },
+    {	"type": "VertexData",
+        "id": "floor_vertex",
+        "initInfo": {
+            "type": "VertexDataInitInfo_Text",
+            "source": "SOURCE_BINARY_OBJ"
+        },
+        "initResources": [
+            "floor_vinfo"
+        ],
+        "depResources": []
+    },
+    {	"type": "Mesh",
+        "id": "floor_mesh",
+        "initInfo": {
+            "type": "MeshInitInfo_Default"
+        },
+        "initResources": [
+            "floor_vertex"
+        ],
+        "depResources": [
+            "floor_material"
         ]
     }
 ]

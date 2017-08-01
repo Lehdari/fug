@@ -24,6 +24,7 @@ int main()
                      {sf::Keyboard::D, ControlMapComponent::Action::MoveRight}};
 
     auto cube_mesh_ptr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("cube_mesh"));
+    auto floor_mesh_ptr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("floor_mesh"));
 
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(BeatComponent(BeatComponent::FlashBg, 0.3f, 0.04f));
@@ -32,8 +33,12 @@ int main()
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(MeshComponent(cube_mesh_ptr));
     FUG_SCENE.addComponent(MotionComponent({0.f, 0.f, 0.05}, {0.f, 0.f, 0.f}, {1.f, 0.01f, 0.01f, 0.01f}));
-    FUG_SCENE.addComponent(TransformComponent({-2.f, 1.f, 0.f}));
+    FUG_SCENE.addComponent(TransformComponent({0.f, 2.f, 0.f}));
     FUG_SCENE.addComponent(BeatComponent(BeatComponent::Pulse, 0.2f, 0.02f));
+
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(MeshComponent(floor_mesh_ptr));
+    FUG_SCENE.addComponent(TransformComponent({0.f, 0.f, 0.f}, {1.f, 1.f, 0.f, 0.f}, {10.f, 10.f, 10.f}));
 
     ControlVisitor control_visitor;
     TransformVisitor transform_visitor;
