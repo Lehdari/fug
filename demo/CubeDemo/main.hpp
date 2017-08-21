@@ -29,7 +29,6 @@
 #include "Graphics/VertexData_Init_Text.hpp"
 
 #include "Graphics/Canvas_SFML.hpp"
-#include "Graphics/Renderer.hpp"
 
 #include "Core/MathTypes.hpp"
 
@@ -39,6 +38,8 @@
 #include "ControlVisitor.hpp"
 #include "BeatComponent.hpp"
 #include "BeatVisitor.hpp"
+#include "Graphics/CameraVisitor.hpp"
+#include "Graphics/RenderVisitor.hpp"
 
 #include <SFML/Audio.hpp>
 

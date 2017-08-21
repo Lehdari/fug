@@ -32,7 +32,7 @@ int main()
 
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(MeshComponent(cube_mesh_ptr));
-    FUG_SCENE.addComponent(MotionComponent({0.f, 0.f, 0.05}, {0.f, 0.f, 0.f}, {1.f, 0.01f, 0.01f, 0.01f}));
+    FUG_SCENE.addComponent(MotionComponent({0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}, {1.f, 0.008f, -0.015f, 0.01f}));
     FUG_SCENE.addComponent(TransformComponent({0.f, 2.f, 0.f}));
     FUG_SCENE.addComponent(BeatComponent(BeatComponent::Pulse, 0.2f, 0.02f));
 
@@ -40,11 +40,20 @@ int main()
     FUG_SCENE.addComponent(MeshComponent(floor_mesh_ptr));
     FUG_SCENE.addComponent(TransformComponent({0.f, 0.f, 0.f}, {1.f, 1.f, 0.f, 0.f}, {10.f, 10.f, 10.f}));
 
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(TransformComponent({4.f, 4.f, -4.f}, {1.f, -1.f, -0.5f, 1.f}));
+    FUG_SCENE.addComponent(CameraComponent(90.f, 1280/720.f, 1.f, 50.f));
+    FUG_SCENE.addComponent(std::move(ctrl_comp));
+
     ControlVisitor control_visitor;
     TransformVisitor transform_visitor;
     MotionVisitor motion_visitor;
     BeatVisitor beat_visitor(sound);
-    Renderer render_visitor({4.f, 4.f, -4.f}, {0.f, 0.f, 0.f}, {0.f, 1.0f, 0.f}, 90.f, 1280/720.f, 1.f, 10.f);
+    CameraVisitor camera_visitor;
+    RenderVisitor render_visitor;
+
+    FUG_SCENE.accept(camera_visitor);
+    render_visitor.initCamera();
 
     while (canvas.isOpen()) {
 
@@ -62,6 +71,9 @@ int main()
 
         // Handle motions
         FUG_SCENE.accept(motion_visitor);
+
+        // Handlle camera(s)
+        FUG_SCENE.accept(camera_visitor);
 
         // Handle transforms
         FUG_SCENE.accept(transform_visitor);
