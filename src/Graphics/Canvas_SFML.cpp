@@ -6,7 +6,8 @@
 using namespace fug;
 
 
-Canvas_SFML::Canvas_SFML(void)
+Canvas_SFML::Canvas_SFML(void) :
+    _cursor_movable(true), _cursor_pos(0,0)
 {
     // window settings
     sf::ContextSettings settings;
@@ -71,6 +72,24 @@ void Canvas_SFML::handleEvents(void)
             // Key released, fire core event
             FUG_EVENT_MANAGER.pushEvent(event, sf::Event::KeyReleased);
         }
+        else if (event.type == sf::Event::MouseMoved) {
+            // Mouse moved, fire core events
+            auto delta = event;
+            delta.mouseMove.x = _cursor_pos.x - delta.mouseMove.x;
+            delta.mouseMove.y = _cursor_pos.y - delta.mouseMove.y;
+
+            FUG_EVENT_MANAGER.pushEvent(event, sf::Event::MouseMoved); // port for position
+            FUG_EVENT_MANAGER.pushEvent(delta, sf::Event::MouseMoved+123); // port for delta
+
+            if (!_cursor_movable) {
+                if (event.mouseMove.x != _cursor_pos.x || event.mouseMove.y != _cursor_pos.y) {
+                    setCursorPosition(_cursor_pos);
+                }
+                else {
+                    continue;
+                }
+            }
+        }
         else {
             // Unhandled event
         }
@@ -79,4 +98,25 @@ void Canvas_SFML::handleEvents(void)
 
 sf::Window* Canvas_SFML::getWindow(void) {
     return &_window;
+}
+
+void Canvas_SFML::setCursorVisible(bool b) {
+    _window.setMouseCursorVisible(b);
+}
+
+void Canvas_SFML::setCursorMovable(bool b) {
+    _cursor_movable = b;
+    if (!b) {
+        _cursor_pos = sf::Mouse::getPosition(_window);
+    }
+}
+
+void Canvas_SFML::setCursorPosition(sf::Vector2i p) {
+    sf::Mouse::setPosition(p, _window);
+}
+
+void Canvas_SFML::setCursorLock(bool b) {
+    if (b) setCursorPosition({int(_window.getSize().x / 2), int(_window.getSize().y / 2)});
+    setCursorMovable(!b);
+    setCursorVisible(!b);
 }

@@ -4,6 +4,7 @@
 int main()
 {
     Canvas_SFML canvas;
+    canvas.setCursorLock(true);
 
     ResourceLoader res("cubedemo.stfu");
     res.load();
@@ -84,6 +85,8 @@ int main()
         // Flush event buffers
         FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyPressed);
         FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::KeyReleased);
+        FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::MouseMoved);
+        FUG_EVENT_MANAGER.flushEvents<sf::Event>(sf::Event::MouseMoved+123);
        
         // End the current frame (internally swaps the front and back buffers)
         canvas.display();
