@@ -11,65 +11,65 @@ MailboxIterator<T_Event>::MailboxIterator(const std::vector<Event<T_Event>>* vec
 template <typename T_Event>
 MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator++()
 {
-	if (_index == _last) {
-		_index = _first;
-	}
-	else {
-		_index++;
-	}
-	return *this;
+    if (_index == _last) {
+        _index = _first;
+    }
+    else {
+        _index++;
+    }
+    return *this;
 }
 
 template <typename T_Event>
 MailboxIterator<T_Event> MailboxIterator<T_Event>::operator++(int)
 {
-	auto ret = *this;
-	++*this;
-	return ret;
+    auto ret = *this;
+    ++*this;
+    return ret;
 }
 
 template <typename T_Event>
 MailboxIterator<T_Event>& MailboxIterator<T_Event>::operator--()
 {
-	if (_index == _first) {
-		_index = _last;
-	}
-	else {
-		_index--;
-	}
-	return *this;
+    if (_index == _first) {
+        _index = _last;
+    }
+    else {
+        _index--;
+    }
+    return *this;
 }
 
 template <typename T_Event>
 MailboxIterator<T_Event> MailboxIterator<T_Event>::operator--(int)
 {
-	auto ret = *this;
-	--*this;
-	return ret;
+    auto ret = *this;
+    --*this;
+    return ret;
 }
 
 template <typename T_Event>
 bool MailboxIterator<T_Event>::operator==(MailboxIterator const& other)
 {
-	return other._index == _index && other._port == _port;
+    return other._index == _index && other._port == _port;
 }
 
 template <typename T_Event>
 bool MailboxIterator<T_Event>::operator!=(MailboxIterator const& other)
 {
-	return other._index != _index || other._port != _port;
+    return other._index != _index || other._port != _port;
 }
 
 template <typename T_Event>
 Event<T_Event> const& MailboxIterator<T_Event>::operator*() const
 {
-	return (*_vec)[_index];
+    return (*_vec)[_index];
 }
 
 template <typename T_Event>
 const Event<T_Event>* MailboxIterator<T_Event>::operator->() const
 {
-	return &(*_vec)[_index];
+    return &(*_vec)[_index];
 }
 
 #ifdef FUG_DEBUG
@@ -79,9 +79,9 @@ const Event<T_Event>* MailboxIterator<T_Event>::operator->() const
 template <typename T_Event>
 std::ostream& operator<<(std::ostream& os, MailboxIterator<T_Event> const& it)
 {
-	os << util::str(it) << " (port " << it._port << ") with"
-	   << " index " << it._index
-	   << ", bounds [" << it._first << " " << it._last << "]";
-	return os;
+    os << util::str(it) << " (port " << it._port << ") with"
+       << " index " << it._index
+       << ", bounds [" << it._first << " " << it._last << "]";
+    return os;
 }
 #endif

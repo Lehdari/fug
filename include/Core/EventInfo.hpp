@@ -5,13 +5,13 @@
 
 namespace fug {
 
-	// Metadata container for Event
+    // Metadata container for Event
     struct EventInfo {
 
-		EventId id;
-		EventPort port;
+        EventId id;
+        EventPort port;
 
-		bool persistent;
+        bool persistent;
     };
 
 } // namespace fug

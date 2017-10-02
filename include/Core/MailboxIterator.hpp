@@ -6,52 +6,52 @@
 #include <iostream>
 
 namespace fug {
-	
-	template <typename T_Event>
-	class MailboxIterator {
 
-		friend class FUG_IMPLEMENTATION_EVENT_MANAGER;
-	
-		template <typename U_Event>
-		friend class Mailbox;
+    template <typename T_Event>
+    class MailboxIterator {
 
-	public:
-		// incrementation
-		MailboxIterator& operator++();
-		MailboxIterator operator++(int);
+        friend class FUG_IMPLEMENTATION_EVENT_MANAGER;
 
-		// decrementation
-		MailboxIterator& operator--();
-		MailboxIterator operator--(int);
+        template <typename U_Event>
+        friend class Mailbox;
 
-		// (in)equality
-		bool operator==(MailboxIterator const&);
-		bool operator!=(MailboxIterator const&);
+    public:
+        // incrementation
+        MailboxIterator& operator++();
+        MailboxIterator operator++(int);
 
-		// dereferencing
-		Event<T_Event> const& operator*(void) const;
+        // decrementation
+        MailboxIterator& operator--();
+        MailboxIterator operator--(int);
 
-		// member access
-		const Event<T_Event>* operator->(void) const;
+        // (in)equality
+        bool operator==(MailboxIterator const&);
+        bool operator!=(MailboxIterator const&);
 
-	private:
-		MailboxIterator() = delete;
+        // dereferencing
+        Event<T_Event> const& operator*(void) const;
+
+        // member access
+        const Event<T_Event>* operator->(void) const;
+
+    private:
+        MailboxIterator() = delete;
         MailboxIterator(const std::vector<Event<T_Event>>*, EventPort const&, MailboxSize_t, MailboxSize_t, MailboxSize_t);
-		
-		const std::vector<Event<T_Event>>* _vec;
-		EventPort _port;
 
-		MailboxSize_t _first;
-		MailboxSize_t _last;
-		MailboxSize_t _index;
+        const std::vector<Event<T_Event>>* _vec;
+        EventPort _port;
 
-		#ifdef FUG_DEBUG
-		template <typename U_Event>
-		friend std::ostream& operator<<(std::ostream&, MailboxIterator<U_Event> const&);
-		#endif
-	};
+        MailboxSize_t _first;
+        MailboxSize_t _last;
+        MailboxSize_t _index;
 
-	#include "MailboxIterator.tcc"
+        #ifdef FUG_DEBUG
+        template <typename U_Event>
+        friend std::ostream& operator<<(std::ostream&, MailboxIterator<U_Event> const&);
+        #endif
+    };
+
+    #include "MailboxIterator.tcc"
 
 }
 

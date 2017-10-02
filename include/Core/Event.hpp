@@ -7,25 +7,25 @@
 
 namespace fug {
 
-	template <typename T_Event>	
-	class Event {
-	
-	public:
-		Event(T_Event const& = T_Event(), EventPort const& = EventPort(), bool = false);
+    template <typename T_Event>
+    class Event {
 
-		T_Event data;
-		EventInfo info;
+    public:
+        Event(T_Event const& = T_Event(), EventPort const& = EventPort(), bool = false);
 
-	private:
-		static EventId _id;
+        T_Event data;
+        EventInfo info;
 
-		#ifdef FUG_DEBUG
-		template <typename U_Event>
-		friend std::ostream& operator<<(std::ostream&, Event<U_Event> const&);
-		#endif
+    private:
+        static EventId _id;
 
-	};
-	#include "Event.tcc"
+        #ifdef FUG_DEBUG
+        template <typename U_Event>
+        friend std::ostream& operator<<(std::ostream&, Event<U_Event> const&);
+        #endif
+
+    };
+    #include "Event.tcc"
 
 } // namespace fug
 

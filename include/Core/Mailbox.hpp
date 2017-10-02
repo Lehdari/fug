@@ -12,33 +12,33 @@ namespace fug {
     template <typename T_Event>
     class Mailbox {
     
-	public:
+    public:
         friend class FUG_IMPLEMENTATION_EVENT_MANAGER;
 
         ~Mailbox();
 
-		Mailbox(Mailbox const&);
+        Mailbox(Mailbox const&);
         Mailbox(Mailbox<T_Event>&&);
-		Mailbox<T_Event>& operator=(Mailbox<T_Event> const&);
-		Mailbox<T_Event>& operator=(Mailbox<T_Event>&&);
+        Mailbox<T_Event>& operator=(Mailbox<T_Event> const&);
+        Mailbox<T_Event>& operator=(Mailbox<T_Event>&&);
 
-		MailboxIterator<T_Event> const& begin();
-		MailboxIterator<T_Event> const& end();
+        MailboxIterator<T_Event> const& begin();
+        MailboxIterator<T_Event> const& end();
 
     private:
         Mailbox() = delete;
-		Mailbox(MailboxIterator<T_Event> const&, MailboxIterator<T_Event> const&);
+        Mailbox(MailboxIterator<T_Event> const&, MailboxIterator<T_Event> const&);
 
-		const MailboxIterator<T_Event>* _begin;
-		const MailboxIterator<T_Event>* _end;
-		
+        const MailboxIterator<T_Event>* _begin;
+        const MailboxIterator<T_Event>* _end;
+
         EventPort _port;
-		
-		static std::function<void(Mailbox<T_Event>*)> _registerMailbox;
+
+        static std::function<void(Mailbox<T_Event>*)> _registerMailbox;
         static std::function<void(Mailbox<T_Event>*)> _unRegisterMailbox;
     };
     
-	#include "Mailbox.tcc"
+    #include "Mailbox.tcc"
 
 }
 
