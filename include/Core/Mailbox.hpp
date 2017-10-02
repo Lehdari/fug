@@ -33,6 +33,7 @@ namespace fug {
         const MailboxIterator<T_Event>* _end;
 
         EventPort _port;
+        bool _handlerFlag;
 
         static std::function<void(Mailbox<T_Event>*)> _registerMailbox;
         static std::function<void(Mailbox<T_Event>*)> _unRegisterMailbox;
