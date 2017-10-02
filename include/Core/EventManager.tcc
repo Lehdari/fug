@@ -14,6 +14,13 @@ Mailbox<T_Event> EventManagerBase<T_Implementation>::getMailbox(EventPort const&
 }
 
 template <typename T_Implementation>
+template <typename T_Event, typename T_Visitor, typename... T_Components>
+Mailbox<T_Event> EventManagerBase<T_Implementation>::getHandlerMailbox(Visitor<T_Visitor, T_Components...> const& visitor)
+{
+    return static_cast<T_Implementation*>(this)-> template getHandlerMailbox<T_Event>(visitor);
+}
+
+template <typename T_Implementation>
 template <typename T_Event>
 void EventManagerBase<T_Implementation>::pushEvent(T_Event const& event, EventPort const& port, bool persistent) 
 {
@@ -25,6 +32,13 @@ template <typename T_Event>
 void EventManagerBase<T_Implementation>::flushEvents(EventPort const& port)
 {
     static_cast<T_Implementation*>(this)-> template flushEvents<T_Event>(port);
+}
+
+template <typename T_Implementation>
+template <typename... T_Events, typename T_Visitor, typename... T_Components>
+void EventManagerBase<T_Implementation>::registerHandler(Visitor<T_Visitor, T_Components...> const& visitor)
+{
+    static_cast<T_Implementation*>(this)-> template registerHandler<T_Events...>(visitor);
 }
 
 template <typename T_Implementation>

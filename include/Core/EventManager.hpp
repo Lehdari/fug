@@ -5,7 +5,7 @@
 
 #include "Implementation.hpp"
 #include "Mailbox.hpp"
-
+#include "Core/Visitor.hpp"
 
 namespace fug {
 
@@ -24,6 +24,10 @@ namespace fug {
         template <typename T_Event>
         Mailbox<T_Event> getMailbox(EventPort const& = EventPort());
 
+        // Requests a specific mailbox handle for the assigned handler (Visitor)
+        template <typename T_Event, typename T_Visitor, typename... T_Components>
+        Mailbox<T_Event> getHandlerMailbox(Visitor<T_Visitor, T_Components...> const&);
+
         // Adds a Event to its specific mailbox
         template <typename T_Event>
         void pushEvent(T_Event const&, EventPort const& = EventPort(), bool = false);
@@ -32,6 +36,9 @@ namespace fug {
         template <typename T_Event>
         void flushEvents(EventPort const& = EventPort());
 
+        // Registers T_Visitor to have responsibility of T_Events... handling
+        template <typename... T_Events, typename T_Visitor, typename... T_Components>
+        void registerHandler(Visitor<T_Visitor, T_Components...> const&);
 
     protected:
         EventManagerBase(void) {}
