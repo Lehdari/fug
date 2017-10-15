@@ -22,8 +22,16 @@ namespace fug {
 
         sf::Window* getWindow(void);
 
+        void setCursorVisible(bool);
+        void setCursorMovable(bool);
+        void setCursorPosition(sf::Vector2i);
+        void setCursorLock(bool);
+
     private:
         sf::Window _window;
+
+        bool _cursor_movable;
+        sf::Vector2i _cursor_pos;
     };
 }
 
