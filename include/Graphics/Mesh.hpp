@@ -24,7 +24,6 @@ namespace fug {
         const Material& getMaterial(void) const;
         ResourcePointer<Material> getMaterialPointer(void) const;
 
-    private:
         ResourcePointer<Material> _material;
 
         GLuint _vertexArrayObjectId;

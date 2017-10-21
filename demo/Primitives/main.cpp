@@ -26,6 +26,9 @@
 #include "Graphics/VertexData_Init_Text.hpp"
 #include "Graphics/VertexData_Init_UVSphere.hpp"
 
+#include "Graphics/RenderObject.hpp"
+#include "Graphics/RenderExtractor.hpp"
+
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/Renderer.hpp"
 
@@ -54,8 +57,8 @@ int main(void)
                             FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
     MeshComponent quadMeshComp(quadMeshResPtr);
 
-    Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
-                      Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
+    Camera cam(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
+               Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
 
     bool running = true;
     while (running)
@@ -80,23 +83,27 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw...
+        std::vector<RenderObject> objects;
+        RenderExtractor extractor(objects);
 
         TransformComponent transform;
         transform.transform << 1.f, 0.f, 0.f,  2.5f,
                                0.f, 1.f, 0.f,  1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(cubeMeshComp, transform);
+        extractor(cubeMeshComp, transform);
         transform.transform << 1.f, 0.f, 0.f, -2.5f,
                                0.f, 1.f, 0.f,  1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(UVSphereMeshComp, transform);
+        extractor(UVSphereMeshComp, transform);
         transform.transform << 1.f, 0.f, 0.f, -2.5f,
                                0.f, 1.f, 0.f, -1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(quadMeshComp, transform);
+        extractor(quadMeshComp, transform);
+
+        renderObjects(objects, cam);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();

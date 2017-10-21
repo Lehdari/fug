@@ -22,7 +22,6 @@ namespace fug {
 
         GLuint getShaderId(void) const;
 
-    private:
         ResourcePointer<ShaderProgram>          _shader;
         std::vector<ResourcePointer<Texture>>   _textures;
         Vector3Glf                              _specularColor;

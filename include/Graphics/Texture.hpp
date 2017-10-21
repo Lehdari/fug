@@ -13,7 +13,6 @@ namespace fug {
         Texture(void);
         const Vector2Glf& getSize() const;
         void bind(GLenum target) const;
-    private:
         GLuint textureId_;
         
         Vector2Glf _textureSize;
