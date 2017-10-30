@@ -13,6 +13,10 @@ Renderer::Renderer(const Vector3Glf& position, const Vector3Glf& forward, const 
 
 
 bool Renderer::operator()(MeshComponent& mesh, TransformComponent& transform) {
-    mesh.draw(transform.transform ,_cam.getView(), _cam.getProj());
+    auto meshPtr = mesh.getMeshPointer();
+    meshPtr->getMaterialPointer()->useMaterial(transform.transform, _cam.getView(), _cam.getProj());
+    glBindVertexArray(meshPtr->getVAO());
+    glDrawElements(GL_TRIANGLES, meshPtr->getIndexCount(), GL_UNSIGNED_INT, (GLvoid*)0);
+    glBindVertexArray(0);
     return true;
 }
