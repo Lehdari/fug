@@ -15,14 +15,13 @@ Renderer::Renderer(const Vector3Glf& position, const Vector3Glf& forward, const 
 bool Renderer::operator()(MeshComponent& mesh, TransformComponent& transform) {
     auto meshPtr = mesh.getMeshPointer();
     auto materialPtr = meshPtr->getMaterialPointer();
+    auto shaderPtr = materialPtr->getShaderProgPtr();
 
     // Retrieve relevant gl-variables
-    GLint shaderId = materialPtr->getShaderProgPtr()->getId();
+    GLint shaderId = shaderPtr->getId();
     auto textures = materialPtr->getTexturePtrs();
-    auto uniformLocationsSampler2D = materialPtr->getUniformLocsSampler2D();
-    auto uniformLocationsMat4 = materialPtr->getUniformLocsMat4();
-    auto uniformLocationsVec3 = materialPtr->getUniformLocsVec3();
-    auto uniformLocationsFloat = materialPtr->getUniformLocsFloat();
+    auto samplerLocations = shaderPtr->getSamplerLocations();
+    auto uniformLocations = shaderPtr->getUniformLocations();
     auto specularColor = materialPtr->getSpecularColor();
     auto specularExp = materialPtr->getSpecularExp();
 
@@ -34,19 +33,19 @@ bool Renderer::operator()(MeshComponent& mesh, TransformComponent& transform) {
     glUseProgram(shaderId);
 
     // Bind textures
-    auto nValidBinds = std::min(textures.size(), uniformLocationsSampler2D.size());
+    auto nValidBinds = std::min(textures.size(), samplerLocations.size());
     for (auto i = 0u; i < nValidBinds; ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         textures[i]->bind(GL_TEXTURE_2D);
-        glUniform1i(uniformLocationsSampler2D[i], i);
+        glUniform1i(samplerLocations[i], i);
     }
 
     // Set uniforms
-    glUniformMatrix4fv(uniformLocationsMat4[0], 1, GL_FALSE, modelToClip.data());
-    glUniformMatrix4fv(uniformLocationsMat4[1], 1, GL_FALSE, modelToCam.data());
-    glUniformMatrix4fv(uniformLocationsMat4[2], 1, GL_FALSE, normalToCam.data());
-    glUniform3fv(uniformLocationsVec3[0], 1, specularColor.data());
-    glUniform1f(uniformLocationsFloat[0], specularExp);
+    glUniformMatrix4fv(uniformLocations[0], 1, GL_FALSE, modelToClip.data());
+    glUniformMatrix4fv(uniformLocations[1], 1, GL_FALSE, modelToCam.data());
+    glUniformMatrix4fv(uniformLocations[2], 1, GL_FALSE, normalToCam.data());
+    glUniform3fv(uniformLocations[3], 1, specularColor.data());
+    glUniform1f(uniformLocations[4], specularExp);
 
     // Draw
     glBindVertexArray(meshPtr->getVAO());

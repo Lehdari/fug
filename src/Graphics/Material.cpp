@@ -23,23 +23,3 @@ float Material::getSpecularExp() const
 {
     return _specularExp;
 }
-
-const std::vector<GLint>& Material::getUniformLocsSampler2D() const
-{
-    return _uniformLocations_Sampler2D;
-}
-
-const std::vector<GLint>& Material::getUniformLocsMat4() const
-{
-    return _uniformLocations_Mat4;
-}
-
-const std::vector<GLint>& Material::getUniformLocsVec3() const
-{
-    return _uniformLocations_Vec3;
-}
-
-const std::vector<GLint>& Material::getUniformLocsFloat() const
-{
-    return _uniformLocations_Float;
-}

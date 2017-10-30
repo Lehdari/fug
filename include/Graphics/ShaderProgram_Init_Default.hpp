@@ -9,9 +9,13 @@
 
 namespace fug {
     struct ShaderProgramInitInfo_Default {
+        std::vector<std::string> samplerNames;
+        std::vector<std::string> uniformNames;
     };
     FUG_RESOURCE_INITINFO_INIT(ShaderProgram, ShaderProgramInitInfo_Default)
     {
+        for (auto& u : json["samplerNames"]) initInfo.samplerNames.push_back(u);
+        for (auto& u : json["uniformNames"]) initInfo.uniformNames.push_back(u);
     }
     FUG_RESOURCE_INIT(ShaderProgram, ShaderProgramInitInfo_Default)
     {
@@ -33,6 +37,12 @@ namespace fug {
             FUG_LOG(LogLevel::Error)("%s\n", infoLog);
             throw infoLog;
         }
+
+        // Fetch uniform locations
+        for (auto& name : initInfo.samplerNames)
+            _samplerLocations.emplace_back(glGetUniformLocation(programId_, name.c_str()));
+        for (auto& name : initInfo.uniformNames)
+            _uniformLocations.emplace_back(glGetUniformLocation(programId_, name.c_str()));
     }
     FUG_RESOURCE_DESTROY(ShaderProgram, ShaderProgramInitInfo_Default)
     {
