@@ -23,11 +23,6 @@ void Mesh::draw(const Matrix4Glf& model, const Matrix4Glf& camera, const Matrix4
     glBindVertexArray(0);
 }
 
-const Material& Mesh::getMaterial(void) const
-{
-    return *_material;
-}
-
 ResourcePointer<Material> Mesh::getMaterialPointer(void) const
 {
     return _material;

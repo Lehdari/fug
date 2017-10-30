@@ -8,10 +8,6 @@ MeshComponent::MeshComponent(ResourcePointer<Mesh>& mesh) :
     mesh_(mesh)
 {}
 
-const Mesh& MeshComponent::getMesh(void) const {
-    return *mesh_;
-}
-
 ResourcePointer<Mesh> MeshComponent::getMeshPointer(void) const {
     return mesh_;
 }

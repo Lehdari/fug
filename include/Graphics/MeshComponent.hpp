@@ -12,7 +12,6 @@ namespace fug {
     public:
         MeshComponent(ResourcePointer<Mesh>& mesh);
 
-        const Mesh& getMesh(void) const;
         ResourcePointer<Mesh> getMeshPointer(void) const;
 
         void draw(const Matrix4Glf& transform, const Matrix4Glf& view, const Matrix4Glf& proj) const;

@@ -34,11 +34,6 @@ void SpriteMesh::draw(const Matrix4Glf& model, const Matrix4Glf& camera,
     glBindVertexArray(0);
 }
 
-const SpriteMaterial& SpriteMesh::getMaterial(void) const
-{
-    return *_material;
-}
-
 ResourcePointer<SpriteMaterial> SpriteMesh::getMaterialPointer(void) const
 {
     return _material;
