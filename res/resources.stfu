@@ -47,7 +47,9 @@
 	{	"type": "ShaderProgram",
 		"id": "shaderprogram_default",
 		"initInfo": {
-			"type": "ShaderProgramInitInfo_Default"
+			"type": "ShaderProgramInitInfo_Default",
+			"samplerNames": [],
+			"uniformNames": []
 		},
 		"initResources": [
 			"shaderobject_default_vert",
