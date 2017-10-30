@@ -17,13 +17,6 @@
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/ShaderProgram_Init_Default.hpp"
 
-#include "Graphics/SpriteMeshComponent.hpp"
-#include "Graphics/SpriteMaterial.hpp"
-#include "Graphics/SpriteMaterial_Init.hpp"
-#include "Graphics/SpriteMesh.hpp"
-#include "Graphics/SpriteMesh_Init.hpp"
-#include "Graphics/SpriteMeshComponent.hpp"
-
 #include "Graphics/Texture.hpp"
 #include "Graphics/Texture_Init_Binary.hpp"
 
@@ -32,7 +25,6 @@
 
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/Renderer.hpp"
-#include "Graphics/SpriteRenderer.hpp"
 
 #include "Core/EventManager.hpp"
 #include "Core/Scene.hpp"
