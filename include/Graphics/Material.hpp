@@ -18,9 +18,15 @@ namespace fug {
 
         Material(void);
 
-        void useMaterial(const Matrix4Glf& model, const Matrix4Glf& vie, const Matrix4Glf& proj) const;
+        const ResourcePointer<ShaderProgram>& getShaderProgPtr() const;
+        const std::vector<ResourcePointer<Texture>>& getTexturePtrs() const;
+        const Vector3Glf& getSpecularColor() const;
+        float getSpecularExp() const;
 
-        GLuint getShaderId(void) const;
+        const std::vector<GLint>& getUniformLocsSampler2D() const;
+        const std::vector<GLint>& getUniformLocsMat4() const;
+        const std::vector<GLint>& getUniformLocsVec3() const;
+        const std::vector<GLint>& getUniformLocsFloat() const;
 
     private:
         ResourcePointer<ShaderProgram>          _shader;
@@ -32,8 +38,6 @@ namespace fug {
         std::vector<GLint> _uniformLocations_Mat4;
         std::vector<GLint> _uniformLocations_Vec3;
         std::vector<GLint> _uniformLocations_Float;
-
-        void bindTextures(void) const;
     };
 
 };
