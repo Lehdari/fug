@@ -1,4 +1,4 @@
-#include <Graphics/SpriteMeshComponent.hpp>
+#include "SpriteMeshComponent.hpp"
 
 using namespace fug;
 
