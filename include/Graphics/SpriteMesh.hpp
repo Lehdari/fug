@@ -24,7 +24,7 @@ namespace fug {
         void draw(const Matrix4Glf& model, const Matrix4Glf& camera,
                   const GLint& frameRow, const GLint& frameColumn) const;
 
-        ResourcePointer<SpriteMaterial> getMaterialPointer(void) const;
+        const ResourcePointer<SpriteMaterial>& getMaterialPointer(void) const;
 
     private:
         ResourcePointer<SpriteMaterial> _material;

@@ -12,7 +12,7 @@ namespace fug {
     public:
         SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh);
 
-        ResourcePointer<SpriteMesh> getMeshPointer(void) const;
+        const ResourcePointer<SpriteMesh>& getMeshPointer(void) const;
 
         void draw(const Matrix4Glf& transform, const Matrix4Glf& camera,
                   const GLint& frameRow, const GLint& frameColumn) const;
