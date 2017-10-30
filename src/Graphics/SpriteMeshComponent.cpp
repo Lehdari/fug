@@ -7,7 +7,7 @@ SpriteMeshComponent::SpriteMeshComponent(ResourcePointer<SpriteMesh>& mesh) :
     _mesh(mesh)
 {}
 
-ResourcePointer<SpriteMesh> SpriteMeshComponent::getMeshPointer(void) const
+const ResourcePointer<SpriteMesh>& SpriteMeshComponent::getMeshPointer(void) const
 {
     return _mesh;
 }

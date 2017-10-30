@@ -20,7 +20,7 @@ namespace fug {
         Mesh(void);
 
         void draw(const Matrix4Glf& model, const Matrix4Glf& view, const Matrix4Glf& proj) const;
-        ResourcePointer<Material> getMaterialPointer(void) const;
+        const ResourcePointer<Material>& getMaterialPointer(void) const;
 
     private:
         ResourcePointer<Material> _material;
