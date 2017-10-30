@@ -2,7 +2,7 @@
 #define FUG_GRAPHICS_SPRITEMESHCOMPONENT_HPP
 
 
-#include "Graphics/SpriteMesh.hpp"
+#include "SpriteMesh.hpp"
 #include "Core/MathTypes.hpp"
 
 

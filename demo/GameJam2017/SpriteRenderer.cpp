@@ -1,4 +1,4 @@
-#include "Graphics/SpriteRenderer.hpp"
+#include "SpriteRenderer.hpp"
 
 
 using namespace fug;

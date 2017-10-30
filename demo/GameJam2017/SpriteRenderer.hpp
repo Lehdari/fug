@@ -5,8 +5,8 @@
 #include <Core/MathTypes.hpp>
 #include <Core/Visitor.hpp>
 #include <Logic/TransformComponent.hpp>
-#include <Graphics/SpriteMeshComponent.hpp>
 #include <Graphics/Camera.hpp>
+#include "SpriteMeshComponent.hpp"
 
 namespace fug {
 

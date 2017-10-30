@@ -6,7 +6,7 @@
 #include <GL/glew.h>
 #include <Core/ResourceManager.hpp>
 #include <Core/MathTypes.hpp>
-#include <Graphics/SpriteMaterial.hpp>
+#include "SpriteMaterial.hpp"
 
 
 

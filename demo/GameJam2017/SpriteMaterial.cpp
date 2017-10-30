@@ -1,4 +1,4 @@
-#include <Graphics/SpriteMaterial.hpp>
+#include "SpriteMaterial.hpp"
 
 using namespace fug;
 
