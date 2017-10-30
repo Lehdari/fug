@@ -21,8 +21,8 @@ namespace fug {
 
         const Vector3Glf& getPosition(void) const;
         const Matrix4Glf getWorldToClip(void) const;
-        const Matrix4Glf getView(void) const;
-        const Matrix4Glf getProj(void) const;
+        const Matrix4Glf& getView(void) const;
+        const Matrix4Glf& getProj(void) const;
 
     private:
         //  Vectors for orientation matrix
