@@ -19,15 +19,16 @@ namespace fug {
 
         Mesh(void);
 
-        void draw(const Matrix4Glf& model, const Matrix4Glf& view, const Matrix4Glf& proj) const;
         const ResourcePointer<Material>& getMaterialPointer(void) const;
+        GLuint getVAO() const;
+        uint32_t getIndexCount() const;
 
     private:
         ResourcePointer<Material> _material;
 
         GLuint _vertexArrayObjectId;
 
-        unsigned _nIndices;
+        uint32_t _nIndices;
 
         GLuint _positionBufferId;
         GLuint _texCoordBufferId;
