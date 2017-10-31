@@ -7,13 +7,8 @@ FUG_RESOURCE_INIT(Mesh, MeshInitInfo_Default) {
         FUG_LOG(LogLevel::Error)("MeshInitInfo_Default: expected 1 initialization resource, got %i\n", initResources.size());
         throw;
     }
-    if (depResources.size() != 1) {
-        FUG_LOG(LogLevel::Error)("MeshInitInfo_Default: expected 1 dependency resource, got %i\n", depResources.size());
-        throw;
-    }
 
     auto vertexData = FUG_RESOURCE_MANAGER.template getResource<VertexData>(initResources[0]);
-    _material = FUG_RESOURCE_MANAGER.template getResource<Material>(depResources[0]);
 
     // Check validity of vertex data
     if (!vertexData->usesTextureCoordinates()) {

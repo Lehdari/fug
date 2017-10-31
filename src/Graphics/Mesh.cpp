@@ -12,11 +12,6 @@ Mesh::Mesh(void) :
     _elementBufferId(0)
 {}
 
-const ResourcePointer<Material>& Mesh::getMaterialPointer(void) const
-{
-    return _material;
-}
-
 GLuint Mesh::getVAO() const
 {
     return _vertexArrayObjectId;

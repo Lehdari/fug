@@ -112,9 +112,7 @@
 		"initResources": [
 			"vertexdata_cube"
 		],
-		"depResources": [
-			"material_white"
-		]
+		"depResources": []
 	},
 
 	{	"type": "VertexData",
@@ -136,9 +134,7 @@
 		"initResources": [
 			"vertexdata_uvsphere"
 		],
-		"depResources": [
-			"material_white"
-		]
+		"depResources": []
 	},
 
 	{	"type": "Text",
@@ -171,9 +167,7 @@
 		"initResources": [
 			"vertexdata_quad"
 		],
-		"depResources": [
-			"material_white"
-		]
+		"depResources": []
 	}
 ]
 }
