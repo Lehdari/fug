@@ -12,7 +12,7 @@
 
 #include "Graphics/Mesh.hpp"
 #include "Graphics/Mesh_Init.hpp"
-#include "Graphics/MeshComponent.hpp"
+#include "Graphics/ModelComponent.hpp"
 
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Text.hpp"
@@ -39,20 +39,24 @@ int main(void)
     ResourceLoader resourceLoader("primitives.stfu");
     resourceLoader.load();
 
+    // White Material
+    auto whiteMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(
+                                 FUG_RESOURCE_ID_MAP.getId("material_white"));
+
     // Cube MeshComponent
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_cube"));
-    MeshComponent cubeMeshComp(cubeMeshResPtr);
+    ModelComponent cubeModelComp = {whiteMaterialResPtr, cubeMeshResPtr};
 
     // UVSphere MeshComponent
     auto UVSphereMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_uvsphere"));
-    MeshComponent UVSphereMeshComp(UVSphereMeshResPtr);
+    ModelComponent UVSphereModelComp = {whiteMaterialResPtr, UVSphereMeshResPtr};
 
     // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
-    MeshComponent quadMeshComp(quadMeshResPtr);
+    ModelComponent quadModelComp = {whiteMaterialResPtr, quadMeshResPtr};
 
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
@@ -86,17 +90,17 @@ int main(void)
                                0.f, 1.f, 0.f,  1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(cubeMeshComp, transform);
+        renderer(cubeModelComp, transform);
         transform.transform << 1.f, 0.f, 0.f, -2.5f,
                                0.f, 1.f, 0.f,  1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(UVSphereMeshComp, transform);
+        renderer(UVSphereModelComp, transform);
         transform.transform << 1.f, 0.f, 0.f, -2.5f,
                                0.f, 1.f, 0.f, -1.5f,
                                0.f, 0.f, 1.f,  1.5f,
                                0.f, 0.f, 0.f,   1.f;
-        renderer(quadMeshComp, transform);
+        renderer(quadModelComp, transform);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();

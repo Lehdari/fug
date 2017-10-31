@@ -13,7 +13,7 @@
 
 #include "Graphics/Mesh.hpp"
 #include "Graphics/Mesh_Init.hpp"
-#include "Graphics/MeshComponent.hpp"
+#include "Graphics/ModelComponent.hpp"
 
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Text.hpp"
@@ -81,11 +81,12 @@ int main(void)
 
     // Cube Mesh
     FUG_RESOURCE_MANAGER.addResourceInfo<Mesh, MeshInitInfo_Default>
-    (119, MeshInitInfo_Default(), {118}, {116});
+    (119, MeshInitInfo_Default(), {118}, {});
 
-    // Cube MeshComponent
-    auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
-    MeshComponent cubeMeshComp(cubeMeshResPtr);
+    // Cube ModelComponent
+    ModelComponent cubeModelComp;
+    cubeModelComp.material = FUG_RESOURCE_MANAGER.getResource<Material>(116);
+    cubeModelComp.mesh = FUG_RESOURCE_MANAGER.getResource<Mesh>(119);
 
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
@@ -154,7 +155,7 @@ int main(void)
 
         TransformComponent transform;
         transform.transform = translation * rotXMat * rotYMat;
-        renderer(cubeMeshComp, transform);
+        renderer(cubeModelComp, transform);
 
         ImGui::Render();
         // end the current frame (internally swaps the front and back buffers)

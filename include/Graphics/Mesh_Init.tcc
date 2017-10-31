@@ -2,11 +2,10 @@ FUG_RESOURCE_INITINFO_INIT(Mesh, MeshInitInfo_Default) {
 }
 
 FUG_RESOURCE_INIT(Mesh, MeshInitInfo_Default) {
-    if (initResources.size() < 1 || depResources.size() < 1)
+    if (initResources.size() < 1)
     return;
     
     auto vertexData = FUG_RESOURCE_MANAGER.template getResource<VertexData>(initResources[0]);
-    _material = FUG_RESOURCE_MANAGER.template getResource<Material>(depResources[0]);
     
     auto positions = vertexData->getPositions();
     auto texCoords = vertexData->getTextureCoordinates();

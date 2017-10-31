@@ -12,9 +12,9 @@ Renderer::Renderer(const Vector3Glf& position, const Vector3Glf& forward, const 
 }
 
 
-bool Renderer::operator()(MeshComponent& mesh, TransformComponent& transform) {
-    auto meshPtr = mesh.getMeshPointer();
-    auto materialPtr = meshPtr->getMaterialPointer();
+bool Renderer::operator()(ModelComponent& model, TransformComponent& transform) {
+    auto meshPtr = model.mesh;
+    auto materialPtr = model.material;
     auto shaderPtr = materialPtr->getShaderProgPtr();
 
     // Retrieve relevant gl-variables
