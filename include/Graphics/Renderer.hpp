@@ -19,8 +19,8 @@ namespace fug {
 
         bool operator()(ModelComponent& mesh, TransformComponent& transform);
 
-    private:
         Camera _cam;
+    private:
 
     };
 
