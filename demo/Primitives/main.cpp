@@ -4,6 +4,7 @@
 #include "Core/Binary_Init_File.hpp"
 #include "Core/Text.hpp"
 #include "Core/Text_Init_File.hpp"
+#include "Core/Scene.hpp"
 
 #include "Engine/ResourceLoader.hpp"
 
@@ -39,24 +40,42 @@ int main(void)
     ResourceLoader resourceLoader("primitives.stfu");
     resourceLoader.load();
 
-    // White Material
     auto whiteMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(
                                  FUG_RESOURCE_ID_MAP.getId("material_white"));
-
-    // Cube MeshComponent
     auto cubeMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_cube"));
-    ModelComponent cubeModelComp = {whiteMaterialResPtr, cubeMeshResPtr};
-
-    // UVSphere MeshComponent
     auto UVSphereMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_uvsphere"));
-    ModelComponent UVSphereModelComp = {whiteMaterialResPtr, UVSphereMeshResPtr};
-
-    // Quad MeshComponent
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(
                             FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
-    ModelComponent quadModelComp = {whiteMaterialResPtr, quadMeshResPtr};
+
+    // Set up scene
+    TransformComponent cubeTransform;
+    cubeTransform.transform << 1.f, 0.f, 0.f, 2.5f,
+                               0.f, 1.f, 0.f, 1.5f,
+                               0.f, 0.f, 1.f, 1.5f,
+                               0.f, 0.f, 0.f,  1.f;
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(ModelComponent({whiteMaterialResPtr, cubeMeshResPtr}));
+    FUG_SCENE.addComponent(std::move(cubeTransform));
+
+    TransformComponent uvTransform;
+    uvTransform.transform << 1.f, 0.f, 0.f, -2.5f,
+                             0.f, 1.f, 0.f,  1.5f,
+                             0.f, 0.f, 1.f,  1.5f,
+                             0.f, 0.f, 0.f,   1.f;
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(ModelComponent({whiteMaterialResPtr, UVSphereMeshResPtr}));
+    FUG_SCENE.addComponent(std::move(uvTransform));
+
+    TransformComponent quadTransform;
+    quadTransform.transform << 1.f, 0.f, 0.f, -2.5f,
+                               0.f, 1.f, 0.f, -1.5f,
+                               0.f, 0.f, 1.f,  1.5f,
+                               0.f, 0.f, 0.f,   1.f;
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(ModelComponent({whiteMaterialResPtr, quadMeshResPtr}));
+    FUG_SCENE.addComponent(std::move(quadTransform));
 
     Renderer renderer(Vector3Glf(0.f, 0.f, -3.f), Vector3Glf(0.f, 0.f, 1.f),
                       Vector3Glf(0.f, 1.f, 0.f), 90.f, 1280/720.f, 1.f, 10.f);
@@ -84,23 +103,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // draw...
-
-        TransformComponent transform;
-        transform.transform << 1.f, 0.f, 0.f,  2.5f,
-                               0.f, 1.f, 0.f,  1.5f,
-                               0.f, 0.f, 1.f,  1.5f,
-                               0.f, 0.f, 0.f,   1.f;
-        renderer(cubeModelComp, transform);
-        transform.transform << 1.f, 0.f, 0.f, -2.5f,
-                               0.f, 1.f, 0.f,  1.5f,
-                               0.f, 0.f, 1.f,  1.5f,
-                               0.f, 0.f, 0.f,   1.f;
-        renderer(UVSphereModelComp, transform);
-        transform.transform << 1.f, 0.f, 0.f, -2.5f,
-                               0.f, 1.f, 0.f, -1.5f,
-                               0.f, 0.f, 1.f,  1.5f,
-                               0.f, 0.f, 0.f,   1.f;
-        renderer(quadModelComp, transform);
+        FUG_SCENE.accept(renderer);
 
         // end the current frame (internally swaps the front and back buffers)
         wPtr->display();
