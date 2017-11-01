@@ -48,6 +48,7 @@ file(GLOB_RECURSE TEXTURED_CUBE_SRC_FILES demo/TexturedCube/*.cpp)
 file(GLOB_RECURSE PRIMITIVES_SRC_FILES demo/Primitives/*.cpp)
 file(GLOB_RECURSE DRAW_TEST_SRC_FILES demo/TexturedCube/*.cpp)
 file(GLOB_RECURSE CUBE_DEMO_SRC_FILES demo/CubeDemo/*.cpp)
+file(GLOB_RECURSE PBR_TEST_SRC_FILES demo/PBRTest/*.cpp)
 
 file(GLOB_RECURSE TEST_SRC_FILES src/Test/*.cpp src/test_main.cpp)
 file(GLOB_RECURSE TEST_INCLUDE_FILES include/Test/*.hpp)
@@ -176,3 +177,15 @@ target_link_libraries(cube_demo
 )
 set_property(TARGET cube_demo PROPERTY CXX_STANDARD 14)
 
+add_executable(pbr_test ${PBR_TEST_SRC_FILES})
+target_include_directories(pbr_test
+    PRIVATE ${EIGEN3_INCLUDE_DIR}
+    PRIVATE ${SFML_INCLUDE_DIRS}
+)
+target_link_libraries(pbr_test
+    fug-engine
+    imgui-fug
+    ${OPENGL_LIBRARIES}
+    ${SFML_LIBRARIES}
+)
+set_property(TARGET pbr_test PROPERTY CXX_STANDARD 14)
