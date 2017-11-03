@@ -51,7 +51,12 @@
 		"initInfo": {
 			"type": "ShaderProgramInitInfo_Default",
 			"samplerNames": ["albedoSampler", "roughnessSampler", "metalnessSampler"],
-			"uniformNames": ["uModelToClip", "uModelToCam", "uNormalToCam", "uSpecularCol", "uSpecularExp"]
+			"uniformNames": ["uSpecularCol", "uSpecularExp"],
+			"matrixNames": {
+				"ModelToClip": "uModelToClip",
+				"ModelToView": "uModelToCam",
+				"NormalToView": "uNormalToCam"
+			}
 		},
 		"initResources": [
 			"shaderobject_default_vert",
