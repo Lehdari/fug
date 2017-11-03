@@ -19,3 +19,8 @@ const std::vector<GLint>& ShaderProgram::getUniformLocations() const
 {
     return _uniformLocations;
 }
+
+const std::vector<GLint>& ShaderProgram::getMatrixLocations() const
+{
+    return _matrixLocations;
+}

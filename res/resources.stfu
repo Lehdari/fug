@@ -51,7 +51,8 @@
 		"initInfo": {
 			"type": "ShaderProgramInitInfo_Default",
 			"samplerNames": [],
-			"uniformNames": []
+			"uniformNames": [],
+			"matrixNames": []
 		},
 		"initResources": [
 			"shaderobject_default_vert",

@@ -54,7 +54,9 @@ int main(void)
     (112, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {111}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
-    (113, ShaderProgramInitInfo_Default{{"diffuseSampler"}, {"uModelToClip", "uModelToCam", "uNormalToCam", "uSpecularCol", "uSpecularExp"}}, {110,112}, {}, true);
+    (113, ShaderProgramInitInfo_Default{{"diffuseSampler"}, { "uSpecularCol", "uSpecularExp"},
+                       {{"ModelToClip", "uModelToClip"}, {"ModelToView", "uModelToCam"},
+                        {"NormalToView", "uNormalToCam"}}}, {110,112}, {}, true);
 
     // Cube Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>

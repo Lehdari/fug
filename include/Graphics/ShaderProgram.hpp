@@ -2,6 +2,7 @@
 #define FUG_SHADER_PROGRAM_HPP
 
 #include "Core/Resource.hpp"
+#include "Graphics/RenderingMatrixType.hpp"
 
 #include <GL/glew.h>
 
@@ -13,10 +14,12 @@ namespace fug {
         GLuint getId(void) const;
         const std::vector<GLint>& getSamplerLocations() const;
         const std::vector<GLint>& getUniformLocations() const;
+        const std::vector<GLint>& getMatrixLocations() const;
     private:
         GLuint programId_;
         std::vector<GLint> _samplerLocations;
         std::vector<GLint> _uniformLocations;
+        std::vector<GLint> _matrixLocations;
     };
 }
 
