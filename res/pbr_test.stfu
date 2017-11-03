@@ -50,8 +50,6 @@
 		"id": "shaderprogram_pbr",
 		"initInfo": {
 			"type": "ShaderProgramInitInfo_Default",
-			"samplerNames": ["albedoSampler", "roughnessSampler", "metalnessSampler"],
-			"uniformNames": ["uSpecularCol", "uSpecularExp"],
 			"matrixNames": {
 				"ModelToClip": "uModelToClip",
 				"ModelToView": "uModelToCam",
@@ -139,8 +137,7 @@
 		"id": "material_red_plastic",
 		"initInfo": {
 			"type": "MaterialInitInfo_Default",
-			"specularColor": [0.1, 0.1, 0.1],
-			"specularExp": 0.5
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
 		},
 		"initResources": [],
 		"depResources": [
@@ -155,8 +152,7 @@
 		"id": "material_iron",
 		"initInfo": {
 			"type": "MaterialInitInfo_Default",
-			"specularColor": [0.1, 0.1, 0.1],
-			"specularExp": 0.5
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
 		},
 		"initResources": [],
 		"depResources": [
@@ -171,8 +167,7 @@
 		"id": "material_copper",
 		"initInfo": {
 			"type": "MaterialInitInfo_Default",
-			"specularColor": [0.1, 0.1, 0.1],
-			"specularExp": 0.5
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
 		},
 		"initResources": [],
 		"depResources": [

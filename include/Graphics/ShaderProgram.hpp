@@ -12,13 +12,9 @@ namespace fug {
         FUG_RESOURCE_INIT_DESTROY_DECL
         ShaderProgram(void);
         GLuint getId(void) const;
-        const std::vector<GLint>& getSamplerLocations() const;
-        const std::vector<GLint>& getUniformLocations() const;
         const std::vector<GLint>& getMatrixLocations() const;
     private:
         GLuint programId_;
-        std::vector<GLint> _samplerLocations;
-        std::vector<GLint> _uniformLocations;
         std::vector<GLint> _matrixLocations;
     };
 }

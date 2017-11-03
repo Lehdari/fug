@@ -54,9 +54,10 @@ int main(void)
     (112, ShaderObjectInitInfo_Text{GL_FRAGMENT_SHADER}, {111}, {});
 
     FUG_RESOURCE_MANAGER.addResourceInfo<ShaderProgram, ShaderProgramInitInfo_Default>
-    (113, ShaderProgramInitInfo_Default{{"diffuseSampler"}, { "uSpecularCol", "uSpecularExp"},
-                       {{"ModelToClip", "uModelToClip"}, {"ModelToView", "uModelToCam"},
-                        {"NormalToView", "uNormalToCam"}}}, {110,112}, {}, true);
+    (113, ShaderProgramInitInfo_Default{{{"ModelToClip", "uModelToClip"},
+                                         {"ModelToView", "uModelToCam"},
+                                         {"NormalToView", "uNormalToCam"}}},
+                                       {110,112}, {}, true);
 
     // Cube Texture
     FUG_RESOURCE_MANAGER.addResourceInfo<Binary, BinaryInitInfo_File>
@@ -71,8 +72,10 @@ int main(void)
 
     // Cube Material
     FUG_RESOURCE_MANAGER.addResourceInfo<Material, MaterialInitInfo_Default>
-    (116, MaterialInitInfo_Default{ Vector3Glf(0.1f, 0.1f, 0.1f), 0.5f},
-                                   {}, {113,115}, true);
+    (116, MaterialInitInfo_Default{{"diffuseSampler"},
+                                   {{"uSpecularCol", Vector3Glf(0.1f, 0.1f, 0.1f)}},
+                                   {{"uSpecularExp", 0.5f}}},
+                                  {}, {113,115}, true);
 
     // Cube VertexData
     FUG_RESOURCE_MANAGER.addResourceInfo<Text, TextInitInfo_File>

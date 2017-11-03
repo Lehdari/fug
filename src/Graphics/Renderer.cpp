@@ -17,39 +17,34 @@ bool Renderer::operator()(ModelComponent& model, TransformComponent& transform) 
     auto materialPtr = model.material;
     auto shaderPtr = materialPtr->getShaderProgPtr();
 
-    // Retrieve relevant gl-variables
-    GLint shaderId = shaderPtr->getId();
-    auto textures = materialPtr->getTexturePtrs();
-    auto samplerLocations = shaderPtr->getSamplerLocations();
-    auto uniformLocations = shaderPtr->getUniformLocations();
-    auto matrixLocations = shaderPtr->getMatrixLocations();
-    auto specularColor = materialPtr->getSpecularColor();
-    auto specularExp = materialPtr->getSpecularExp();
-
     // Calculate matrices
     Matrix4Glf modelToCam = _cam.getView() * transform.transform;
     Matrix4Glf modelToClip = _cam.getProj() * modelToCam;
     Matrix4Glf normalToCam = modelToCam.transpose().inverse();
 
-    glUseProgram(shaderId);
+    glUseProgram(shaderPtr->getId());
 
     // Bind textures
-    auto nValidBinds = std::min(textures.size(), samplerLocations.size());
-    for (auto i = 0u; i < nValidBinds; ++i) {
+    auto textures = materialPtr->getTextures();
+    for (auto i = 0u; i < textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
-        textures[i]->bind(GL_TEXTURE_2D);
-        glUniform1i(samplerLocations[i], i);
+        textures[i].second->bind(GL_TEXTURE_2D);
+        glUniform1i(textures[i].first, i);
     }
 
     // Set uniforms
+    auto matrixLocations = shaderPtr->getMatrixLocations();
     glUniformMatrix4fv(matrixLocations[static_cast<size_t>(RMType::ModelToClip)], 1,
                        GL_FALSE, modelToClip.data());
     glUniformMatrix4fv(matrixLocations[static_cast<size_t>(RMType::ModelToView)], 1,
                        GL_FALSE, modelToCam.data());
     glUniformMatrix4fv(matrixLocations[static_cast<size_t>(RMType::NormalToView)], 1,
                        GL_FALSE, normalToCam.data());
-    glUniform3fv(uniformLocations[0], 1, specularColor.data());
-    glUniform1f(uniformLocations[1], specularExp);
+
+    for (auto& u : materialPtr->getVec3s())
+        glUniform3fv(u.first, 1, u.second.data());
+    for (auto& u : materialPtr->getFloats())
+        glUniform1f(u.first, u.second);
 
     // Draw
     glBindVertexArray(meshPtr->getVAO());
