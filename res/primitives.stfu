@@ -48,8 +48,6 @@
 		"id": "shaderprogram_default",
 		"initInfo": {
 			"type": "ShaderProgramInitInfo_Default",
-			"samplerNames": ["diffuseSampler"],
-			"uniformNames": ["uSpecularCol", "uSpecularExp"],
 			"matrixNames": {
 				"ModelToClip": "uModelToClip",
 				"ModelToView": "uModelToCam",
@@ -77,8 +75,13 @@
 		"id": "material_white",
 		"initInfo": {
 			"type": "MaterialInitInfo_Default",
-			"specularColor": [0.1, 0.1, 0.1],
-			"specularExp": 0.5
+			"sampler2DUniforms": ["diffuseSampler"],
+			"vec3Uniforms" : {
+				"uSpecularColor": [0.1, 0.1, 0.1]
+			},
+			"floatUniforms": {
+				"uSpecularExp": 0.5
+			}
 		},
 		"initResources": [],
 		"depResources": [

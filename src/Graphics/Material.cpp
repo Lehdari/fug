@@ -9,17 +9,17 @@ const ResourcePointer<ShaderProgram>& Material::getShaderProgPtr() const
     return _shader;
 }
 
-const std::vector<ResourcePointer<Texture>>& Material::getTexturePtrs() const
+const std::vector<std::pair<GLint, ResourcePointer<Texture>>>& Material::getTextures() const
 {
     return _textures;
 }
 
-const Vector3Glf& Material::getSpecularColor() const
+const std::vector<std::pair<GLint, Vector3Glf>>& Material::getVec3s() const
 {
-    return _specularColor;
+    return _vec3s;
 }
 
-float Material::getSpecularExp() const
+const std::vector<std::pair<GLint, float>>& Material::getFloats() const
 {
-    return _specularExp;
+    return _floats;
 }

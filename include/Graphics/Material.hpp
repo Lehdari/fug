@@ -19,15 +19,15 @@ namespace fug {
         Material(void);
 
         const ResourcePointer<ShaderProgram>& getShaderProgPtr() const;
-        const std::vector<ResourcePointer<Texture>>& getTexturePtrs() const;
-        const Vector3Glf& getSpecularColor() const;
-        float getSpecularExp() const;
+        const std::vector<std::pair<GLint, ResourcePointer<Texture>>>& getTextures() const;
+        const std::vector<std::pair<GLint, Vector3Glf>>& getVec3s() const;
+        const std::vector<std::pair<GLint, float>>& getFloats() const;
 
     private:
-        ResourcePointer<ShaderProgram>          _shader;
-        std::vector<ResourcePointer<Texture>>   _textures;
-        Vector3Glf                              _specularColor;
-        float                                   _specularExp;
+        ResourcePointer<ShaderProgram>                          _shader;
+        std::vector<std::pair<GLint, ResourcePointer<Texture>>> _textures;
+        std::vector<std::pair<GLint, Vector3Glf>>               _vec3s;
+        std::vector<std::pair<GLint, float>>                    _floats;
 
     };
 

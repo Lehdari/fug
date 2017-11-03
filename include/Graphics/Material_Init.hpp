@@ -4,16 +4,18 @@
 #include <Core/ResourceManager.hpp>
 #include <Graphics/Material.hpp>
 
-#include <vector>
 #include <string>
+#include <tuple>
+#include <vector>
 
 
 namespace fug {
 
     /// Initialization info struct
     struct MaterialInitInfo_Default {
-        Vector3Glf specularColor;
-        float      specularExp;
+        std::vector<std::string> sampler2DUniforms;
+        std::vector<std::pair<std::string, Vector3Glf>> vec3Uniforms;
+        std::vector<std::pair<std::string, float>> floatUniforms;
     };
 
     #include "Material_Init.tcc"
