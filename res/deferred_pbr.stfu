@@ -1,0 +1,318 @@
+{
+"Resource": [
+	{	"type": "Text",
+		"id": "binary_shader_default_vert",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "shader/default_vert.glsl"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Text",
+		"id": "binary_shader_deferred_pbr_geometry_frag",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "shader/deferred_pbr_geometry_frag.glsl"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Text",
+		"id": "binary_shader_deferred_light_vert",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "shader/deferred_light_vert.glsl"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Text",
+		"id": "binary_shader_deferred_pbr_directional_light_frag",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "shader/deferred_pbr_directional_light_frag.glsl"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "ShaderObject",
+		"id": "shaderobject_default_vert",
+		"initInfo": {
+			"type": "ShaderObjectInitInfo_Text",
+			"source": "BINARY",
+			"shaderType": "GL_VERTEX_SHADER"
+		},
+		"initResources": [
+			"binary_shader_default_vert"
+		],
+		"depResources": []
+	},
+
+	{	"type": "ShaderObject",
+		"id": "shaderobject_deferred_pbr_geometry_frag",
+		"initInfo": {
+			"type": "ShaderObjectInitInfo_Text",
+			"source": "BINARY",
+			"shaderType": "GL_FRAGMENT_SHADER"
+		},
+		"initResources": [
+			"binary_shader_deferred_pbr_geometry_frag"
+		],
+		"depResources": []
+	},
+
+	{	"type": "ShaderObject",
+		"id": "shaderobject_deferred_pbr_light_vert",
+		"initInfo": {
+			"type": "ShaderObjectInitInfo_Text",
+			"source": "BINARY",
+			"shaderType": "GL_VERTEX_SHADER"
+		},
+		"initResources": [
+			"binary_shader_deferred_light_vert"
+		],
+		"depResources": []
+	},
+
+	{	"type": "ShaderObject",
+		"id": "shaderobject_deferred_pbr_directional_light_frag",
+		"initInfo": {
+			"type": "ShaderObjectInitInfo_Text",
+			"source": "BINARY",
+			"shaderType": "GL_FRAGMENT_SHADER"
+		},
+		"initResources": [
+			"binary_shader_deferred_pbr_directional_light_frag"
+		],
+		"depResources": []
+	},
+
+	{	"type": "ShaderProgram",
+		"id": "shaderprogram_deferred_pbr_geometry",
+		"initInfo": {
+			"type": "ShaderProgramInitInfo_Default",
+			"matrixNames": {
+				"ModelToClip": "uModelToClip",
+				"ModelToView": "uModelToCam",
+				"NormalToView": "uNormalToCam"
+			}
+		},
+		"initResources": [
+			"shaderobject_default_vert",
+			"shaderobject_deferred_pbr_geometry_frag"
+		],
+		"depResources": []
+	},
+
+	{	"type": "ShaderProgram",
+		"id": "shaderprogram_deferred_pbr_directional_light",
+		"initInfo": {
+			"type": "ShaderProgramInitInfo_Default"
+		},
+		"initResources": [
+			"shaderobject_deferred_pbr_light_vert",
+			"shaderobject_deferred_pbr_directional_light_frag"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_red_plastic_albedo",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [1.0,0.0,0.0,1.0]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_iron_albedo",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [0.55,0.56,0.57,1.0]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_copper_albedo",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [0.95,0.64,0.54,1.0]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_value_05",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [0.5,0.5,0.5,0.5]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_value_02",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [0.2,0.2,0.2,0.2]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_value_1",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [1.0,1.0,1.0,1.0]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_value_0",
+		"initInfo": {
+			"type": "TextureInitInfo_Color",
+			"color": [0.0,0.0,0.0,1.0]
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Material",
+		"id": "material_red_plastic",
+		"initInfo": {
+			"type": "MaterialInitInfo_Default",
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
+		},
+		"initResources": [],
+		"depResources": [
+			"shaderprogram_deferred_pbr_geometry",
+			"texture_red_plastic_albedo",
+			"texture_value_02",
+			"texture_value_0"
+		]
+	},
+
+	{	"type": "Material",
+		"id": "material_iron",
+		"initInfo": {
+			"type": "MaterialInitInfo_Default",
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
+		},
+		"initResources": [],
+		"depResources": [
+			"shaderprogram_deferred_pbr_geometry",
+			"texture_iron_albedo",
+			"texture_value_05",
+			"texture_value_1"
+		]
+	},
+
+	{	"type": "Material",
+		"id": "material_copper",
+		"initInfo": {
+			"type": "MaterialInitInfo_Default",
+			"sampler2DUniforms": ["albedoSampler", "roughnessSampler", "metalnessSampler"]
+		},
+		"initResources": [],
+		"depResources": [
+			"shaderprogram_deferred_pbr_geometry",
+			"texture_copper_albedo",
+			"texture_value_05",
+			"texture_value_1"
+		]
+	},
+
+	{	"type": "VertexData",
+		"id": "vertexdata_uvsphere",
+		"initInfo": {
+			"type": "VertexDataInitInfo_UVSphere",
+            "segments": 64,
+            "rings": 32
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Mesh",
+		"id": "mesh_uvsphere",
+		"initInfo": {
+			"type": "MeshInitInfo_Default"
+		},
+		"initResources": [
+			"vertexdata_uvsphere"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Text",
+		"id": "text_quad_obj",
+		"initInfo": {
+			"type": "TextInitInfo_File",
+			"fileName": "meshes/quad.obj"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "VertexData",
+		"id": "vertexdata_quad",
+		"initInfo": {
+			"type": "VertexDataInitInfo_Text",
+			"source": "SOURCE_BINARY_OBJ"
+		},
+		"initResources": [
+			"text_quad_obj"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Mesh",
+		"id": "mesh_quad",
+		"initInfo": {
+			"type": "MeshInitInfo_Default"
+		},
+		"initResources": [
+			"vertexdata_quad"
+		],
+		"depResources": []
+	},
+
+	{	"type": "LightShaderBinding",
+		"id": "light_shader_binding_directional",
+		"initInfo": {
+			"type": "LightShaderBindingInitInfo",
+			"sampler2DUniforms": [
+				"depthMap",
+				"normalMap",
+				"albedoMap",
+				"roughnessMap",
+				"metalnessMap"
+			],
+			"parameterUniforms": {
+				"Direction" : "uLightDir",
+				"Intensity" : "uLightInt",
+				"AmbientIntensity" : "uLightAmb"
+			}
+		},
+		"initResources": [],
+		"depResources": [
+			"shaderprogram_deferred_pbr_directional_light"
+		]
+	}
+
+]
+}
