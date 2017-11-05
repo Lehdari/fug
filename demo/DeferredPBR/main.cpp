@@ -2,41 +2,36 @@
 #include "imgui-fug/imgui_impl_sfml_gl3.h"
 
 #include "Core/ResourceManager.hpp"
-
 #include "Core/Binary.hpp"
 #include "Core/Binary_Init_File.hpp"
+#include "Core/Scene.hpp"
 #include "Core/Text.hpp"
 #include "Core/Text_Init_File.hpp"
-#include "Core/Scene.hpp"
 
 #include "Engine/ResourceLoader.hpp"
 
 #include "Graphics/GBuffer.hpp"
-
+#include "Graphics/DirectionalLightPass.hpp"
 #include "Graphics/LightShaderBinding.hpp"
 #include "Graphics/LightShaderBinding_Init.hpp"
-
 #include "Graphics/Material.hpp"
 #include "Graphics/Material_Init.hpp"
-
 #include "Graphics/Mesh.hpp"
 #include "Graphics/Mesh_Init.hpp"
 #include "Graphics/ModelComponent.hpp"
-
 #include "Graphics/ShaderObject.hpp"
 #include "Graphics/ShaderObject_Init_Text.hpp"
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/ShaderProgram_Init_Default.hpp"
-
 #include "Graphics/Texture.hpp"
 #include "Graphics/Texture_Init_Color.hpp"
-
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init_Text.hpp"
 #include "Graphics/VertexData_Init_UVSphere.hpp"
-
 #include "Graphics/Canvas_SFML.hpp"
 #include "Graphics/Renderer.hpp"
+
+using namespace fug;
 
 namespace {
     const float FOV = 90.f * PI / 180.f;
@@ -45,15 +40,34 @@ namespace {
     const float MAX_PITCH = PI * 0.4999f;
     int CENTER_X = 1280 * 0.5;
     int CENTER_Y = 720 * 0.5;
+
+    // Homogenous corner vectors for a full screen quad
+    // TODO: Check why this doesn't match the quad's vert order
+    const std::vector<Vector4Glf> ndcCorners{ Vector4Glf( 1.f, -1.f, 0.f, 1.f),
+                                              Vector4Glf( 1.f,  1.f, 0.f, 1.f),
+                                              Vector4Glf(-1.f, -1.f, 0.f, 1.f),
+                                              Vector4Glf(-1.f,  1.f, 0.f, 1.f) };
+    std::vector<GLfloat> getHomogenousVectors(const Matrix4Glf& normalToView)
+    {
+        std::vector<GLfloat> vecs(8);
+        for (auto i = 0u; i < 4; ++i) {
+            auto v = ndcCorners[i];
+            v = normalToView * v;
+            v /= v[3];
+            v /= v[2];
+            vecs[i*2] = v[0];
+            vecs[i*2 + 1] = v[1];
+        }
+        return vecs;
+    }
+
 }
 
 int main(void)
 {
-    using namespace fug;
     Canvas_SFML c;
     sf::Window* window = c.getWindow();
 
-    // Bind imgui
     ImGui_ImplSFMLGL3_Init(window);
 
     // Load resources
@@ -105,6 +119,10 @@ int main(void)
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(ModelComponent({ironMaterialResPtr, sphereMeshResPtr}));
     FUG_SCENE.addComponent(std::move(ironBallTransform));
+    FUG_SCENE.addEntity();
+    FUG_SCENE.addComponent(DirectionalLightComponent({ dirLightBindResPtr,
+                                                       Vector3Glf(-0.5, -0.5, 1).normalized(),
+                                                       { 1.0, 1.0, 1.0 }, { 0.05, 0.05, 0.05 }}));
 
     // Set up camera movement
     bool cameraActive = false;
@@ -122,8 +140,12 @@ int main(void)
     const char* renderModes[] = { "Shaded", "Depth", "Normals", "Albedo", "Roughness",
                                   "Metalness" };
 
+
     Renderer renderer(camPos, Vector3Glf(0.f, 0.f, 1.f), Vector3Glf(0.f, 1.f, 0.f),
                       FOV, float(window->getSize().x) / window->getSize().y, Z_NEAR, Z_FAR);
+    Matrix4Glf normalToView = renderer._cam.getView().transpose().inverse();
+    DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView,
+                                      getHomogenousVectors(normalToView), 0);
 
     GBuffer gBuffer(1280, 720, { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
                                {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } );
@@ -188,9 +210,11 @@ int main(void)
             camPos -= 0.05f * renderer._cam.getXAxis();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
             camPos += 0.05f * renderer._cam.getYAxis();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             camPos -= 0.05f * renderer._cam.getYAxis();
         renderer._cam.orient(camPos, camFwd, Vector3Glf(0.f, 1.f, 0.f));
+        dirLightPass._normalToView = renderer._cam.getView().transpose().inverse();
+        dirLightPass._hCorners = getHomogenousVectors(renderer._cam.getProj().inverse());
 
         // Handle basic camera control
         // Simple imgui-window
@@ -213,31 +237,9 @@ int main(void)
 
         // Draw contents of buffer
         gBuffer.bindRead();
-        auto shaderId = dirLightBindResPtr->getShaderProgPtr()->getId();
-        glDepthMask(GL_FALSE);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendEquation(GL_FUNC_ADD);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(shaderId);
-        glUniform1i(glGetUniformLocation(shaderId, "uOnlyDepth"),
-                    currentMode == 1);
-        glUniform1i(glGetUniformLocation(shaderId, "uOnlyNormal"),
-                    currentMode == 2);
-        glUniform1i(glGetUniformLocation(shaderId, "uOnlyAlbedo"),
-                    currentMode == 3);
-        glUniform1i(glGetUniformLocation(shaderId, "uOnlyRoughness"),
-                    currentMode == 4);
-        glUniform1i(glGetUniformLocation(shaderId, "uOnlyMetalness"),
-                    currentMode == 5);
-
-        for (auto i = 0u; i < dirLightBindResPtr->getSamplerLocations().size(); i++)
-            glUniform1i(dirLightBindResPtr->getSamplerLocations()[i], i);
-
-        glBindVertexArray(quadMeshResPtr->getVAO());
-        glDrawElements(GL_TRIANGLES, quadMeshResPtr->getIndexCount(), GL_UNSIGNED_INT, (GLvoid*)0);
-        glBindVertexArray(0);
+        dirLightPass._currentMode = currentMode;
+        dirLightPass.initPass();
+        FUG_SCENE.accept(dirLightPass);
 
         ImGui::Render();
         // end the current frame (internally swaps the front and back buffers)
