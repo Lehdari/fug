@@ -17,6 +17,10 @@ uniform bool uOnlyMetalness;
 // Output
 out vec4 fragColor;
 
+// Input
+// Interpolated view ray direction
+in vec2 rayDirVar;
+
 // Constants
 const vec2 viewport = vec2(1280, 720); // TODO: Pass from cpu
 const float PI = 3.14159265359;
