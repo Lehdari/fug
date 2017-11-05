@@ -1,6 +1,11 @@
 #version 330
 
-/// GBuffer
+// Uniforms
+uniform vec3 uLightDir;
+uniform vec3 uLightInt;
+uniform vec3 uLightAmb;
+
+// GBuffer
 uniform sampler2D depthMap;
 uniform sampler2D normalMap;
 uniform sampler2D albedoMap;
@@ -111,8 +116,13 @@ void main()
         fragColor = vec4(vec3(mat.roughness), 1);
     else if (uOnlyMetalness)
         fragColor = vec4(vec3(mat.metalness), 1);
-    else
-        fragColor = vec4(0, 0, 0, 1);
-        /*vec3 v = -normalize(attrVar.pos);
-        vec3 sumCol = evalLighting(v, n, lightPos, lightInt, mat);*/
+    else {
+        vec3 v = -normalize(vec3(rayDirVar, 1));
+        vec3 directCol = evalLighting(v, n, -uLightDir, uLightInt, mat);
+        vec3 ambientCol = mat.albedo * uLightAmb;
+        if (mat.metalness > 0.5)
+            ambientCol *= 0.5;
+        fragColor = vec4(directCol + ambientCol, 1);
+        // TODO: Check why += broke, ambient light
+    }
 }
