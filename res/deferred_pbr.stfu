@@ -30,6 +30,36 @@
 		"depResources": []
 	},
 
+	{	"type": "Binary",
+		"id": "binary_rusted_basecolor",
+		"initInfo": {
+			"type": "BinaryInitInfo_File",
+			"fileName": "textures/rustediron2_basecolor.png"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Binary",
+		"id": "binary_rusted_roughness",
+		"initInfo": {
+			"type": "BinaryInitInfo_File",
+			"fileName": "textures/rustediron2_roughness.png"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
+	{	"type": "Binary",
+		"id": "binary_rusted_metalness",
+		"initInfo": {
+			"type": "BinaryInitInfo_File",
+			"fileName": "textures/rustediron2_metallic.png"
+		},
+		"initResources": [],
+		"depResources": []
+	},
+
 	{	"type": "Text",
 		"id": "binary_shader_deferred_pbr_directional_light_frag",
 		"initInfo": {
@@ -132,12 +162,53 @@
 	},
 
 	{	"type": "Texture",
-		"id": "texture_iron_albedo",
+		"id": "texture_rusted_albedo",
 		"initInfo": {
-			"type": "TextureInitInfo_Color",
-			"color": [0.55,0.56,0.57,1.0]
+			"type": "TextureInitInfo_Binary",
+			"source": "SOURCE_BINARY_PNG",
+			"wrapS": "GL_CLAMP_TO_EDGE",
+			"wrapT": "GL_CLAMP_TO_EDGE",
+			"minFiltering": "GL_LINEAR",
+			"magFiltering": "GL_LINEAR"
+
 		},
-		"initResources": [],
+		"initResources": [
+			"binary_rusted_basecolor"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_rusted_roughness",
+		"initInfo": {
+			"type": "TextureInitInfo_Binary",
+			"source": "SOURCE_BINARY_PNG",
+			"wrapS": "GL_CLAMP_TO_EDGE",
+			"wrapT": "GL_CLAMP_TO_EDGE",
+			"minFiltering": "GL_LINEAR",
+			"magFiltering": "GL_LINEAR"
+
+		},
+		"initResources": [
+			"binary_rusted_roughness"
+		],
+		"depResources": []
+	},
+
+	{	"type": "Texture",
+		"id": "texture_rusted_metalness",
+		"initInfo": {
+			"type": "TextureInitInfo_Binary",
+			"source": "SOURCE_BINARY_PNG",
+			"wrapS": "GL_CLAMP_TO_EDGE",
+			"wrapT": "GL_CLAMP_TO_EDGE",
+			"minFiltering": "GL_LINEAR",
+			"magFiltering": "GL_LINEAR"
+
+		},
+		"initResources": [
+			"binary_rusted_metalness"
+		],
 		"depResources": []
 	},
 
@@ -215,9 +286,9 @@
 		"initResources": [],
 		"depResources": [
 			"shaderprogram_deferred_pbr_geometry",
-			"texture_iron_albedo",
-			"texture_value_05",
-			"texture_value_1"
+			"texture_rusted_albedo",
+			"texture_rusted_roughness",
+			"texture_rusted_metalness"
 		]
 	},
 

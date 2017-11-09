@@ -24,6 +24,7 @@
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/ShaderProgram_Init_Default.hpp"
 #include "Graphics/Texture.hpp"
+#include "Graphics/Texture_Init_Binary.hpp"
 #include "Graphics/Texture_Init_Color.hpp"
 #include "Graphics/VertexData.hpp"
 #include "Graphics/VertexData_Init_Text.hpp"
@@ -103,14 +104,14 @@ int main(void)
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(ModelComponent({redPlasticMaterialResPtr, quadMeshResPtr}));
     FUG_SCENE.addComponent(std::move(floorTransform));
-    TransformComponent plasticBallTransform;
-    plasticBallTransform.transform << 1.f, 0.f, 0.f, -1.5f,
+    TransformComponent copperBallTransform;
+    copperBallTransform.transform << 1.f, 0.f, 0.f, -1.5f,
                                       0.f, 1.f, 0.f,  0.5f,
                                       0.f, 0.f, 1.f,   0.f,
                                       0.f, 0.f, 0.f,   1.f;
     FUG_SCENE.addEntity();
-    FUG_SCENE.addComponent(ModelComponent({redPlasticMaterialResPtr, sphereMeshResPtr}));
-    FUG_SCENE.addComponent(std::move(plasticBallTransform));
+    FUG_SCENE.addComponent(ModelComponent({copperMaterialResPtr, sphereMeshResPtr}));
+    FUG_SCENE.addComponent(std::move(copperBallTransform));
     TransformComponent ironBallTransform;
     ironBallTransform.transform << 1.f, 0.f, 0.f, 1.5f,
                                    0.f, 1.f, 0.f, 0.5f,
