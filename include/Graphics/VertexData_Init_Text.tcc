@@ -52,7 +52,7 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
                 else if (strcmp(lineHeader, "f") == 0) {
                     std::array<unsigned, 9> index = {0, 0, 0,  0, 0, 0,  0, 0, 0};
                     if (sscanf(buffer, "%u %u %u", &index[2], &index[1], &index[0]) == 3 ||
-                        sscanf(buffer, "%u//%u %u//%u %u//%u", &index[2], &index[8], &index[1], &index[7], &index[1], &index[6]) == 6 ||
+                        sscanf(buffer, "%u//%u %u//%u %u//%u", &index[2], &index[8], &index[1], &index[7], &index[0], &index[6]) == 6 ||
                         sscanf(buffer, "%u/%u %u/%u %u/%u", &index[2], &index[5], &index[1], &index[4], &index[0], &index[3]) == 6 ||
                         sscanf(buffer, "%u/%u/%u %u/%u/%u %u/%u/%u", &index[2], &index[5], &index[8], &index[1], &index[4], &index[7], &index[0], &index[3], &index[6]) == 9)
                         indices.push_back(std::move(index));
