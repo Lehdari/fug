@@ -77,8 +77,12 @@ int main(void)
     auto ironMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(FUG_RESOURCE_ID_MAP.getId("material_iron"));
     auto copperMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(FUG_RESOURCE_ID_MAP.getId("material_copper"));
     auto redPlasticMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(FUG_RESOURCE_ID_MAP.getId("material_red_plastic"));
+    auto chalkMaterialResPtr = FUG_RESOURCE_MANAGER.getResource<Material>(FUG_RESOURCE_ID_MAP.getId("material_chalk"));
+
     auto sphereMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("mesh_uvsphere"));
     auto quadMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("mesh_quad"));
+    auto bunnyMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("mesh_bunny"));
+
     auto dirLightBindResPtr = FUG_RESOURCE_MANAGER.getResource<LightShaderBinding>(FUG_RESOURCE_ID_MAP.getId("light_shader_binding_directional"));
 
 
@@ -119,6 +123,21 @@ int main(void)
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(ModelComponent({ironMaterialResPtr, sphereMeshResPtr}));
     FUG_SCENE.addComponent(std::move(ironBallTransform));
+
+    // Generate bunnyfield
+    for (int j = 0; j < 4; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            TransformComponent bunnyTransform;
+            bunnyTransform.transform << 2.f, 0.f, 0.f, -2.f + i * 1,
+                                        0.f, 2.f, 0.f,         -1.f,
+                                        0.f, 0.f, 2.f, -6.f + j * 1,
+                                        0.f, 0.f, 0.f,          1.f;
+            FUG_SCENE.addEntity();
+            FUG_SCENE.addComponent(ModelComponent({chalkMaterialResPtr, bunnyMeshResPtr}));
+            FUG_SCENE.addComponent(std::move(bunnyTransform));
+        }
+    }
+
     FUG_SCENE.addEntity();
     FUG_SCENE.addComponent(DirectionalLightComponent({ dirLightBindResPtr,
                                                        Vector3Glf(-0.5, -0.5, 1).normalized(),
@@ -172,7 +191,7 @@ int main(void)
                 if (event.type == sf::Event::MouseButtonPressed) {
                     // Enable mouse control and hide cursor
                     cameraActive = !cameraActive;
-                    sf::Mouse::setPosition({CENTER_X, CENTER_Y}, *window);
+                    window->setMouseCursorVisible(!cameraActive);
                 }
             }
             ImGui_ImplSFMLGL3_HandleEvent(event);
@@ -221,7 +240,6 @@ int main(void)
         ImGui_ImplSFMLGL3_NewFrame();
         // mousepos could be passed to imgui before event-handling and check this
         // to not pass mouse-events to program if hovering
-        ImGui::GetIO().MouseDrawCursor = ImGui::IsMouseHoveringAnyWindow();
         {
             ImGui::ListBox("", &currentMode, renderModes, 6, 6);
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

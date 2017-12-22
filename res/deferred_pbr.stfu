@@ -280,6 +280,25 @@
 			]
 		},
 		{
+			"type": "Material",
+			"id": "material_chalk",
+			"initInfo": {
+				"type": "MaterialInitInfo_Default",
+				"sampler2DUniforms": [
+					"albedoSampler",
+					"roughnessSampler",
+					"metalnessSampler"
+				]
+			},
+			"initResources": [],
+			"depResources": [
+				"shaderprogram_deferred_pbr_geometry",
+				"texture_value_1",
+				"texture_value_1",
+				"texture_value_0"
+			]
+		},
+		{
 			"type": "VertexData",
 			"id": "vertexdata_uvsphere",
 			"initInfo": {
@@ -331,6 +350,39 @@
 			},
 			"initResources": [
 				"vertexdata_quad"
+			],
+			"depResources": []
+		},
+		{
+			"type": "Text",
+			"id": "text_bunny_obj",
+			"initInfo": {
+				"type": "TextInitInfo_File",
+				"fileName": "meshes/bunny.obj"
+			},
+			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "VertexData",
+			"id": "vertexdata_bunny",
+			"initInfo": {
+				"type": "VertexDataInitInfo_Text",
+				"source": "SOURCE_BINARY_OBJ"
+			},
+			"initResources": [
+				"text_bunny_obj"
+			],
+			"depResources": []
+		},
+		{
+			"type": "Mesh",
+			"id": "mesh_bunny",
+			"initInfo": {
+				"type": "MeshInitInfo_Default"
+			},
+			"initResources": [
+				"vertexdata_bunny"
 			],
 			"depResources": []
 		},
