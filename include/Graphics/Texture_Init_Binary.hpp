@@ -20,9 +20,16 @@ namespace fug {
 
     FUG_RESOURCE_INITINFO_INIT(Texture, TextureInitInfo_Binary)
     {
+        // Check that keys are valid
+        assertJsonValidity("TextureInitInfo_Binary", json,
+                          {"type", "source", "wrapS", "wrapT", "minFiltering", "magFiltering"},
+                          {"source", "wrapS", "wrapT", "minFiltering", "magFiltering"});
+
+        // Parse fields
         if (json["source"] == "SOURCE_BINARY_PNG") {
             initInfo.source = TextureInitInfo_Binary::SOURCE_BINARY_PNG;
         } else {
+            FUG_LOG(LogLevel::Error)("TextureInitInfo_Binary: invalid source type '%s'\n", json["source"].get<std::string>().c_str());
             throw;
         }
         initInfo.wrapS = fug::getGLenum(json["wrapS"]);
@@ -34,12 +41,13 @@ namespace fug {
     FUG_RESOURCE_INIT(Texture, TextureInitInfo_Binary)
     {
         if (initResources.size() == 0) {
-            textureId_ = 0;
-            return;
+            FUG_LOG(LogLevel::Error)("TextureInitInfo_Binary: no initialization resources defined\n");
+            throw;
         }
 
         if (initInfo.source != TextureInitInfo_Binary::SOURCE_BINARY_PNG) {
-            return;
+            FUG_LOG(LogLevel::Error)("TextureInitInfo_Binary: invalid source type\n");
+            throw;
         }
 
         auto buffer = FUG_RESOURCE_MANAGER.getResource<Binary>(initResources[0]);

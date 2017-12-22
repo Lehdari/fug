@@ -1,7 +1,12 @@
 FUG_RESOURCE_INITINFO_INIT(VertexData, VertexDataInitInfo_Text) {
+    // Check that keys are correct
+    assertJsonValidity("VertexDataInitInfo_Text", json, {"type", "source"}, {"source"});
+
+    // Parse fields
     if (json["source"] == "SOURCE_BINARY_OBJ") {
         initInfo.source = VertexDataInitInfo_Text::SOURCE_BINARY_OBJ;
     } else {
+        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: invalid source type '%s'\n", json["source"].get<std::string>().c_str());
         throw;
     }
 }
@@ -10,8 +15,10 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
     switch (initInfo.source) {
     case VertexDataInitInfo_Text::SOURCE_BINARY_OBJ:
         {
-            if (initResources.size() == 0)
-                return; // TODO_EXCEPTION: maybe throw an exception instead?
+            if (initResources.size() != 1) {
+                FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: expected 1 initialization resource, got %i\n", initResources.size());
+                throw;
+            }
 
             positions_.clear();
             texCoords_.clear();
@@ -26,27 +33,35 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
             std::vector<std::array<unsigned, 9>> indices;
 
             while(*buffer) {
-                if (sscanf(buffer, "%s", lineHeader) == 0)
-                    return;
+                if (sscanf(buffer, "%s", lineHeader) == 0) {
+                    FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: sscanf '%s' failed\n");
+                    throw;
+                }
 
                 buffer += strlen(lineHeader)+1;
 
                 if (strcmp(lineHeader, "v") == 0) {
                     std::array<float, 4> position = {0.0f, 0.0f, 0.0f, 1.0f};
-                    if (sscanf(buffer, "%f %f %f %f", &position[0], &position[1], &position[2], &position[3]) < 3)
-                        throw "VertexData: invalid file!"; // TODO_EXCEPTION
+                    if (sscanf(buffer, "%f %f %f %f", &position[0], &position[1], &position[2], &position[3]) < 3) {
+                        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: sscanf failed on vertex positions\n");
+                        throw;
+                    }
                     positions.push_back(std::move(position));
                 }
                 else if (strcmp(lineHeader, "vt") == 0) {
                     std::array<float, 3> texCoord = {0.0f, 0.0f, 0.0f};
-                    if (sscanf(buffer, "%f %f %f", &texCoord[0], &texCoord[1], &texCoord[2]) < 2)
-                        throw "VertexData: invalid file!"; // TODO_EXCEPTION
+                    if (sscanf(buffer, "%f %f %f", &texCoord[0], &texCoord[1], &texCoord[2]) < 2) {
+                        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: sscanf failed on texture coordinates\n");
+                        throw;
+                    }
                     texCoords.push_back(std::move(texCoord));
                 }
                 else if (strcmp(lineHeader, "vn") == 0) {
                     std::array<float, 3> normal = {0.0f, 0.0f, 0.0f};
-                    if (sscanf(buffer, "%f %f %f", &normal[0], &normal[1], &normal[2]) < 3)
-                        throw "VertexData: invalid file!"; // TODO_EXCEPTION
+                    if (sscanf(buffer, "%f %f %f", &normal[0], &normal[1], &normal[2]) < 3) {
+                        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: sscanf failed on normals\n");
+                        throw;
+                    }
                     normals.push_back(std::move(normal));
                 }
                 else if (strcmp(lineHeader, "f") == 0) {
@@ -56,8 +71,10 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
                         sscanf(buffer, "%u/%u %u/%u %u/%u", &index[2], &index[5], &index[1], &index[4], &index[0], &index[3]) == 6 ||
                         sscanf(buffer, "%u/%u/%u %u/%u/%u %u/%u/%u", &index[2], &index[5], &index[8], &index[1], &index[4], &index[7], &index[0], &index[3], &index[6]) == 9)
                         indices.push_back(std::move(index));
-                    else
-                        throw "VertexData: invalid file!"; // TODO_EXCEPTION
+                    else {
+                        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: sscanf failed on faces\n");
+                        throw;
+                    }
                 }
 
                 while (*buffer++ != 10)
@@ -72,11 +89,30 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
             usingIndexing_ = true;
 
             for (auto& indexArray : indices) {
-                if (usingTexCoords_ && (indexArray[3] == 0 || indexArray[4] == 0 || indexArray[5] == 0))
-                    throw "VertexData: invalid index data (texture coordinates)";
+                // Check that indices are in range
+                for (auto i = 0u; i < 3; i++) {
+                    if (indexArray[i] == 0 || indexArray[i] > positions.size()) {
+                        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: invalid position index '%i'\n", indexArray[i]);
+                        throw;
+                    }
+                }
+                if (usingTexCoords_) {
+                    for (auto i = 3u; i < 6; i++) {
+                        if (indexArray[i] == 0 || indexArray[i] > texCoords.size()) {
+                            FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: invalid texture coordinate index '%i'\n", indexArray[i]);
+                            throw;
+                        }
 
-                if (usingNormals_ && (indexArray[6] == 0 || indexArray[7] == 0 || indexArray[8] == 0))
-                    throw "VertexData: invalid index data (normals)";
+                    }
+                }
+                if (usingNormals_) {
+                    for (auto i = 6u; i < 9; i++) {
+                        if (indexArray[i] == 0 || indexArray[i] > normals.size()) {
+                            FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: invalid normal index '%i'\n", indexArray[i]);
+                            throw;
+                        }
+                    }
+                }
 
                 std::array<unsigned, 3> v1 = { indexArray[0], indexArray[3], indexArray[6] };
                 std::array<unsigned, 3> v2 = { indexArray[1], indexArray[4], indexArray[7] };
@@ -115,8 +151,13 @@ FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_Text) {
                 }
                 indices_.push_back(createdVertices[v3]);
             }
+        break;
         }
-    break;
+    default:
+        {
+            FUG_LOG(LogLevel::Error)("VertexDataInitInfo_Text: invalid source type\n");
+            throw;
+        }
     }
 }
 

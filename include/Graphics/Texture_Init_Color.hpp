@@ -11,6 +11,10 @@ namespace fug {
 
     FUG_RESOURCE_INITINFO_INIT(Texture, TextureInitInfo_Color)
     {
+        // Check that keys are valid
+        assertJsonValidity("TextureInitInfo_Color", json, {"type", "color"}, {"color"});
+
+        // Parse color
         auto c = json["color"];
         initInfo.color = Vector4Glf(c[0], c[1], c[2], c[3]);
     }
