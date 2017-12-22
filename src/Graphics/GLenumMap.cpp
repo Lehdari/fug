@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "Core/Log.hpp"
+
 namespace {
 
     const std::unordered_map<std::string, GLenum> GLenumsByString = {
@@ -26,5 +28,11 @@ namespace {
 }
 
 const GLenum fug::getGLenum(const std::string& glenum) {
-    return GLenumsByString.find(glenum)->second;
+    auto it = GLenumsByString.find(glenum);
+    if (it != GLenumsByString.end()) {
+        return it->second;
+    } else {
+        FUG_LOG(LogLevel::Error)("GLenumMap: invalid GLenum '%s'\n", glenum.c_str());
+        throw;
+    }
 }
