@@ -1,9 +1,23 @@
 FUG_RESOURCE_INITINFO_INIT(VertexData, VertexDataInitInfo_UVSphere) {
+    // Check that keys are correct
+    assertJsonValidity("VertexDataInitInfo_UVSphere", json, {"type", "segments", "rings"}, {"segments", "rings"});
+
+    // Parse fields
     initInfo.segments = json["segments"];
     initInfo.rings = json["rings"];
 }
 
 FUG_RESOURCE_INIT(VertexData, VertexDataInitInfo_UVSphere) {
+    // Check parameters
+    if (initInfo.segments < 4) {
+        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_UVSphere: expected at least 4 segments\n");
+        throw;
+    }
+    if (initInfo.rings < 2) {
+        FUG_LOG(LogLevel::Error)("VertexDataInitInfo_UVSphere: expected at least 2 rings\n");
+        throw;
+    }
+
     usingTexCoords_ = true;
     usingNormals_ = true;
     usingIndexing_ = true;

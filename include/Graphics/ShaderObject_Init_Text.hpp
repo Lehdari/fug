@@ -15,14 +15,19 @@ namespace fug {
 
     FUG_RESOURCE_INITINFO_INIT(ShaderObject, ShaderObjectInitInfo_Text)
     {
+        // Check that keys are valid
+        assertJsonValidity("ShaderObjectInitInfo_Text", json, {"type", "shaderType"}, {"shaderType"});
+
+        // Parse fields
         initInfo.type = fug::getGLenum(json["shaderType"]);
     }
 
     FUG_RESOURCE_INIT(ShaderObject, ShaderObjectInitInfo_Text) {
-        if (initResources.size() == 0) {
-            objectId_ = 0;
-            return;
+        if (initResources.size() != 1) {
+            FUG_LOG(LogLevel::Error)("ShaderObjectInitInfo_Text: expected 1 initialization resource, got %i\n", initResources.size());
+            throw;
         }
+
         auto src = FUG_RESOURCE_MANAGER.getResource<Text>(initResources[0]);
         FUG_LOG(LogLevel::Debug)("%s: get: %p\n", __func__, src.get());
         FUG_LOG(LogLevel::Debug)("res num: %lu\n", initResources[0]);
@@ -42,9 +47,10 @@ namespace fug {
             glGetShaderiv(objectId_, GL_INFO_LOG_LENGTH, &infoLogLength);
             char* infoLog = new char[infoLogLength];
             glGetShaderInfoLog(objectId_, infoLogLength, &infoLogLength, infoLog);
+            FUG_LOG(LogLevel::Error)("ShaderObjectInitInfo_Text: shader compile failed\n");
             FUG_LOG(LogLevel::Error)("%s", infoLog);
             glDeleteShader(objectId_);
-            throw infoLog;
+            throw;
         }
     }
     FUG_RESOURCE_DESTROY(ShaderObject, ShaderObjectInitInfo_Text) {

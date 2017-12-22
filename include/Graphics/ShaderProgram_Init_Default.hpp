@@ -15,8 +15,11 @@ namespace fug {
     }
     FUG_RESOURCE_INIT(ShaderProgram, ShaderProgramInitInfo_Default)
     {
-        if (initResources.size() == 0)
-            return;
+        if (initResources.size() == 0) {
+            FUG_LOG(LogLevel::Error)("ShaderProgramInitInfo_Default: no initialization resources defined\n");
+            throw;
+        }
+
         programId_ = glCreateProgram();
         for (auto& initResourceId : initResources) {
             const auto &id = FUG_RESOURCE_MANAGER.getResource<ShaderObject>(initResourceId)->getId();
@@ -30,8 +33,9 @@ namespace fug {
             glGetShaderiv(programId_, GL_INFO_LOG_LENGTH, &infoLogLength);
             char *infoLog = new char[infoLogLength];
             glGetProgramInfoLog(programId_, infoLogLength, NULL, infoLog);
+            FUG_LOG(LogLevel::Error)("ShaderProgramInitInfo_Default: shader linking failed\n");
             FUG_LOG(LogLevel::Error)("%s\n", infoLog);
-            throw infoLog;
+            throw;
         }
     }
     FUG_RESOURCE_DESTROY(ShaderProgram, ShaderProgramInitInfo_Default)

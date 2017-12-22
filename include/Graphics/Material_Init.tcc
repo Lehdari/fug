@@ -1,18 +1,30 @@
 FUG_RESOURCE_INITINFO_INIT(Material, MaterialInitInfo_Default)
 {
+    // Check that keys are valid
+    assertJsonValidity("MaterialInitInfo_Default", json,
+                      {"type", "uniformSampler2DNames", "uniformMat4Names", "uniformVec3Names",
+                       "uniformFloatNames", "specularColor", "specularExp"},
+                      {"specularColor", "specularExp"});
+
+    // Parse fields
     for (auto& u : json["uniformSampler2DNames"]) initInfo.uniformSampler2DNames.push_back(u);
     for (auto& u : json["uniformMat4Names"]) initInfo.uniformMat4Names.push_back(u);
     for (auto& u : json["uniformVec3Names"]) initInfo.uniformVec3Names.push_back(u);
     for (auto& u : json["uniformFloatNames"]) initInfo.uniformFloatNames.push_back(u);
+
     auto c = json["specularColor"];
     initInfo.specularColor = Vector3f(c[0], c[1], c[2]);
     initInfo.specularExp = json["specularExp"];
 }
 
 FUG_RESOURCE_INIT(Material, MaterialInitInfo_Default) {
-    if (depResources.size() < 1)
-        return;
+    // Check dependency count
+    if (depResources.size() < 1) {
+        FUG_LOG(LogLevel::Error)("MaterialInitInfo_Default: no dependency resources defined\n");
+        throw;
+    }
 
+    // Set shader
     _shader = FUG_RESOURCE_MANAGER.template getResource<ShaderProgram>(depResources[0]);
 
     for (auto i=1u; i<depResources.size(); ++i)
