@@ -110,20 +110,20 @@ target_link_libraries(fug-engine
 set_property(TARGET fug-engine PROPERTY CXX_STANDARD 14)
 
 # Applications
-add_executable(test
+add_executable(fug_test
     ${TEST_SRC_FILES}
     ${TEST_INCLUDE_FILES}
 )
-target_include_directories(test
+target_include_directories(fug_test
     PRIVATE ${EIGEN3_INCLUDE_DIR}
     PRIVATE ${SFML_INCLUDE_DIRS}
 )
-target_link_libraries(test
+target_link_libraries(fug_test
     fug-engine
     ${OPENGL_LIBRARIES}
     ${SFML_LIBRARIES}
 )
-set_property(TARGET test PROPERTY CXX_STANDARD 14)
+set_property(TARGET fug_test PROPERTY CXX_STANDARD 14)
 
 add_executable(fgj
     ${GAME_SRC_FILES}
