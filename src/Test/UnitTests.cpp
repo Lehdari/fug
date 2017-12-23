@@ -68,3 +68,13 @@ void fug::Tester::fail(void)
         throw;
 }
 
+std::vector<std::string> fug::Tester::getTestNames()
+{
+    std::vector<std::string> names;
+
+    for (auto &test: _testFuncs)
+        names.emplace_back(test.first);
+
+    return names;
+}
+

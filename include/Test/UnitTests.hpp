@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "Core/Macros.hpp"
 
@@ -57,6 +58,7 @@ namespace fug {
         void run(bool dieOnFail = true);
         void run(const std::string& testName, bool dieOnFail = true);
         void fail(void);
+        std::vector<std::string> getTestNames();
         static Tester& instance(void);
     private:
         std::unordered_map<std::string, UnitTest> _testFuncs;
