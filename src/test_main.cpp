@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     };
 
     /* TODO: This should be a nice generic data-driven thing, but oh well */
-    for (int i = 1; i < (argc); ++i) {
+    for (int i = 1; i < argc; ++i) {
         if (i < argc)
             arg = std::string(argv[i]);
         if (!isParam) {
@@ -51,6 +51,12 @@ int main(int argc, char *argv[])
             }
             isParam = false;
         }
+    }
+
+    if (argc == 1) {
+        printf("Usage: %s [-v Debug|Info|Warn|Error] [TEST_NAME] [TEST_NAME] ...\n",
+               argv[0]);
+        return 0;
     }
 
     if (testNames.size() == 0) {
