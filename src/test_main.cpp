@@ -35,6 +35,10 @@ int main(int argc, char *argv[])
                 isParam = true;
                 param = arg;
             } else {
+                if (!arg.compare("all"))  {
+                    testNames = FUG_TESTER.getTestNames();
+                    break;
+                }
                 testNames.push_back(arg);
             }
         } else {
@@ -56,15 +60,15 @@ int main(int argc, char *argv[])
     if (argc == 1) {
         printf("Usage: %s [-v Debug|Info|Warn|Error] [TEST_NAME] [TEST_NAME] ...\n",
                argv[0]);
+        printf("Valid test names are:\n");
+        for (const auto &testName: FUG_TESTER.getTestNames())
+            printf("\t%s\n", testName.c_str());
+        printf("\tall (runs all of the tests above)\n");
         return 0;
     }
 
-    if (testNames.size() == 0) {
-        FUG_TESTER.run();
-    } else {
-        for (const auto& testName: testNames)
-            FUG_TESTER.run(testName, true);
-    }
+    for (const auto& testName: testNames)
+        FUG_TESTER.run(testName, true);
 
     return 0;
 }
