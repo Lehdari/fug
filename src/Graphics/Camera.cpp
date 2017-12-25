@@ -12,6 +12,18 @@ Camera::Camera(const Vector3Glf& position, const Vector3Glf& forward, const Vect
     lookAt(position, forward, up);
 }
 
+Camera::Camera(const Camera& c)
+{
+    _xAxis = c._xAxis;
+    _yAxis = c._yAxis;
+    _zAxis = c._zAxis;
+    _fov = c._fov;
+    _aspectRatio = c._aspectRatio;
+    _near = c._near;
+    _far = c._far;
+    _orientation = c._orientation;
+    _projection = c._projection;
+}
 
 void Camera::lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up)
 {
