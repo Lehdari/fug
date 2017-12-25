@@ -15,6 +15,7 @@ namespace fug {
                const float& fov, const float& aspectRatio,
                const float& near, const float& far);
         Camera(const Camera& c);
+        Camera& operator=(const Camera& c);
 
         void lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up);
         void orient(const Vector3Glf& pos, const Vector3Glf& fwd, const Vector3Glf& up);

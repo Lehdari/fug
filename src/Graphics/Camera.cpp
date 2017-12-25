@@ -25,6 +25,22 @@ Camera::Camera(const Camera& c)
     _projection = c._projection;
 }
 
+Camera& Camera::operator=(const Camera& other)
+{
+    if (this != &other) {
+        this->_xAxis = other._xAxis;
+        this->_yAxis = other._yAxis;
+        this->_zAxis = other._zAxis;
+        this->_fov = other._fov;
+        this->_aspectRatio = other._aspectRatio;
+        this->_near = other._near;
+        this->_far = other._far;
+        this->_orientation = other._orientation;
+        this->_projection = other._projection;
+    }
+    return *this;
+}
+
 void Camera::lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up)
 {
     _zAxis = (to - from).normalized();
