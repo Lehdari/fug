@@ -168,8 +168,9 @@ int main(void)
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView,
                                       getHomogenousVectors(normalToView), { RES_X, RES_Y }, 0);
 
-    GBuffer gBuffer(RES_X, RES_Y, { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
-                                  {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } );
+    auto gBuffer = std::shared_ptr<GBuffer>(new GBuffer(RES_X, RES_Y,
+                                                        { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
+                                                        {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } ));
 
     bool running = true;
     while (running)
@@ -193,7 +194,7 @@ int main(void)
                 // Recalculate projection
                 renderer._cam.projection(FOV, float(RES_X) / RES_Y, Z_NEAR, Z_FAR);
                 // Resize rendering buffers
-                gBuffer.resize(RES_X, RES_Y);
+                gBuffer->resize(RES_X, RES_Y);
             } else if (cameraActive || !ImGui::IsMouseHoveringAnyWindow()) {
                 if (event.type == sf::Event::MouseButtonPressed) {
                     // Enable mouse control and hide cursor
@@ -256,10 +257,10 @@ int main(void)
         }
 
         // Clear final image
-        gBuffer.clearFinal();
+        gBuffer->clearFinal();
 
         // Draw geometry to gbuffer
-        gBuffer.bindGeometryPass();
+        gBuffer->bindGeometryPass();
         glDepthMask(GL_TRUE);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -267,13 +268,13 @@ int main(void)
         FUG_SCENE.accept(renderer);
 
         // Render contributions of directional lights
-        gBuffer.bindLightPass();
+        gBuffer->bindLightPass();
         dirLightPass._currentMode = currentMode;
         dirLightPass.initPass();
         FUG_SCENE.accept(dirLightPass);
 
         // Blit final texture to screen
-        gBuffer.bindFinalRead();
+        gBuffer->bindFinalRead();
         glBlitFramebuffer(0, 0, RES_X, RES_Y, 0, 0, RES_X, RES_Y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
         // Render GUI
