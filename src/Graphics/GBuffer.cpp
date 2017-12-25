@@ -1,5 +1,7 @@
 #include "Graphics/GBuffer.hpp"
 
+#include "Core/Log.hpp"
+
 using namespace fug;
 
 GBuffer::GBuffer(GLsizei resX, GLsizei resY, const std::vector<GLint>& sizedFormats,
@@ -7,13 +9,18 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, const std::vector<GLint>& sizedForm
     _sizedFormats(sizedFormats),
     _baseFormats(baseFormats)
 {
-    // TODO: Better checks
-    if (resX == 0 || resY == 0)
-        throw "Trying to create gbuffer with 0 width or height!";
-    if (_sizedFormats.size() == 0)
-        throw "Trying to create an empty gbuffer!";
-    if (_sizedFormats.size() != _baseFormats.size())
-        throw "Mismatching format vectors in GBufferInitInfo!";
+    if (resX == 0 || resY == 0) {
+        FUG_LOG(LogLevel::Error)("GBuffer: trying to create with 0 width or height\n");
+        throw;
+    }
+    if (_sizedFormats.size() == 0) {
+        FUG_LOG(LogLevel::Error)("GBuffer: trying to create an empty gbuffer\n");
+        throw;
+    }
+    if (_sizedFormats.size() != _baseFormats.size()) {
+        FUG_LOG(LogLevel::Error)("GBuffer: format vectors mismatch\n");
+        throw;
+    }
 
     // Generate and bind a new fbo
     glGenFramebuffers(1, &_fbo);
@@ -46,10 +53,13 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, const std::vector<GLint>& sizedForm
     if (drawBuffers.size() != 0)
         glDrawBuffers(drawBuffers.size(), drawBuffers.data());
 
-    GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-    if (Status != GL_FRAMEBUFFER_COMPLETE)
-        throw "GBuffer initialization failed"; // TODO: add status to throw
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
+        FUG_LOG(LogLevel::Error)("GBuffer: framebuffer initialization failed\n");
+        FUG_LOG(LogLevel::Error)("Status: %i\n", status);
+        throw;
+    }
 
     // Bind default fbo
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
