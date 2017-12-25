@@ -6,6 +6,7 @@ uniform vec3 uLightInt;
 uniform vec3 uLightAmb;
 
 // GBuffer
+uniform vec2 uViewportSize;
 uniform sampler2D depthMap;
 uniform sampler2D normalMap;
 uniform sampler2D albedoMap;
@@ -27,7 +28,6 @@ out vec4 fragColor;
 in vec2 rayDirVar;
 
 // Constants
-const vec2 viewport = vec2(1280, 720); // TODO: Pass from cpu
 const float PI = 3.14159265359;
 
 // Material (for copypaste from skunkwork)
@@ -97,7 +97,7 @@ vec3 evalLighting(vec3 v, vec3 n, vec3 l, vec3 intensity, Material mat)
 
 void main()
 {
-    vec2 texCoord = gl_FragCoord.xy / viewport;
+    vec2 texCoord = gl_FragCoord.xy / uViewportSize;
     // Extract deferred parameters
     float d = texture(depthMap, texCoord).r;
     vec3 n = texture(normalMap, texCoord).rgb;

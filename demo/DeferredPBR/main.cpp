@@ -38,8 +38,10 @@ namespace {
     const float Z_NEAR = 0.1f;
     const float Z_FAR = 100.f;
     const float MAX_PITCH = PI * 0.4999f;
-    int CENTER_X = 1280 * 0.5;
-    int CENTER_Y = 720 * 0.5;
+    int RES_X = 1280;
+    int RES_Y = 720;
+    int CENTER_X = RES_X * 0.5;
+    int CENTER_Y = RES_Y * 0.5;
 
     // Homogenous corner vectors for a full screen quad
     // TODO: Check why this doesn't match the quad's vert order
@@ -164,29 +166,34 @@ int main(void)
                       FOV, float(window->getSize().x) / window->getSize().y, Z_NEAR, Z_FAR);
     Matrix4Glf normalToView = renderer._cam.getView().transpose().inverse();
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView,
-                                      getHomogenousVectors(normalToView), 0);
+                                      getHomogenousVectors(normalToView), { RES_X, RES_Y }, 0);
 
-    GBuffer gBuffer(1280, 720, { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
-                               {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } );
+    GBuffer gBuffer(RES_X, RES_Y, { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
+                                  {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } );
 
     bool running = true;
     while (running)
     {
-        // handle events
+        // Handle events
         sf::Event event;
         while (window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed) {
-                // end the program
+                // End the program on esc
                 running = false;
             } else if (event.type == sf::Event::Resized) {
-                // adjust the viewport when the window is resized
-                glViewport(0, 0, event.size.width, event.size.height);
-                renderer._cam.projection(FOV, float(event.size.width) / event.size.height,
-                                         Z_NEAR, Z_FAR);
-                gBuffer.resize(event.size.width, event.size.height);
-                CENTER_X = event.size.width * 0.5;
-                CENTER_Y = event.size.height * 0.5;
+                // update statics
+                RES_X = event.size.width;
+                RES_Y = event.size.height;
+                CENTER_X = RES_X * 0.5;
+                CENTER_Y = RES_Y * 0.5;
+                // Adjust the viewport
+                glViewport(0, 0, RES_X, RES_Y);
+                dirLightPass._viewportSize = { RES_X, RES_Y };
+                // Recalculate projection
+                renderer._cam.projection(FOV, float(RES_X) / RES_Y, Z_NEAR, Z_FAR);
+                // Resize rendering buffers
+                gBuffer.resize(RES_X, RES_Y);
             } else if (cameraActive || !ImGui::IsMouseHoveringAnyWindow()) {
                 if (event.type == sf::Event::MouseButtonPressed) {
                     // Enable mouse control and hide cursor
@@ -216,9 +223,11 @@ int main(void)
                                         0.f, 0.f,          0.f, 1.f;
                 Vector4Glf fwd = camYawMat * camPitchMat * Vector4Glf(0.f, 0.f, 1.f, 0.f);
                 camFwd = Vector3Glf(fwd[0], fwd[1], fwd[2]);
+                // Recenter mouse
                 sf::Mouse::setPosition({CENTER_X, CENTER_Y}, *window);
             }
         }
+        // Update camera position if movement key(s) are pressed
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
             camPos += 0.05f * renderer._cam.getZAxis();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -231,6 +240,7 @@ int main(void)
             camPos += 0.05f * renderer._cam.getYAxis();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             camPos -= 0.05f * renderer._cam.getYAxis();
+        // Reorient camera
         renderer._cam.orient(camPos, camFwd, Vector3Glf(0.f, 1.f, 0.f));
         dirLightPass._normalToView = renderer._cam.getView().transpose().inverse();
         dirLightPass._hCorners = getHomogenousVectors(renderer._cam.getProj().inverse());

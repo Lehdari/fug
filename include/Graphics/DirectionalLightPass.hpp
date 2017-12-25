@@ -13,7 +13,8 @@ namespace fug {
     class DirectionalLightPass : public Visitor<DirectionalLightPass, DirectionalLightComponent> {
     public:
         DirectionalLightPass(const ResourcePointer<Mesh>& quadMesh, const Matrix4Glf& normalToView,
-                             const std::vector<GLfloat>& hCorners, int _currentMode);
+                             const std::vector<GLfloat>& hCorners, const Vector2Glf& viewportSize, 
+                             int _currentMode);
         bool operator()(DirectionalLightComponent& light);
 
         void initPass() const;
@@ -21,6 +22,7 @@ namespace fug {
         int                   _currentMode;
         Matrix4Glf            _normalToView;
         std::vector<GLfloat>  _hCorners;
+        Vector2Glf            _viewportSize;
     private:
         ResourcePointer<Mesh> _quadMesh;
 
