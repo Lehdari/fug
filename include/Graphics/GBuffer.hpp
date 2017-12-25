@@ -13,13 +13,18 @@ namespace fug {
         ~GBuffer();
 
         void resize(GLsizei resX, GLsizei resY);
-        void bindWrite();
-        void bindRead();
+        void clearFinal();
+        void bindGeometryPass();
+        void bindStencilPass();
+        void bindLightPass();
+        void bindFinalRead();
 
     private:
         GLuint              _fbo;
         std::vector<GLuint> _textures;
+        std::vector<GLenum> _drawBuffers;
         GLuint              _finalTexture;
+        GLenum              _finalAttachment;
         GLuint              _depthTexture;
         std::vector<GLint>  _sizedFormats;
         std::vector<GLint>  _baseFormats;

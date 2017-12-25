@@ -255,22 +255,31 @@ int main(void)
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 
+        // Clear final image
+        gBuffer.clearFinal();
+
         // Draw geometry to gbuffer
-        gBuffer.bindWrite();
+        gBuffer.bindGeometryPass();
         glDepthMask(GL_TRUE);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
         FUG_SCENE.accept(renderer);
 
-        // Draw contents of buffer
-        gBuffer.bindRead();
+        // Render contributions of directional lights
+        gBuffer.bindLightPass();
         dirLightPass._currentMode = currentMode;
         dirLightPass.initPass();
         FUG_SCENE.accept(dirLightPass);
 
+        // Blit final texture to screen
+        gBuffer.bindFinalRead();
+        glBlitFramebuffer(0, 0, RES_X, RES_Y, 0, 0, RES_X, RES_Y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+        // Render GUI
         ImGui::Render();
-        // end the current frame (internally swaps the front and back buffers)
+
+        // End the current frame (internally swaps the front and back buffers)
         window->display();
     }
     return 0;
