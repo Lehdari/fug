@@ -27,29 +27,33 @@ GBuffer::GBuffer(GLsizei resX, GLsizei resY, const std::vector<GLint>& sizedForm
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
     // Generate textures
-    std::vector<GLenum> drawBuffers;
     _textures.resize(sizedFormats.size());
     glGenTextures(_textures.size(), _textures.data());
-    glGenTextures(1, &_depthTexture);
 
     // Generate texture storage and bind to color attatchments in order
+    std::vector<GLenum> drawBuffers;
     for (auto i = 0u ; i < _textures.size() ; i++) {
         glBindTexture(GL_TEXTURE_2D, _textures[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, _sizedFormats[i], resX,
-                     resY, 0, _baseFormats[i], GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, _sizedFormats[i], resX, resY, 0, _baseFormats[i], GL_FLOAT, NULL);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i,
-                               GL_TEXTURE_2D, _textures[i], 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, _textures[i], 0);
         drawBuffers.emplace_back(GL_COLOR_ATTACHMENT0 + i);
     }
 
     // Generate depth texture storage and bind to depth attatchment
+    glGenTextures(1, &_depthTexture);
     glBindTexture(GL_TEXTURE_2D, _depthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, resX,
-                 resY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                           GL_TEXTURE_2D, _depthTexture, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8, resX, resY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, _depthTexture, 0);
+
+    // Generate texture for final image
+    glGenTextures(1, &_finalTexture);
+    glBindTexture(GL_TEXTURE_2D, _finalTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resX, resY, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, drawBuffers.back() + 1, GL_TEXTURE_2D, _finalTexture, 0);
 
     // Set draw buffers
     if (drawBuffers.size() != 0)
@@ -72,6 +76,7 @@ GBuffer::~GBuffer()
     if (_fbo != 0) glDeleteFramebuffers(1, &_fbo);
     if (_textures.size() != 0) glDeleteTextures(_textures.size(), _textures.data());
     if (_depthTexture != 0) glDeleteTextures(1, &_depthTexture);
+    if (_finalTexture != 0) glDeleteTextures(1, &_finalTexture);
 }
 
 void GBuffer::resize(GLsizei resX, GLsizei resY)
@@ -79,13 +84,14 @@ void GBuffer::resize(GLsizei resX, GLsizei resY)
     // Resize generic textures
     for (auto i = 0u ; i < _textures.size() ; i++) {
         glBindTexture(GL_TEXTURE_2D, _textures[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, _sizedFormats[i], resX,
-                     resY, 0, _baseFormats[i], GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, _sizedFormats[i], resX, resY, 0, _baseFormats[i], GL_FLOAT, NULL);
     }
     // Resize depth texture
     glBindTexture(GL_TEXTURE_2D, _depthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, resX,
-                 resY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8, resX, resY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    // Resize final texture
+    glBindTexture(GL_TEXTURE_2D, _finalTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resX, resY, 0, GL_RGB, GL_FLOAT, NULL);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

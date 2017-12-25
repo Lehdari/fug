@@ -19,6 +19,7 @@ namespace fug {
     private:
         GLuint              _fbo;
         std::vector<GLuint> _textures;
+        GLuint              _finalTexture;
         GLuint              _depthTexture;
         std::vector<GLint>  _sizedFormats;
         std::vector<GLint>  _baseFormats;
