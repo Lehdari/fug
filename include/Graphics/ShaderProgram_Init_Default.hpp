@@ -52,9 +52,13 @@ namespace fug {
 
         // Fetch uniform locations
         _matrixLocations = initRenderingMatrixLocations();
-        for (auto& matrix : initInfo.matrixNames)
-            _matrixLocations[static_cast<size_t>(getRenderingMatrixType(matrix.first))] =
-                glGetUniformLocation(programId_, matrix.second.c_str());
+        for (auto& matrix : initInfo.matrixNames) {
+            auto loc = glGetUniformLocation(programId_, matrix.second.c_str());
+            if (loc == -1)
+                FUG_LOG(LogLevel::Error)("ShaderProgramInitInfo_Default: invalid uniform name '%s'\n", matrix.second.c_str());
+            else
+                _matrixLocations[static_cast<size_t>(getRenderingMatrixType(matrix.first))] = loc;
+        }
     }
     FUG_RESOURCE_DESTROY(ShaderProgram, ShaderProgramInitInfo_Default)
     {
