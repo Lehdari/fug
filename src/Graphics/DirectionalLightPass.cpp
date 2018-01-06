@@ -23,7 +23,6 @@ void DirectionalLightPass::initPass() const
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_ONE, GL_ONE);
-    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 bool DirectionalLightPass::operator()(DirectionalLightComponent& light) {
