@@ -32,16 +32,35 @@ FUG_RESOURCE_INIT(Material, MaterialInitInfo_Default) {
     // Set shader
     _shader = FUG_RESOURCE_MANAGER.template getResource<ShaderProgram>(depResources[0]);
 
+    // Bind sampler locations to texture resources
     for (auto i=1u; i<depResources.size(); ++i) {
-        GLint uLoc = glGetUniformLocation(_shader->getId(), initInfo.sampler2DUniforms[i-1].c_str());
-        ResourcePointer<Texture> t = FUG_RESOURCE_MANAGER.template getResource<Texture>(depResources[i]);
-        _textures.push_back({uLoc, t});
+        auto name = initInfo.sampler2DUniforms[i-1].c_str();
+        auto loc = glGetUniformLocation(_shader->getId(), name);
+        if (loc == -1)
+            FUG_LOG(LogLevel::Error)("MaterialInitInfo_Default: invalid uniform name '%s'\n", name);
+        else {
+            ResourcePointer<Texture> t = FUG_RESOURCE_MANAGER.template getResource<Texture>(depResources[i]);
+            _textures.push_back({loc, t});
+        }
     }
 
-    for (auto& u : initInfo.vec3Uniforms)
-        _vec3s.push_back({glGetUniformLocation(_shader->getId(), u.first.c_str()), u.second});
-    for (auto& u : initInfo.floatUniforms)
-        _floats.push_back({glGetUniformLocation(_shader->getId(), u.first.c_str()), u.second});
+    // Get vec3 uniform locations
+    for (auto& u : initInfo.vec3Uniforms) {
+        auto loc = glGetUniformLocation(_shader->getId(), u.first.c_str());
+        if (loc == -1)
+            FUG_LOG(LogLevel::Error)("MaterialInitInfo_Default: invalid uniform name '%s'\n", u.first.c_str());
+        else
+            _vec3s.push_back({loc, u.second});
+    }
+
+    // Get float uniform locations
+    for (auto& u : initInfo.floatUniforms) {
+        auto loc = glGetUniformLocation(_shader->getId(), u.first.c_str());
+        if (loc == -1)
+            FUG_LOG(LogLevel::Error)("MaterialInitInfo_Default: invalid uniform name '%s'\n", u.first.c_str());
+        else
+            _floats.push_back({loc, u.second});
+    }
 }
 
 FUG_RESOURCE_DESTROY(Material, MaterialInitInfo_Default) {}
