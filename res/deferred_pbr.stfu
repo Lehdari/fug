@@ -2,6 +2,26 @@
 	"Resource": [
 		{
 			"type": "Text",
+			"id": "binary_shader_stencil_vert",
+			"initInfo": {
+				"type": "TextInitInfo_File",
+				"fileName": "shader/stencil_vert.glsl"
+			},
+			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "Text",
+			"id": "binary_shader_empty_frag",
+			"initInfo": {
+				"type": "TextInitInfo_File",
+				"fileName": "shader/empty_frag.glsl"
+			},
+			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "Text",
 			"id": "binary_shader_default_vert",
 			"initInfo": {
 				"type": "TextInitInfo_File",
@@ -22,10 +42,30 @@
 		},
 		{
 			"type": "Text",
+			"id": "binary_shader_deferred_point_light_vert",
+			"initInfo": {
+				"type": "TextInitInfo_File",
+				"fileName": "shader/deferred_point_light_vert.glsl"
+			},
+			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "Text",
 			"id": "binary_shader_deferred_light_vert",
 			"initInfo": {
 				"type": "TextInitInfo_File",
 				"fileName": "shader/deferred_light_vert.glsl"
+			},
+			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "Text",
+			"id": "binary_shader_deferred_pbr_point_light_frag",
+			"initInfo": {
+				"type": "TextInitInfo_File",
+				"fileName": "shader/deferred_pbr_point_light_frag.glsl"
 			},
 			"initResources": [],
 			"depResources": []
@@ -38,6 +78,30 @@
 				"fileName": "shader/deferred_pbr_directional_light_frag.glsl"
 			},
 			"initResources": [],
+			"depResources": []
+		},
+		{
+			"type": "ShaderObject",
+			"id": "shaderobject_stencil_vert",
+			"initInfo": {
+				"type": "ShaderObjectInitInfo_Text",
+				"shaderType": "GL_VERTEX_SHADER"
+			},
+			"initResources": [
+				"binary_shader_stencil_vert"
+			],
+			"depResources": []
+		},
+		{
+			"type": "ShaderObject",
+			"id": "shaderobject_empty_frag",
+			"initInfo": {
+				"type": "ShaderObjectInitInfo_Text",
+				"shaderType": "GL_FRAGMENT_SHADER"
+			},
+			"initResources": [
+				"binary_shader_empty_frag"
+			],
 			"depResources": []
 		},
 		{
@@ -66,6 +130,18 @@
 		},
 		{
 			"type": "ShaderObject",
+			"id": "shaderobject_deferred_pbr_point_light_vert",
+			"initInfo": {
+				"type": "ShaderObjectInitInfo_Text",
+				"shaderType": "GL_VERTEX_SHADER"
+			},
+			"initResources": [
+				"binary_shader_deferred_point_light_vert"
+			],
+			"depResources": []
+		},
+		{
+			"type": "ShaderObject",
 			"id": "shaderobject_deferred_pbr_light_vert",
 			"initInfo": {
 				"type": "ShaderObjectInitInfo_Text",
@@ -89,6 +165,33 @@
 			"depResources": []
 		},
 		{
+			"type": "ShaderObject",
+			"id": "shaderobject_deferred_pbr_point_light_frag",
+			"initInfo": {
+				"type": "ShaderObjectInitInfo_Text",
+				"shaderType": "GL_FRAGMENT_SHADER"
+			},
+			"initResources": [
+				"binary_shader_deferred_pbr_point_light_frag"
+			],
+			"depResources": []
+		},
+		{
+			"type": "ShaderProgram",
+			"id": "shaderprogram_stencil",
+			"initInfo": {
+				"type": "ShaderProgramInitInfo_Default",
+				"matrixNames": {
+					"ModelToClip": "uModelToClip"
+				}
+			},
+			"initResources": [
+				"shaderobject_stencil_vert",
+				"shaderobject_empty_frag"
+			],
+			"depResources": []
+		},
+		{
 			"type": "ShaderProgram",
 			"id": "shaderprogram_deferred_pbr_geometry",
 			"initInfo": {
@@ -102,6 +205,21 @@
 			"initResources": [
 				"shaderobject_default_vert",
 				"shaderobject_deferred_pbr_geometry_frag"
+			],
+			"depResources": []
+		},
+		{
+			"type": "ShaderProgram",
+			"id": "shaderprogram_deferred_pbr_point_light",
+			"initInfo": {
+				"type": "ShaderProgramInitInfo_Default",
+				"matrixNames": {
+					"ModelToClip": "uModelToClip"
+				}
+			},
+			"initResources": [
+				"shaderobject_deferred_pbr_point_light_vert",
+				"shaderobject_deferred_pbr_point_light_frag"
 			],
 			"depResources": []
 		},
@@ -385,6 +503,29 @@
 				"vertexdata_bunny"
 			],
 			"depResources": []
+		},
+		{
+			"type": "LightShaderBinding",
+			"id": "light_shader_binding_point",
+			"initInfo": {
+				"type": "LightShaderBindingInitInfo",
+				"sampler2DUniforms": [
+					"depthMap",
+					"normalMap",
+					"albedoMap",
+					"roughnessMap",
+					"metalnessMap"
+				],
+				"parameterUniforms": {
+					"Position": "uLightPos",
+					"Attenuation": "uLightAtten",
+					"Intensity": "uLightInt"
+				}
+			},
+			"initResources": [],
+			"depResources": [
+				"shaderprogram_deferred_pbr_point_light"
+			]
 		},
 		{
 			"type": "LightShaderBinding",

@@ -11,6 +11,7 @@
 #include "Engine/ResourceLoader.hpp"
 
 #include "Graphics/GBuffer.hpp"
+#include "Graphics/PointLightPass.hpp"
 #include "Graphics/DirectionalLightPass.hpp"
 #include "Graphics/LightShaderBinding.hpp"
 #include "Graphics/LightShaderBinding_Init.hpp"
@@ -63,6 +64,11 @@ namespace {
         return vecs;
     }
 
+    float randf()
+    {
+        float per_half = 2.f / RAND_MAX;
+        return rand() * per_half - 1.f;
+    }
 }
 
 int main(void)
@@ -86,7 +92,9 @@ int main(void)
     auto bunnyMeshResPtr = FUG_RESOURCE_MANAGER.getResource<Mesh>(FUG_RESOURCE_ID_MAP.getId("mesh_bunny"));
 
     auto dirLightBindResPtr = FUG_RESOURCE_MANAGER.getResource<LightShaderBinding>(FUG_RESOURCE_ID_MAP.getId("light_shader_binding_directional"));
+    auto pointLightBindResPtr = FUG_RESOURCE_MANAGER.getResource<LightShaderBinding>(FUG_RESOURCE_ID_MAP.getId("light_shader_binding_point"));
 
+    auto stencilProgResPtr = FUG_RESOURCE_MANAGER.getResource<ShaderProgram>(FUG_RESOURCE_ID_MAP.getId("shaderprogram_stencil"));
 
     // Set up scene
     Matrix4Glf translation;
@@ -107,7 +115,7 @@ int main(void)
     TransformComponent floorTransform;
     floorTransform.transform = translation * rotMatX * scaleMat;
     FUG_SCENE.addEntity();
-    FUG_SCENE.addComponent(ModelComponent({redPlasticMaterialResPtr, quadMeshResPtr}));
+    FUG_SCENE.addComponent(ModelComponent({chalkMaterialResPtr, quadMeshResPtr}));
     FUG_SCENE.addComponent(std::move(floorTransform));
     TransformComponent plasticBallTransform;
     plasticBallTransform.transform << 1.f, 0.f, 0.f, -1.5f,
@@ -145,9 +153,37 @@ int main(void)
                                                        Vector3Glf(-0.5, -0.5, 1).normalized(),
                                                        { 1.0, 1.0, 1.0 }, { 0.05, 0.05, 0.05 }}));
 
+    // Calculate light effect distance
+    for (int i = 0; i < 10 ; i++) {
+        Vector3Glf lInt(randf() * 0.5 + 1.f, randf() * 0.5 + 1.f, randf() * 0.5 + 1.f);
+        Vector3Glf lAtten(0, 0, 1);
+        float maxComp = fmax(fmax(lInt[0], lInt[1]), lInt[2]);
+        lInt *= 0.7;
+        // TODO: is this really a good bound? should^tm limit at light values greater than 1/256
+        float d = (-lAtten[1] + sqrt(lAtten[1] * lAtten[1] - 4 * lAtten[2] * (lAtten[0] - 256 * maxComp))) / (2 * lAtten[2]);
+        TransformComponent pointTransform;
+        pointTransform.position = Vector3Glf(randf(), 0.1 * randf(), randf());
+        pointTransform.position *= 3;
+        pointTransform.position += Vector3Glf(-0.5f, 0.4f, -5.f);
+        translation << 1.f, 0.f, 0.f, pointTransform.position[0],
+                       0.f, 1.f, 0.f, pointTransform.position[1],
+                       0.f, 0.f, 1.f, pointTransform.position[2],
+                       0.f, 0.f, 0.f,                        1.f;
+        Matrix4Glf scale;
+        scale <<   d, 0.f, 0.f, 0.f,
+                 0.f,   d, 0.f, 0.f,
+                 0.f, 0.f,   d, 0.f,
+                 0.f, 0.f, 0.f, 1.f;
+        pointTransform.transform = translation * scale;
+        pointTransform.position = Vector3Glf(0,0,0);
+        FUG_SCENE.addEntity();
+        FUG_SCENE.addComponent(PointLightComponent({ pointLightBindResPtr, sphereMeshResPtr, lInt, lAtten}));
+        FUG_SCENE.addComponent(std::move(pointTransform));
+    }
+
     // Set up camera movement
     bool cameraActive = false;
-    Vector3Glf camPos(0.f, 0.f, -3.f);
+    Vector3Glf camPos(0.f, 0.f, -10.f);
     float camPitch = 0.f;
     float camYaw = 0.f;
     Matrix4Glf camPitchMat = Matrix4Glf::Identity();
@@ -166,11 +202,14 @@ int main(void)
                       FOV, float(window->getSize().x) / window->getSize().y, Z_NEAR, Z_FAR);
     Matrix4Glf normalToView = renderer._cam.getView().transpose().inverse();
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView,
-                                      getHomogenousVectors(normalToView), { RES_X, RES_Y }, 0);
+                                      getHomogenousVectors(renderer._cam.getProj().inverse()), { RES_X, RES_Y }, 0);
 
     auto gBuffer = std::shared_ptr<GBuffer>(new GBuffer(RES_X, RES_Y,
                                                         { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
                                                         {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } ));
+
+    PointLightPass pointLightPass(renderer._cam, gBuffer, getHomogenousVectors(renderer._cam.getProj().inverse()),
+                                  { RES_X, RES_Y }, stencilProgResPtr);
 
     bool running = true;
     while (running)
@@ -190,7 +229,9 @@ int main(void)
                 CENTER_Y = RES_Y * 0.5;
                 // Adjust the viewport
                 glViewport(0, 0, RES_X, RES_Y);
+                // TODO: have viewport as a global?
                 dirLightPass._viewportSize = { RES_X, RES_Y };
+                pointLightPass._viewportSize = { RES_X, RES_Y };
                 // Recalculate projection
                 renderer._cam.projection(FOV, float(RES_X) / RES_Y, Z_NEAR, Z_FAR);
                 // Resize rendering buffers
@@ -245,6 +286,8 @@ int main(void)
         renderer._cam.orient(camPos, camFwd, Vector3Glf(0.f, 1.f, 0.f));
         dirLightPass._normalToView = renderer._cam.getView().transpose().inverse();
         dirLightPass._hCorners = getHomogenousVectors(renderer._cam.getProj().inverse());
+        pointLightPass._cam = renderer._cam;
+        pointLightPass._hCorners = dirLightPass._hCorners;
 
         // Handle basic camera control
         // Simple imgui-window
@@ -266,6 +309,12 @@ int main(void)
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
         FUG_SCENE.accept(renderer);
+        glDepthMask(GL_FALSE);
+
+        // Render contributions of point lights
+        glEnable(GL_STENCIL_TEST);
+        FUG_SCENE.accept(pointLightPass);
+        glDisable(GL_STENCIL_TEST);
 
         // Render contributions of directional lights
         gBuffer->bindLightPass();
