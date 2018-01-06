@@ -41,12 +41,21 @@ namespace fug {
 
         _shader = FUG_RESOURCE_MANAGER.getResource<ShaderProgram>(depResources[0]);
 
-        for (auto& u : initInfo.sampler2DUniforms)
-            _samplerLocations.push_back(glGetUniformLocation(_shader->getId(), u.c_str()));
+        for (auto& u : initInfo.sampler2DUniforms) {
+            auto loc = glGetUniformLocation(_shader->getId(), u.c_str());
+            if (loc == -1)
+                FUG_LOG(LogLevel::Error)("LightShaderBinding: invalid uniform name '%s'\n", u.c_str());
+            else
+                _samplerLocations.push_back(loc);
+        }
+
         _parameterLocations = initLightParameterLocations();
         for (auto& p : initInfo.parameterUniforms) {
-                _parameterLocations[static_cast<size_t>(getLightParameter(p.first))] =
-                    glGetUniformLocation(_shader->getId(), p.second.c_str());
+            auto loc = glGetUniformLocation(_shader->getId(), p.second.c_str());
+            if (loc == -1)
+                FUG_LOG(LogLevel::Error)("LightShaderBinding: invalid uniform name '%s'\n", p.second.c_str());
+            else
+                _parameterLocations[static_cast<size_t>(getLightParameter(p.first))] = loc;
         }
     }
 
