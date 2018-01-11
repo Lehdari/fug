@@ -322,8 +322,16 @@ int main(void)
         dirLightPass.initPass();
         FUG_SCENE.accept(dirLightPass);
 
-        // Blit final texture to screen
-        gBuffer->bindFinalRead();
+        // Select buffer to blit
+        if (currentMode == 0) {
+            // Default is to blit the complete frame
+            gBuffer->bindFinalRead();
+        } else {
+            // Otherwise select from GBuffer in order
+            gBuffer->bindRead(currentMode - 1);
+        }
+
+        // Blit selected buffer to screen
         glBlitFramebuffer(0, 0, RES_X, RES_Y, 0, 0, RES_X, RES_Y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
         // Render GUI
