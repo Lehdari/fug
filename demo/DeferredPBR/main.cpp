@@ -202,7 +202,7 @@ int main(void)
                       FOV, float(window->getSize().x) / window->getSize().y, Z_NEAR, Z_FAR);
     Matrix4Glf normalToView = renderer._cam.getView().transpose().inverse();
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView,
-                                      getHomogenousVectors(renderer._cam.getProj().inverse()), { RES_X, RES_Y }, 0);
+                                      getHomogenousVectors(renderer._cam.getProj().inverse()), { RES_X, RES_Y });
 
     auto gBuffer = std::shared_ptr<GBuffer>(new GBuffer(RES_X, RES_Y,
                                                         { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
@@ -318,7 +318,6 @@ int main(void)
 
         // Render contributions of directional lights
         gBuffer->bindLightPass();
-        dirLightPass._currentMode = currentMode;
         dirLightPass.initPass();
         FUG_SCENE.accept(dirLightPass);
 

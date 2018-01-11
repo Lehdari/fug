@@ -7,11 +7,9 @@ using namespace fug;
 DirectionalLightPass::DirectionalLightPass(const ResourcePointer<Mesh>& quadMesh,
                                            const Matrix4Glf& normalToView,
                                            const std::vector<GLfloat>& hCorners,
-                                           const Vector2Glf& viewportSize,
-                                           int currentMode) :
+                                           const Vector2Glf& viewportSize) :
     _quadMesh(quadMesh),
     _normalToView(normalToView),
-    _currentMode(currentMode),
     _hCorners(hCorners),
     _viewportSize(viewportSize)
 {}
@@ -45,13 +43,6 @@ bool DirectionalLightPass::operator()(DirectionalLightComponent& light) {
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Intensity)], 1, light.intensity.data());
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::AmbientIntensity)], 1,
                  light.ambientInt.data());
-
-    // Debug control
-    glUniform1i(glGetUniformLocation(shaderId, "uOnlyDepth"), _currentMode == 1);
-    glUniform1i(glGetUniformLocation(shaderId, "uOnlyNormal"), _currentMode == 2);
-    glUniform1i(glGetUniformLocation(shaderId, "uOnlyAlbedo"), _currentMode == 3);
-    glUniform1i(glGetUniformLocation(shaderId, "uOnlyRoughness"), _currentMode == 4);
-    glUniform1i(glGetUniformLocation(shaderId, "uOnlyMetalness"), _currentMode == 5);
 
     glBindVertexArray(_quadMesh->getVAO());
     glDrawElements(GL_TRIANGLES, _quadMesh->getIndexCount(), GL_UNSIGNED_INT, (GLvoid*)0);

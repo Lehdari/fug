@@ -13,13 +13,6 @@ uniform sampler2D albedoMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D metalnessMap;
 
-// Control booleans
-uniform bool uOnlyDepth;
-uniform bool uOnlyNormal;
-uniform bool uOnlyAlbedo;
-uniform bool uOnlyRoughness;
-uniform bool uOnlyMetalness;
-
 // Output
 out vec4 fragColor;
 
@@ -106,23 +99,10 @@ void main()
     mat.roughness = texture(roughnessMap, texCoord).r;
     mat.metalness = texture(metalnessMap, texCoord).r;
 
-    if (uOnlyDepth)
-        fragColor = vec4(vec3(d), 1);
-    else if (uOnlyNormal)
-        fragColor = vec4(n, 1);
-    else if (uOnlyAlbedo)
-        fragColor = vec4(mat.albedo, 1);
-    else if (uOnlyRoughness)
-        fragColor = vec4(vec3(mat.roughness), 1);
-    else if (uOnlyMetalness)
-        fragColor = vec4(vec3(mat.metalness), 1);
-    else {
-        vec3 v = -normalize(vec3(rayDirVar, 1));
-        vec3 directCol = evalLighting(v, n, -uLightDir, uLightInt, mat);
-        vec3 ambientCol = mat.albedo * uLightAmb;
-        if (mat.metalness > 0.5)
-            ambientCol *= 0.5;
-        fragColor = vec4(directCol + ambientCol, 1);
-        // TODO: Check why += broke, ambient light
-    }
+    vec3 v = -normalize(vec3(rayDirVar, 1));
+    vec3 directCol = evalLighting(v, n, -uLightDir, uLightInt, mat);
+    vec3 ambientCol = mat.albedo * uLightAmb;
+    if (mat.metalness > 0.5)
+        ambientCol *= 0.5;
+    fragColor = vec4(directCol + ambientCol, 1);
 }
