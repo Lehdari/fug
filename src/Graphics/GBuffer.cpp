@@ -128,7 +128,6 @@ void GBuffer::bindLightPass()
 void GBuffer::bindFinalRead()
 {
     // Bind final texture for blit
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
     glReadBuffer(_finalAttachment);
 }
@@ -142,7 +141,6 @@ void GBuffer::bindRead(size_t i)
     }
 
     // Bind texture for blit
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
     glReadBuffer(_drawBuffers[i]);
 }

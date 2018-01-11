@@ -331,6 +331,7 @@ int main(void)
         }
 
         // Blit selected buffer to screen
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         glBlitFramebuffer(0, 0, RES_X, RES_Y, 0, 0, RES_X, RES_Y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
         // Render GUI
