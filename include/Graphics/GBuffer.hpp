@@ -18,6 +18,7 @@ namespace fug {
         void bindStencilPass();
         void bindLightPass();
         void bindFinalRead();
+        void bindRead(size_t i);
 
     private:
         GLuint              _fbo;

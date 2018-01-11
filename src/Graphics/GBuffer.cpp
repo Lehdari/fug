@@ -132,3 +132,17 @@ void GBuffer::bindFinalRead()
     glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
     glReadBuffer(_finalAttachment);
 }
+
+void GBuffer::bindRead(size_t i)
+{
+    // Check that the requested buffer is in range
+    if (i >= _drawBuffers.size()) {
+        FUG_LOG(LogLevel::Error)("GBuffer: Invalid buffer index %i", i);
+        return;
+    }
+
+    // Bind texture for blit
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, _fbo);
+    glReadBuffer(_drawBuffers[i]);
+}
