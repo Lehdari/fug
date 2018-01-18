@@ -23,8 +23,8 @@ namespace fug {
         std::vector<GLfloat> _hCorners;
         Vector2Glf _viewportSize;
     private:
-        bool drawStencil(PointLightComponent& light, TransformComponent& t);
-        bool drawLight(PointLightComponent& light, TransformComponent& t);
+        bool drawStencil(PointLightComponent& light, Matrix4Glf& modelToClip);
+        bool drawLight(PointLightComponent& light, Matrix4Glf& modelToView, Matrix4Glf& modelToClip);
 
         std::shared_ptr<GBuffer> _gBuffer;
         ResourcePointer<ShaderProgram> _stencilProg;

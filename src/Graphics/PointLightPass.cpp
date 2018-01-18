@@ -16,12 +16,14 @@ PointLightPass::PointLightPass(const Camera& c, std::shared_ptr<GBuffer> gb,
 {}
 
 bool PointLightPass::operator()(PointLightComponent& light, TransformComponent& t) {
-    drawStencil(light, t);
-    drawLight(light, t);
+    Matrix4Glf modelToView = _cam.getView() * t.transform;
+    Matrix4Glf modelToClip = _cam.getProj() * modelToView;
+    drawStencil(light, modelToClip);
+    drawLight(light, modelToView, modelToClip);
     return true;
 }
 
-bool PointLightPass::drawStencil(PointLightComponent& light, TransformComponent& t) {
+bool PointLightPass::drawStencil(PointLightComponent& light, Matrix4Glf& modelToClip) {
     // TODO: comments
     glUseProgram(_stencilProg->getId());
 
@@ -35,7 +37,6 @@ bool PointLightPass::drawStencil(PointLightComponent& light, TransformComponent&
     glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
     glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
-    Matrix4Glf modelToClip = _cam.getWorldToClip() * t.transform;
     auto matrixLocations = _stencilProg->getMatrixLocations();
     glUniformMatrix4fv(matrixLocations[static_cast<size_t>(RMType::ModelToClip)], 1, GL_FALSE, modelToClip.data());
 
@@ -46,7 +47,7 @@ bool PointLightPass::drawStencil(PointLightComponent& light, TransformComponent&
     return true;
 }
 
-bool PointLightPass::drawLight(PointLightComponent& light, TransformComponent& t) {
+bool PointLightPass::drawLight(PointLightComponent& light, Matrix4Glf& modelToView, Matrix4Glf& modelToClip) {
     auto shaderId = light.shader->getShaderProgPtr()->getId();
     glUseProgram(shaderId);
 
@@ -66,8 +67,6 @@ bool PointLightPass::drawLight(PointLightComponent& light, TransformComponent& t
         glUniform1i(light.shader->getSamplerLocations()[i], i);
 
     // Bind bounding volume transformation
-    Matrix4Glf modelToView = _cam.getView() * t.transform;
-    Matrix4Glf modelToClip = _cam.getProj() * modelToView;
     auto matrixLocations = light.shader->getShaderProgPtr()->getMatrixLocations();
     glUniformMatrix4fv(matrixLocations[static_cast<size_t>(RMType::ModelToClip)], 1, GL_FALSE, modelToClip.data());
 
@@ -79,7 +78,7 @@ bool PointLightPass::drawLight(PointLightComponent& light, TransformComponent& t
 
     // Bind light attributes
     // TODO: pos to camspace
-    Vector4Glf lightInCamspace = modelToView * Vector4Glf(t.position[0], t.position[1], t.position[2], 1.f);
+    Vector4Glf lightInCamspace = modelToView * Vector4Glf(0.f, 0.f, 0.f, 1.f);
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Position)], 1, lightInCamspace.data());
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Attenuation)], 1, light.attenuation.data());
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Intensity)], 1, light.intensity.data());
