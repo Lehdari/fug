@@ -74,8 +74,6 @@ private:
 template <typename T>
 void Container::addComponent(const T& component)
 {
-    printf("added component, entity: %llu, typeId: %llu\n", _entityId, typeId<T>());
-
     auto& v = accessComponents<T>();
     v.emplace_back(_entityId, component);
 }
@@ -112,7 +110,6 @@ std::vector<Container::ComponentWrapper<T>>& Container::accessComponents()
 template<typename T>
 void Container::deleteComponents(void *components) {
     auto* v = static_cast<std::vector<ComponentWrapper<T>>*>(components);
-    printf("deleted vector of type %llu, size %llu\n", typeId<T>(), v->size());
 
     delete static_cast<std::vector<ComponentWrapper<T>>*>(components);
 }
