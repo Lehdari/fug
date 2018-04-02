@@ -1,6 +1,18 @@
 #include <iostream>
 
 #include "Container.hpp"
+#include "System.hpp"
+
+
+class TestSystem1 : public System<TestSystem1, int, float> {
+public:
+    void operator()(int& c1, float& c2) {
+        ++c1;
+        c2+=1.0f;
+
+        printf("TestSystem1: %d, %0.2f\n", c1, c2);
+    }
+};
 
 
 int main(void) {
@@ -16,13 +28,17 @@ int main(void) {
 
     c.addEntity();
     c.addComponent('C');
+    c.addComponent(2);
     c.addComponent(2.0f);
 
     c.addEntity();
     c.addComponent('D');
-    c.addComponent(4.0);
-    c.addComponent(4);
-    c.addComponent(4llu);
+    c.addComponent(3.0);
+    c.addComponent(3);
+    c.addComponent(3llu);
+
+    TestSystem1 ts1;
+    c.runSystem(ts1);
 
     return 0;
 }
