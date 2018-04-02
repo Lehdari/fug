@@ -84,7 +84,7 @@ template<typename T_DerivedSystem, typename... Components>
 void Container::runSystem(System<T_DerivedSystem, Components...>& system) {
     auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
     //system(...);
-    for (uint64_t eId=0; eId<_entityId; ++eId) {
+    for (uint64_t eId=0; eId<=_entityId; ++eId) {
         if (increaseIterators<Components...>(eId, std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)...))
             system(std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)->component...);
     }

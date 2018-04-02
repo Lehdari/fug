@@ -6,6 +6,10 @@
 #define CONTAINERTEST_SYSTEM_HPP
 
 
+/// Macro for easier and correct CRTP usage
+#define TECS_SYSTEM(SYSTEM, ...) class SYSTEM : public System<SYSTEM, __VA_ARGS__>
+
+
 template <typename T_DerivedSystem, typename... Components>
 struct System {
     void operator()(Components&... components);
