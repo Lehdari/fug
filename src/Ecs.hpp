@@ -114,7 +114,6 @@ std::vector<Ecs::ComponentWrapper<T>>& Ecs::accessComponents()
 
 template<typename T>
 void Ecs::deleteComponents(void *components) {
-    auto* v = static_cast<std::vector<ComponentWrapper<T>>*>(components);
     delete static_cast<std::vector<ComponentWrapper<T>>*>(components);
 }
 
