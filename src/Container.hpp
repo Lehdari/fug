@@ -1,10 +1,17 @@
-#ifndef CONTAINER_HPP
-#define CONTAINER_HPP
+//
+// Created by Lehdari on 2.4.2018.
+//
 
+#ifndef CONTAINERTEST_CONTAINER_HPP
+#define CONTAINERTEST_CONTAINER_HPP
+
+
+#include "System.hpp"
 
 #include <cstdint>
 #include <vector>
 #include <functional>
+#include <tuple>
 
 
 class Container {
@@ -18,6 +25,10 @@ public:
     /// Add component for the current entity
     template <typename T>
     void addComponent(const T& component);
+
+    /// Run system
+    template <typename T_DerivedSystem, typename... Components>
+    void runSystem(System<T_DerivedSystem, Components...>& system);
 
 private:
     /// Wrapper type for components
@@ -42,6 +53,15 @@ private:
     template <typename T>
     static void deleteComponents(void* components);
 
+    template <typename T>
+    using ComponentIterator = typename std::vector<ComponentWrapper<T>>::iterator;
+
+    template <typename... T_Components>
+    static bool increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters);
+
+    template <typename T_Component>
+    static bool increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId);
+
     /// Component vector handling datatypes
     std::vector<void*>                  _components;
     std::vector<std::function<void()>>  _componentDeleters;
@@ -50,7 +70,7 @@ private:
     uint64_t                            _entityId;
 };
 
-
+/// Public member functions
 template <typename T>
 void Container::addComponent(const T& component)
 {
@@ -60,6 +80,17 @@ void Container::addComponent(const T& component)
     v.emplace_back(_entityId, component);
 }
 
+template<typename T_DerivedSystem, typename... Components>
+void Container::runSystem(System<T_DerivedSystem, Components...>& system) {
+    auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
+    //system(...);
+    for (uint64_t eId=0; eId<_entityId; ++eId) {
+        if (increaseIterators<Components...>(eId, std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)...))
+            system(std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)->component...);
+    }
+}
+
+/// Private member functions
 template <typename T>
 uint64_t Container::typeId()
 {
@@ -86,5 +117,21 @@ void Container::deleteComponents(void *components) {
     delete static_cast<std::vector<ComponentWrapper<T>>*>(components);
 }
 
+template<typename... T_Components>
+bool Container::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters) {
+    return (increaseIterator<T_Components>(iters, eId) && ...);
+}
 
-#endif // CONTAINER_HPP
+template<typename T_Component>
+bool Container::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId) {
+    while (it->entityId < eId)
+        ++it;
+
+    if (it->entityId > eId)
+        return false;
+
+    return true;
+}
+
+
+#endif // CONTAINERTEST_CONTAINER_HPP
