@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Container.hpp"
+#include "Ecs.hpp"
 #include "System.hpp"
 
 
@@ -36,41 +36,41 @@ public:
 
 
 int main(void) {
-    Container c;
+    Ecs ecs;
 
-    c.addComponent(0.0f);
-    c.addComponent(0);
+    ecs.addComponent(0.0f);
+    ecs.addComponent(0);
 
-    c.addEntity();
-    c.addComponent(1llu);
-    c.addComponent(1);
-    c.addComponent(1.0);
+    ecs.addEntity();
+    ecs.addComponent(1llu);
+    ecs.addComponent(1);
+    ecs.addComponent(1.0);
 
-    c.addEntity();
-    c.addComponent('C');
-    c.addComponent(2);
-    c.addComponent(2.0f);
+    ecs.addEntity();
+    ecs.addComponent('C');
+    ecs.addComponent(2);
+    ecs.addComponent(2.0f);
 
-    c.addEntity();
-    c.addComponent('D');
-    c.addComponent(3.0);
-    c.addComponent(3);
-    c.addComponent(3llu);
+    ecs.addEntity();
+    ecs.addComponent('D');
+    ecs.addComponent(3.0);
+    ecs.addComponent(3);
+    ecs.addComponent(3llu);
 
-    c.addEntity();
-    c.addComponent('E');
-    c.addComponent(4.0f);
-    c.addComponent(4llu);
+    ecs.addEntity();
+    ecs.addComponent('E');
+    ecs.addComponent(4.0f);
+    ecs.addComponent(4llu);
 
 
     TestSystem1 ts1;
-    c.runSystem(ts1);
+    ecs.runSystem(ts1);
 
     TestSystem2 ts2;
-    c.runSystem(ts2);
+    ecs.runSystem(ts2);
 
     TestSystem3 ts3;
-    c.runSystem(ts3);
+    ecs.runSystem(ts3);
 
 
     return 0;
