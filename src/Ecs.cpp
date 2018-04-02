@@ -2,24 +2,24 @@
 // Created by Lehdari on 2.4.2018.
 //
 
-#include "Container.hpp"
+#include "Ecs.hpp"
 
 
-uint64_t Container::typeIdCounter = 0;
+uint64_t Ecs::typeIdCounter = 0;
 
 
-Container::Container() :
+Ecs::Ecs() :
     _entityId   (0)
 {
 }
 
-Container::~Container()
+Ecs::~Ecs()
 {
     for (auto& cd : _componentDeleters)
         cd();
 }
 
-uint64_t Container::addEntity()
+uint64_t Ecs::addEntity()
 {
     return ++_entityId;
 }

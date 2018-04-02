@@ -2,8 +2,8 @@
 // Created by Lehdari on 2.4.2018.
 //
 
-#ifndef CONTAINERTEST_SYSTEM_HPP
-#define CONTAINERTEST_SYSTEM_HPP
+#ifndef TEMPLATEECS_SYSTEM_HPP
+#define TEMPLATEECS_SYSTEM_HPP
 
 
 /// Macro for easier and correct CRTP usage
@@ -21,4 +21,4 @@ void System<T_DerivedSystem, Components...>::operator()(Components&... component
 }
 
 
-#endif //CONTAINERTEST_SYSTEM_HPP
+#endif //TEMPLATEECS_SYSTEM_HPP

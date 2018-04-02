@@ -2,8 +2,8 @@
 // Created by Lehdari on 2.4.2018.
 //
 
-#ifndef CONTAINERTEST_CONTAINER_HPP
-#define CONTAINERTEST_CONTAINER_HPP
+#ifndef TEMPLATEECS_ECS_HPP
+#define TEMPLATEECS_ECS_HPP
 
 
 #include "System.hpp"
@@ -14,10 +14,10 @@
 #include <tuple>
 
 
-class Container {
+class Ecs {
 public:
-    Container();
-    ~Container();
+    Ecs();
+    ~Ecs();
 
     /// Add new entity
     uint64_t addEntity();
@@ -72,14 +72,14 @@ private:
 
 /// Public member functions
 template <typename T>
-void Container::addComponent(const T& component)
+void Ecs::addComponent(const T& component)
 {
     auto& v = accessComponents<T>();
     v.emplace_back(_entityId, component);
 }
 
 template<typename T_DerivedSystem, typename... Components>
-void Container::runSystem(System<T_DerivedSystem, Components...>& system) {
+void Ecs::runSystem(System<T_DerivedSystem, Components...>& system) {
     auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
     //system(...);
     for (uint64_t eId=0; eId<=_entityId; ++eId) {
@@ -90,14 +90,14 @@ void Container::runSystem(System<T_DerivedSystem, Components...>& system) {
 
 /// Private member functions
 template <typename T>
-uint64_t Container::typeId()
+uint64_t Ecs::typeId()
 {
     static uint64_t tId = typeIdCounter++;
     return tId;
 }
 
 template<typename T>
-std::vector<Container::ComponentWrapper<T>>& Container::accessComponents()
+std::vector<Ecs::ComponentWrapper<T>>& Ecs::accessComponents()
 {
     auto tId = typeId<T>();
     if (tId == _components.size()) {
@@ -108,19 +108,19 @@ std::vector<Container::ComponentWrapper<T>>& Container::accessComponents()
 }
 
 template<typename T>
-void Container::deleteComponents(void *components) {
+void Ecs::deleteComponents(void *components) {
     auto* v = static_cast<std::vector<ComponentWrapper<T>>*>(components);
 
     delete static_cast<std::vector<ComponentWrapper<T>>*>(components);
 }
 
 template<typename... T_Components>
-bool Container::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters) {
+bool Ecs::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters) {
     return (increaseIterator<T_Components>(iters, eId) && ...);
 }
 
 template<typename T_Component>
-bool Container::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId) {
+bool Ecs::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId) {
     while (it->entityId < eId)
         ++it;
 
@@ -131,4 +131,4 @@ bool Container::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eI
 }
 
 
-#endif // CONTAINERTEST_CONTAINER_HPP
+#endif //TEMPLATEECS_ECS_HPP
