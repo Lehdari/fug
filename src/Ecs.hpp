@@ -28,38 +28,38 @@ public:
     uint64_t addEntity();
 
     /// Add component for the current entity
-    template <typename T>
-    void addComponent(const T& component);
+    template <typename T_Component>
+    void addComponent(const T_Component& component);
 
     /// Run system
-    template <typename T_DerivedSystem, typename... Components>
-    void runSystem(System<T_DerivedSystem, Components...>& system);
+    template <typename T_DerivedSystem, typename... T_Components>
+    void runSystem(System<T_DerivedSystem, T_Components...>& system);
 
 private:
     /// Wrapper type for components
-    template <typename T>
+    template <typename T_Component>
     struct ComponentWrapper {
         uint64_t    entityId;
-        T           component;
+        T_Component component;
 
-        ComponentWrapper(uint64_t& eId, const T& c) :
+        ComponentWrapper(uint64_t& eId, const T_Component& c) :
             entityId(eId), component(c) {}
     };
 
     /// TypeId system
     static uint64_t typeIdCounter;
-    template <typename T>
+    template <typename T_Component>
     static uint64_t typeId();
 
     /// Component vector handling functions
-    template <typename T>
-    std::vector<ComponentWrapper<T>>& accessComponents();
+    template <typename T_Component>
+    std::vector<ComponentWrapper<T_Component>>& accessComponents();
 
-    template <typename T>
+    template <typename T_Component>
     static void deleteComponents(void* components);
 
-    template <typename T>
-    using ComponentIterator = typename std::vector<ComponentWrapper<T>>::iterator;
+    template <typename T_Component>
+    using ComponentIterator = typename std::vector<ComponentWrapper<T_Component>>::iterator;
 
     template <typename... T_Components>
     static bool increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters);
@@ -76,45 +76,45 @@ private:
 };
 
 /// Public member functions
-template <typename T>
-void Ecs::addComponent(const T& component)
+template <typename T_Component>
+void Ecs::addComponent(const T_Component& component)
 {
-    auto& v = accessComponents<T>();
+    auto& v = accessComponents<T_Component>();
     v.emplace_back(_entityId, component);
 }
 
 template<typename T_DerivedSystem, typename... Components>
 void Ecs::runSystem(System<T_DerivedSystem, Components...>& system) {
     auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
-    //system(...);
+
     for (uint64_t eId=0; eId<=_entityId; ++eId) {
-        if (increaseIterators<Components...>(eId, std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)...))
-            system(std::get<typename std::vector<ComponentWrapper<Components>>::iterator>(cIters)->component...);
+        if (increaseIterators<Components...>(eId, std::get<ComponentIterator<Components>>(cIters)...))
+            system(std::get<ComponentIterator<Components>>(cIters)->component...);
     }
 }
 
 /// Private member functions
-template <typename T>
+template <typename T_Component>
 uint64_t Ecs::typeId()
 {
     static uint64_t tId = typeIdCounter++;
     return tId;
 }
 
-template<typename T>
-std::vector<Ecs::ComponentWrapper<T>>& Ecs::accessComponents()
+template<typename T_Component>
+std::vector<Ecs::ComponentWrapper<T_Component>>& Ecs::accessComponents()
 {
-    auto tId = typeId<T>();
+    auto tId = typeId<T_Component>();
     if (tId == _components.size()) {
-        _components.push_back(new std::vector<T>);
-        _componentDeleters.push_back(std::bind(&deleteComponents<T>, _components.back()));
+        _components.push_back(new std::vector<T_Component>);
+        _componentDeleters.push_back(std::bind(&deleteComponents<T_Component>, _components.back()));
     }
-    return *static_cast<std::vector<ComponentWrapper<T>>*>(_components[tId]);
+    return *static_cast<std::vector<ComponentWrapper<T_Component>>*>(_components[tId]);
 }
 
-template<typename T>
+template<typename T_Component>
 void Ecs::deleteComponents(void *components) {
-    delete static_cast<std::vector<ComponentWrapper<T>>*>(components);
+    delete static_cast<std::vector<ComponentWrapper<T_Component>>*>(components);
 }
 
 template<typename... T_Components>
