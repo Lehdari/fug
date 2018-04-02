@@ -5,7 +5,6 @@
 
 
 TECS_SYSTEM(TestSystem1, int, float) {
-public:
     void operator()(int& c1, float& c2) {
         ++c1;
         c2+=1.0f;
@@ -15,7 +14,6 @@ public:
 };
 
 TECS_SYSTEM(TestSystem2, int, char) {
-public:
     void operator()(int& c1, char& c2) {
         ++c1;
         ++c2;
@@ -25,7 +23,6 @@ public:
 };
 
 TECS_SYSTEM(TestSystem3, long long unsigned, char) {
-public:
     void operator()(long long unsigned& c1, char& c2) {
         ++c1;
         ++c2;
