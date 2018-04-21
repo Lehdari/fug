@@ -7,7 +7,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(LIBRARY_SOURCES src/Ecs.hpp src/Ecs.cpp src/System.hpp)
 
-set(DEMO_SOURCES src/main.cpp)
+set(DEMO_SOURCES src/main.cpp src/TestComponents.hpp
+        src/TestSystems.hpp src/TestSystems.cpp
+        src/Tests.hpp src/Tests.cpp)
 
 add_library(TemplateECS ${LIBRARY_SOURCES})
 
