@@ -35,29 +35,21 @@ TECS_SYSTEM(TestSystem3, long long unsigned, char) {
 int main(void) {
     Ecs ecs;
 
-    ecs.addComponent(0.0f);
-    ecs.addComponent(0);
-
-    ecs.addEntity();
-    ecs.addComponent(1llu);
-    ecs.addComponent(1);
-    ecs.addComponent(1.0);
-
-    ecs.addEntity();
-    ecs.addComponent('C');
-    ecs.addComponent(2);
-    ecs.addComponent(2.0f);
-
-    ecs.addEntity();
-    ecs.addComponent('D');
-    ecs.addComponent(3.0);
-    ecs.addComponent(3);
-    ecs.addComponent(3llu);
-
-    ecs.addEntity();
-    ecs.addComponent('E');
-    ecs.addComponent(4.0f);
-    ecs.addComponent(4llu);
+    ecs.addComponent(3, 3);
+    ecs.addComponent(2, 2.0f);
+    ecs.addComponent(0, 0);
+    ecs.addComponent(4, 4llu);
+    ecs.addComponent(3, 3.0);
+    ecs.addComponent(1, 1.0);
+    ecs.addComponent(0, 0.0f);
+    ecs.addComponent(4, 'E');
+    ecs.addComponent(1, 1llu);
+    ecs.addComponent(2, 'C');
+    ecs.addComponent(3, 3llu);
+    ecs.addComponent(1, 1);
+    ecs.addComponent(2, 2);
+    ecs.addComponent(3, 'D');
+    ecs.addComponent(4, 4.0f);
 
 
     TestSystem1 ts1;

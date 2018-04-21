@@ -7,15 +7,13 @@ Instantiate an ECS:
 Ecs ecs;
 ```
 
-Add an entity:
+Add components using entity ID:
 ```
-ecs.addEntity();
-```
+MyLittleComponent myLittleComponent1("foo", 715517);
+MyBigComponent myBigComponent1("BAR");
 
-Add components:
-```
-MyLittleComponent myLittleComponent1("foo", "bar", 715517);
-ecs.addComponent(myLittleComponent1);
+ecs.addComponent(0, myLittleComponent1);
+ecs.addComponent(0, myBigComponent1);
 ```
 
 Define a system:

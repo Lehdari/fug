@@ -14,6 +14,9 @@
 #include <tuple>
 
 
+using EntityId = uint64_t;
+
+
 class Ecs {
 public:
     Ecs();
@@ -24,12 +27,9 @@ public:
     Ecs& operator=(const Ecs&) = delete;
     Ecs& operator=(Ecs&&) = delete;
 
-    /// Add new entity
-    uint64_t addEntity();
-
-    /// Add component for the current entity
+    /// Add component
     template <typename T_Component>
-    void addComponent(const T_Component& component);
+    void addComponent(const EntityId& eId, const T_Component& component);
 
     /// Run system
     template <typename T_DerivedSystem, typename... T_Components>
@@ -39,11 +39,11 @@ private:
     /// Wrapper type for components
     template <typename T_Component>
     struct ComponentWrapper {
-        uint64_t    entityId;
+        EntityId    eId;
         T_Component component;
 
-        ComponentWrapper(uint64_t& eId, const T_Component& c) :
-            entityId(eId), component(c) {}
+        ComponentWrapper(const EntityId& eId, const T_Component& c = T_Component()) :
+            eId(eId), component(c) {}
     };
 
     /// TypeId system
@@ -51,15 +51,22 @@ private:
     template <typename T_Component>
     static uint64_t typeId();
 
-    /// Component vector handling functions
+    /// Component vector handling stuff
     template <typename T_Component>
-    std::vector<ComponentWrapper<T_Component>>& accessComponents();
+    using ComponentVector = typename std::vector<ComponentWrapper<T_Component>>;
 
     template <typename T_Component>
-    static void deleteComponents(void* components);
+    ComponentVector<T_Component>& accessComponents();
 
     template <typename T_Component>
-    using ComponentIterator = typename std::vector<ComponentWrapper<T_Component>>::iterator;
+    T_Component& findComponent(ComponentVector<T_Component>& cVector, const EntityId& eId);
+
+    template <typename T_Component>
+    void deleteComponents(uint64_t cVectorId);
+
+    /// Iterator handling stuff
+    template <typename T_Component>
+    using ComponentIterator = typename ComponentVector<T_Component>::iterator;
 
     template <typename... T_Components>
     static bool increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters);
@@ -67,27 +74,32 @@ private:
     template <typename T_Component>
     static bool increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId);
 
-    /// Component vector handling datatypes
+    /// Entity ID handling stuff
+    inline void checkEntityId(const EntityId& eId);
+
+    /// Component vector handling data structures
     std::vector<void*>                  _components;
     std::vector<std::function<void()>>  _componentDeleters;
 
-    /// ID of the last entity
-    uint64_t                            _entityId;
+    /// Entity ID storage
+    std::vector<EntityId>               _entityIds;
 };
 
 /// Public member functions
 template <typename T_Component>
-void Ecs::addComponent(const T_Component& component)
+void Ecs::addComponent(const EntityId& eId, const T_Component& component)
 {
+    checkEntityId(eId);
     auto& v = accessComponents<T_Component>();
-    v.emplace_back(_entityId, component);
+    findComponent(v, eId) = component;
 }
 
 template<typename T_DerivedSystem, typename... Components>
-void Ecs::runSystem(System<T_DerivedSystem, Components...>& system) {
+void Ecs::runSystem(System<T_DerivedSystem, Components...>& system)
+{
     auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
 
-    for (uint64_t eId=0; eId<=_entityId; ++eId) {
+    for (auto eId : _entityIds) {
         if (increaseIterators<Components...>(eId, std::get<ComponentIterator<Components>>(cIters)...))
             system(std::get<ComponentIterator<Components>>(cIters)->component...);
     }
@@ -102,35 +114,58 @@ uint64_t Ecs::typeId()
 }
 
 template<typename T_Component>
-std::vector<Ecs::ComponentWrapper<T_Component>>& Ecs::accessComponents()
+Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 {
     auto tId = typeId<T_Component>();
     if (tId == _components.size()) {
         _components.push_back(new std::vector<T_Component>);
-        _componentDeleters.push_back(std::bind(&deleteComponents<T_Component>, _components.back()));
+        _componentDeleters.push_back(
+            std::bind(&Ecs::deleteComponents<T_Component>,
+                this, (uint64_t)_components.size()-1));
     }
-    return *static_cast<std::vector<ComponentWrapper<T_Component>>*>(_components[tId]);
+    return *static_cast<ComponentVector<T_Component>*>(_components[tId]);
 }
 
 template<typename T_Component>
-void Ecs::deleteComponents(void *components) {
-    delete static_cast<std::vector<ComponentWrapper<T_Component>>*>(components);
+T_Component& Ecs::findComponent(
+    Ecs::ComponentVector<T_Component>& cVector, const EntityId& eId)
+{
+    //  TODO implement binary tree search instead of linear one
+    auto it = cVector.begin();
+    for (; it != cVector.end() && it->eId < eId; ++it);
+    if (it == cVector.end() || it->eId > eId)
+        it = cVector.emplace(it, eId);
+
+    return it->component;
+}
+
+template<typename T_Component>
+void Ecs::deleteComponents(uint64_t cVectorId) {
+    delete static_cast<ComponentVector<T_Component>*>(_components.at(cVectorId));
 }
 
 template<typename... T_Components>
-bool Ecs::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters) {
+bool Ecs::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters)
+{
     return (increaseIterator<T_Components>(iters, eId) && ...);
 }
 
 template<typename T_Component>
-bool Ecs::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId) {
-    while (it->entityId < eId)
+bool Ecs::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId)
+{
+    while (it->eId < eId)
         ++it;
 
-    if (it->entityId > eId)
-        return false;
+    return it->eId > eId ? false : true;
+}
 
-    return true;
+void Ecs::checkEntityId(const EntityId& eId)
+{
+    //  TODO implement binary tree search instead of linear one
+    auto it = _entityIds.begin();
+    for (; it != _entityIds.end() && *it < eId; ++it);
+    if (it == _entityIds.end() || *it > eId)
+        it = _entityIds.emplace(it, eId);
 }
 
 
