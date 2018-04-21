@@ -8,8 +8,7 @@
 uint64_t Ecs::typeIdCounter = 0;
 
 
-Ecs::Ecs() :
-    _entityId   (0)
+Ecs::Ecs()
 {
 }
 
@@ -17,9 +16,4 @@ Ecs::~Ecs()
 {
     for (auto& cd : _componentDeleters)
         cd();
-}
-
-uint64_t Ecs::addEntity()
-{
-    return ++_entityId;
 }
