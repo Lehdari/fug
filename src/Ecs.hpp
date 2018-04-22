@@ -68,11 +68,21 @@ private:
     template <typename T_Component>
     using ComponentIterator = typename ComponentVector<T_Component>::iterator;
 
-    template <typename... T_Components>
-    static bool increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters);
-
     template <typename T_Component>
-    static bool increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId);
+    struct IteratorWrapper {
+        ComponentIterator<T_Component> it;
+        ComponentIterator<T_Component> end;
+
+        IteratorWrapper(const ComponentIterator<T_Component>& it,
+                        const ComponentIterator<T_Component>& end) :
+            it(it), end(end)
+        {}
+
+        bool increase(const EntityId& eId);
+    };
+
+    template <typename... T_Components>
+    static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
 
     /// Entity ID handling stuff
     inline void checkEntityId(const EntityId& eId);
@@ -94,14 +104,16 @@ void Ecs::addComponent(const EntityId& eId, const T_Component& component)
     findComponent(v, eId) = component;
 }
 
-template<typename T_DerivedSystem, typename... Components>
-void Ecs::runSystem(System<T_DerivedSystem, Components...>& system)
+template <typename T_DerivedSystem, typename... T_Components>
+void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
 {
-    auto cIters = std::make_tuple(accessComponents<Components>().begin()...);
+    auto cIters = std::make_tuple(
+        IteratorWrapper<T_Components>(accessComponents<T_Components>().begin(),
+                                      accessComponents<T_Components>().end())...);
 
     for (auto eId : _entityIds) {
-        if (increaseIterators<Components...>(eId, std::get<ComponentIterator<Components>>(cIters)...))
-            system(std::get<ComponentIterator<Components>>(cIters)->component...);
+        if (increaseIterators<T_Components...>(eId, std::get<IteratorWrapper<T_Components>>(cIters)...))
+            system(std::get<IteratorWrapper<T_Components>>(cIters).it->component...);
     }
 }
 
@@ -144,19 +156,19 @@ void Ecs::deleteComponents(uint64_t cVectorId) {
     delete static_cast<ComponentVector<T_Component>*>(_components.at(cVectorId));
 }
 
-template<typename... T_Components>
-bool Ecs::increaseIterators(uint64_t eId, ComponentIterator<T_Components>&... iters)
-{
-    return (increaseIterator<T_Components>(iters, eId) && ...);
-}
-
 template<typename T_Component>
-bool Ecs::increaseIterator(ComponentIterator<T_Component>& it, uint64_t eId)
+bool Ecs::IteratorWrapper<T_Component>::increase(const EntityId& eId)
 {
-    while (it->eId < eId)
+    while (it != end && it->eId < eId)
         ++it;
 
-    return it->eId > eId ? false : true;
+    return (it->eId > eId || it == end) ? false : true;
+}
+
+template<typename... T_Components>
+bool Ecs::increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers)
+{
+    return (itWrappers.increase(eId) && ...);
 }
 
 void Ecs::checkEntityId(const EntityId& eId)
