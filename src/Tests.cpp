@@ -77,7 +77,7 @@ void test1()
 
         printf("mean: %0.3f ms, variance: %0.4f ns\n", mean*1000, var*1000000000);
     }
-#if 0
+
     printf("Iterating through 10k three-component entities\n");
     {
         Ecs ecs;
@@ -104,13 +104,13 @@ void test1()
 
         printf("mean: %0.3f ms, variance: %0.4f ns\n", mean*1000, var*1000000000);
     }
-#endif
-    printf("Iterating through 10k single component entities\n");
+
+    printf("Iterating through 10k three component entities with 10%% hit rate\n");
     {
         Ecs ecs;
         TestSystem3 sys;
 
-        for (auto i=0llu; i<10000; i+=10) {
+        for (auto i=0llu; i<100000; i+=10) {
             ecs.addComponent(i, TestComponent1());
             ecs.addComponent(i, TestComponent2());
             ecs.addComponent(i, TestComponent3());
