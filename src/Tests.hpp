@@ -7,6 +7,7 @@
 
 
 void test1();
+void test2();
 
 
 #endif //TEMPLATEECS_TESTS_HPP
