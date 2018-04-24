@@ -31,6 +31,10 @@ public:
     template <typename T_Component>
     void addComponent(const EntityId& eId, const T_Component& component);
 
+    /// Remove component
+    template <typename T_Component>
+    void removeComponent(const EntityId& eId);
+
     /// Run system
     template <typename T_DerivedSystem, typename... T_Components>
     void runSystem(System<T_DerivedSystem, T_Components...>& system);
@@ -56,16 +60,6 @@ private:
     using ComponentVector = typename std::vector<ComponentWrapper<T_Component>>;
 
     template <typename T_Component>
-    ComponentVector<T_Component>& accessComponents();
-
-    template <typename T_Component>
-    T_Component& findComponent(ComponentVector<T_Component>& cVector, const EntityId& eId);
-
-    template <typename T_Component>
-    void deleteComponents(uint64_t cVectorId);
-
-    /// Iterator handling stuff
-    template <typename T_Component>
     using ComponentIterator = typename ComponentVector<T_Component>::iterator;
 
     template <typename T_Component>
@@ -80,6 +74,17 @@ private:
 
         bool increase(const EntityId& eId);
     };
+
+    template <typename T_Component>
+    ComponentVector<T_Component>& accessComponents();
+
+    template <typename T_Component>
+    bool findComponent(ComponentVector<T_Component>& cVector,
+                       ComponentIterator<T_Component>& it,
+                       const EntityId& eId);
+
+    template <typename T_Component>
+    void deleteComponents(uint64_t cVectorId);
 
     template <typename... T_Components>
     static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
@@ -101,7 +106,11 @@ void Ecs::addComponent(const EntityId& eId, const T_Component& component)
 {
     checkEntityId(eId);
     auto& v = accessComponents<T_Component>();
-    findComponent(v, eId) = component;
+    ComponentIterator<T_Component> it;
+    if (findComponent(v, it, eId))
+        return;
+    else
+        v.emplace(it, eId, component);
 }
 
 template <typename T_DerivedSystem, typename... T_Components>
@@ -139,16 +148,16 @@ Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 }
 
 template<typename T_Component>
-T_Component& Ecs::findComponent(
-    Ecs::ComponentVector<T_Component>& cVector, const EntityId& eId)
+bool Ecs::findComponent(Ecs::ComponentVector<T_Component>& cVector,
+    ComponentIterator<T_Component>& it,
+    const EntityId& eId)
 {
     //  TODO implement binary tree search instead of linear one
-    auto it = cVector.begin();
+    it = cVector.begin();
     for (; it != cVector.end() && it->eId < eId; ++it);
     if (it == cVector.end() || it->eId > eId)
-        it = cVector.emplace(it, eId);
-
-    return it->component;
+        return false;
+    return true;
 }
 
 template<typename T_Component>
