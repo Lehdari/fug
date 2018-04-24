@@ -113,6 +113,15 @@ void Ecs::addComponent(const EntityId& eId, const T_Component& component)
         v.emplace(it, eId, component);
 }
 
+template<typename T_Component>
+void Ecs::removeComponent(const EntityId& eId)
+{
+    auto& v = accessComponents<T_Component>();
+    ComponentIterator<T_Component> it;
+    if (findComponent(v, it, eId))
+        v.erase(it);
+}
+
 template <typename T_DerivedSystem, typename... T_Components>
 void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
 {
