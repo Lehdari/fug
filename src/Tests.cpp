@@ -7,6 +7,8 @@
 #include "TestSystems.hpp"
 
 #include <chrono>
+#include <random>
+#include <algorithm>
 
 
 namespace
@@ -130,9 +132,7 @@ void test1()
         tv.reserve(1000);
         for (auto i=0; i<1000; ++i) {
             auto start = std::chrono::steady_clock::now();
-            //printf("A\n");
             ecs.runSystem(sys);
-            //printf("B\n");
             auto end = std::chrono::steady_clock::now();
             std::chrono::duration<double> diff = end-start;
             tv.push_back(diff.count());
@@ -142,5 +142,31 @@ void test1()
         getMeanAndVariance(tv, mean, var);
 
         printf("mean: %0.3f ms, variance: %0.4f ns\n", mean*1000, var*1000000000);
+    }
+}
+
+void test2()
+{
+    std::default_random_engine rnd(715517);
+
+    for (uint64_t nAdd = 10000; nAdd <= 50000; nAdd+=10000) {
+        Ecs ecs;
+
+        std::vector<uint64_t> eIds;
+        eIds.reserve(nAdd);
+        for (uint64_t i = 0; i < nAdd; ++i)
+            eIds.emplace_back(i);
+
+        for (uint64_t i = 0; i < nAdd; ++i)
+            std::swap(eIds[i], eIds[rnd()%nAdd]);
+
+        printf("Adding %llu components in random order\n", nAdd);
+        auto start = std::chrono::steady_clock::now();
+        for (auto& eId : eIds)
+            ecs.addComponent(eId, TestComponent1());
+        auto end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> diff = end-start;
+        double dt = diff.count();
+        printf("%0.2f ms (%0.4f us per component)\n", dt*1000, (dt*1000000)/nAdd);
     }
 }
