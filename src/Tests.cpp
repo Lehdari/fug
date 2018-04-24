@@ -156,7 +156,6 @@ void test2()
         eIds.reserve(nAdd);
         for (uint64_t i = 0; i < nAdd; ++i)
             eIds.emplace_back(i);
-
         for (uint64_t i = 0; i < nAdd; ++i)
             std::swap(eIds[i], eIds[rnd()%nAdd]);
 
@@ -168,5 +167,23 @@ void test2()
         std::chrono::duration<double> diff = end-start;
         double dt = diff.count();
         printf("%0.2f ms (%0.4f us per component)\n", dt*1000, (dt*1000000)/nAdd);
+
+        auto nDel = nAdd/2;
+        eIds.clear();
+        for (uint64_t i = 0; i < nAdd; ++i)
+            eIds.emplace_back(i);
+        for (uint64_t i = 0; i < nDel; ++i) {
+            uint64_t dId = rnd() % eIds.size();
+            eIds.erase(eIds.begin()+dId);
+        }
+
+        printf("Removing %llu components in random order\n", nDel);
+        start = std::chrono::steady_clock::now();
+        for (auto& eId : eIds)
+            ecs.removeComponent<TestComponent1>(eId);
+        end = std::chrono::steady_clock::now();
+        diff = end-start;
+        dt = diff.count();
+        printf("%0.2f ms (%0.4f us per component)\n", dt*1000, (dt*1000000)/nDel);
     }
 }
