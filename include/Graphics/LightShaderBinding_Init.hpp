@@ -43,10 +43,9 @@ namespace fug {
 
         for (auto& u : initInfo.sampler2DUniforms) {
             auto loc = glGetUniformLocation(_shader->getId(), u.c_str());
-            if (loc == -1)
+            if (loc == -1) // TODO: Some convention for omitted samplers
                 FUG_LOG(LogLevel::Error)("LightShaderBinding: invalid uniform name '%s'\n", u.c_str());
-            else
-                _samplerLocations.push_back(loc);
+            _samplerLocations.push_back(loc); // Push anyway to permit omitting samplers
         }
 
         _parameterLocations = initLightParameterLocations();
