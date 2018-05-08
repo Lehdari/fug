@@ -6,11 +6,11 @@ using namespace fug;
 
 DirectionalLightPass::DirectionalLightPass(const ResourcePointer<Mesh>& quadMesh,
                                            const Matrix4Glf& normalToView,
-                                           const std::vector<GLfloat>& hCorners,
+                                           float fovX,
                                            const Vector2Glf& viewportSize) :
     _quadMesh(quadMesh),
     _normalToView(normalToView),
-    _hCorners(hCorners),
+    _fovX(fovX),
     _viewportSize(viewportSize)
 {}
 
@@ -34,7 +34,7 @@ bool DirectionalLightPass::operator()(DirectionalLightComponent& light) {
     // TODO: Optimize location gets to init,
     //       -> define all "common" uniform locations in shader like the matrices?
     // Bind homogenous corner vectors
-    glUniform2fv(glGetUniformLocation(shaderId, "uCornerVecs"), 4, _hCorners.data());
+    glUniform1f(glGetUniformLocation(shaderId, "uHalfFovX"), _fovX * 0.5);
     glUniform2fv(glGetUniformLocation(shaderId, "uViewportSize"), 1, _viewportSize.data());
 
     // Bind light attributes

@@ -15,12 +15,11 @@ namespace fug {
     {
     public:
         PointLightPass(const Camera& c, std::shared_ptr<GBuffer> gb,
-                       const std::vector<GLfloat>& hCorners, const Vector2Glf& viewportSize,
+                       const Vector2Glf& viewportSize,
                        ResourcePointer<ShaderProgram>& stencilProg);
         bool operator()(PointLightComponent& light, TransformComponent& t);
 
         Camera _cam;
-        std::vector<GLfloat> _hCorners;
         Vector2Glf _viewportSize;
     private:
         bool drawStencil(PointLightComponent& light, Matrix4Glf& modelToClip);

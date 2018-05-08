@@ -1,6 +1,9 @@
 #version 330
 
-// Uniforms
+// Common uniforms
+uniform float uHalfFovX;
+
+// Custom uniforms
 uniform vec3 uLightPos;
 uniform vec3 uLightAtten;
 uniform vec3 uLightInt;
@@ -15,10 +18,6 @@ uniform sampler2D metalnessMap;
 
 // Output
 out vec4 fragColor;
-
-// Input
-// Interpolated view ray direction
-in vec2 rayDirVar;
 
 // Constants
 const float PI = 3.14159265359;
@@ -90,21 +89,19 @@ vec3 evalLighting(vec3 v, vec3 n, vec3 l, vec3 intensity, Material mat)
 
 void main()
 {
-    vec2 texCoord = gl_FragCoord.xy / uViewportSize;
+    vec2 uv = gl_FragCoord.xy / uViewportSize;
     // Extract deferred parameters
-    float d = texture(depthMap, texCoord).r;
-    vec3 n = texture(normalMap, texCoord).rgb;
+    float d = texture(depthMap, uv).r;
+    vec3 n = texture(normalMap, uv).rgb;
     Material mat;
-    mat.albedo = texture(albedoMap, texCoord).rgb;
-    mat.roughness = texture(roughnessMap, texCoord).r;
-    mat.metalness = texture(metalnessMap, texCoord).r;
+    mat.albedo = texture(albedoMap, uv).rgb;
+    mat.roughness = texture(roughnessMap, uv).r;
+    mat.metalness = texture(metalnessMap, uv).r;
 
     // Calculate hit position and view ray in camera space
-    vec2 uv = gl_FragCoord.xy / uViewportSize;
-    // TODO: Pass viewport info as uniform
-    // TODO: figure out math of point light transform, pos at 0 working out fine?
-    vec2 halfSize = vec2(tan(radians(59.0 * 0.5)) * 16.0 / 9.0, tan(radians(59.0 * 0.5)));
-    vec3 hitPos = vec3((2.0 * halfSize * uv) - halfSize, 1.0) * d;
+    float tanHalfFovX = tan(uHalfFovX);
+    vec2 viewportSkew = vec2(tanHalfFovX, tanHalfFovX / (uViewportSize.x / uViewportSize.y));
+    vec3 hitPos = vec3(2 * viewportSkew * uv - viewportSkew, 1) * d;
     vec3 v = -normalize(hitPos);
     // Calculate light position and distance
     vec3 toLight = uLightPos - hitPos;

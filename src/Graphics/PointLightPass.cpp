@@ -6,10 +6,9 @@ using namespace fug;
 using RMType = RenderingMatrixType;
 
 PointLightPass::PointLightPass(const Camera& c, std::shared_ptr<GBuffer> gb,
-                               const std::vector<GLfloat>& hCorners, const Vector2Glf& viewportSize,
+                               const Vector2Glf& viewportSize,
                                ResourcePointer<ShaderProgram>& stencilProg) :
     _cam(c),
-    _hCorners(hCorners),
     _viewportSize(viewportSize),
     _gBuffer(gb),
     _stencilProg(stencilProg)
@@ -73,11 +72,10 @@ bool PointLightPass::drawLight(PointLightComponent& light, Matrix4Glf& modelToVi
     // TODO: Optimize location gets to init,
     //       -> define all "common" uniform locations in shader like the matrices?
     // Bind homogenous corner vectors
-    glUniform2fv(glGetUniformLocation(shaderId, "uCornerVecs"), 4, _hCorners.data());
+    glUniform1f(glGetUniformLocation(shaderId, "uHalfFovX"), _cam.getFovX() * 0.5);
     glUniform2fv(glGetUniformLocation(shaderId, "uViewportSize"), 1, _viewportSize.data());
 
     // Bind light attributes
-    // TODO: pos to camspace
     Vector4Glf lightInCamspace = modelToView * Vector4Glf(0.f, 0.f, 0.f, 1.f);
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Position)], 1, lightInCamspace.data());
     glUniform3fv(light.shader->getParameterLocations()[static_cast<size_t>(LightParameter::Attenuation)], 1, light.attenuation.data());
