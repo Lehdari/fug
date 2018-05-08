@@ -29,11 +29,13 @@ struct Material {
     float metalness;
 };
 
+// Diffuse BRDF: Lambert
 vec3 lambertBRFD(vec3 albedo)
 {
     return albedo / PI;
 }
 
+// Normal Distribution Function: GGX/Trowbridge-Reitz
 float ggx(float NoH, float rough)
 {
     float a2 = rough * rough;
@@ -42,11 +44,13 @@ float ggx(float NoH, float rough)
     return a2 / (PI * denom * denom);
 }
 
+// Fresnel: Schlick
 vec3 schlick(float VoH, vec3 f0)
 {
     return f0 + (1 - f0) * pow(1 - VoH, 5);
 }
 
+// Specular Geometric Attenuation: modified Schlick
 float schlick_ggx(float NoL, float NoV, float rough)
 {
     float k = (rough + 1);
@@ -56,6 +60,11 @@ float schlick_ggx(float NoL, float NoV, float rough)
     return gl * gv;
 }
 
+// Specular BRDF: Cook-Torrance
+// Taken from the Siggraph 2013 presentation by Brian Karis (Epic Games)
+//            D(h)F(v,h)G(l,v,h)
+// f(l,v) = ----------------------
+//               4(n.l)(n.v)
 vec3 cookTorranceBRDF(float NoL, float NoV, float NoH, float VoH, vec3 F, float rough)
 {
     vec3 DFG = ggx(NoH, rough) * F * schlick_ggx(NoL, NoV, rough);
@@ -91,7 +100,7 @@ void main()
 {
     vec2 uv = gl_FragCoord.xy / uViewportSize;
     // Extract deferred parameters
-    float d = texture(depthMap, uv).r;
+    float posZ = texture(depthMap, uv).r;
     vec3 n = texture(normalMap, uv).rgb;
     Material mat;
     mat.albedo = texture(albedoMap, uv).rgb;
@@ -101,7 +110,7 @@ void main()
     // Calculate hit position and view ray in camera space
     float tanHalfFovX = tan(uHalfFovX);
     vec2 viewportSkew = vec2(tanHalfFovX, tanHalfFovX / (uViewportSize.x / uViewportSize.y));
-    vec3 hitPos = vec3(2 * viewportSkew * uv - viewportSkew, 1) * d;
+    vec3 hitPos = vec3(2 * viewportSkew * uv - viewportSkew, 1) * posZ;
     vec3 v = -normalize(hitPos);
     // Calculate light position and distance
     vec3 toLight = uLightPos - hitPos;
