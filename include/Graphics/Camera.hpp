@@ -12,19 +12,22 @@ namespace fug {
     {
     public:
         Camera(const Vector3Glf& position, const Vector3Glf& forward, const Vector3Glf& up,
-               const float& fov, const float& aspectRatio,
+               const float& fovX, const float& aspectRatio,
                const float& near, const float& far);
         Camera(const Camera& c);
         Camera& operator=(const Camera& c);
 
         void lookAt(const Vector3Glf& from, const Vector3Glf& to, const Vector3Glf& up);
         void orient(const Vector3Glf& pos, const Vector3Glf& fwd, const Vector3Glf& up);
-        void projection(const float& fov, const float& aspectRatio,
+        void projection(const float& fovX, const float& aspectRatio,
                         const float& near, const float& far);
 
         const Vector3Glf& getXAxis(void) const;
         const Vector3Glf& getYAxis(void) const;
         const Vector3Glf& getZAxis(void) const;
+
+        float getFovX(void) const;
+        float getAspectRatio(void) const;
 
         const Matrix4Glf getWorldToClip(void) const;
         const Matrix4Glf& getView(void) const;
@@ -37,7 +40,7 @@ namespace fug {
         Vector3Glf _zAxis;
 
         //  Values for projection matrix
-        float _fov;
+        float _fovX;
         float _aspectRatio;
         float _near;
         float _far;
