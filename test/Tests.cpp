@@ -3,7 +3,7 @@
 //
 
 #include "Tests.hpp"
-#include "Ecs.hpp"
+#include "../src/Ecs.hpp"
 #include "TestSystems.hpp"
 
 #include <chrono>

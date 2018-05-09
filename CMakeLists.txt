@@ -5,15 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(LIBRARY_SOURCES src/Ecs.hpp src/Ecs.cpp src/System.hpp)
-
-set(DEMO_SOURCES src/main.cpp src/TestComponents.hpp
-        src/TestSystems.hpp src/TestSystems.cpp
-        src/Tests.hpp src/Tests.cpp)
+add_subdirectory(src)
+add_subdirectory(test)
 
 add_library(TemplateECS ${LIBRARY_SOURCES})
+add_executable(TemplateECS_Test ${TEST_SOURCES})
 
-add_executable(TemplateECSDemo ${DEMO_SOURCES})
-
-target_link_libraries(TemplateECSDemo TemplateECS)
-target_include_directories(TemplateECSDemo PRIVATE src)
+target_link_libraries(TemplateECS_Test TemplateECS)
+target_include_directories(TemplateECS_Test PRIVATE src)
