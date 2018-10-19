@@ -1,0 +1,8 @@
+# Add sources
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SUB_SOURCES)
+
+set(EXECUTABLE_SOURCES
+    ${EXECUTABLE_SOURCES}
+    ${SUB_SOURCES}
+    PARENT_SCOPE)
+

@@ -1,0 +1,8 @@
+# Add headers
+file(GLOB SUB_HEADERS "*.hpp")
+
+set(EXECUTABLE_SOURCES
+    ${EXECUTABLE_SOURCES}
+    ${SUB_HEADERS}
+    PARENT_SCOPE)
+
