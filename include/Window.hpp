@@ -8,6 +8,7 @@
 
 #include <SFML/Window.hpp>
 #include <Ecs.hpp>
+#include "PhysicsComponent.hpp"
 
 
 class Window {
