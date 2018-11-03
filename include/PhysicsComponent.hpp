@@ -10,6 +10,11 @@
 
 
 struct PhysicsComponent {
+    PhysicsComponent(mm::Vec2f pos, mm::Vec2f vel) :
+        pos(pos),
+        vel(vel)
+    {
+    }
     mm::Vec2f   pos;
     mm::Vec2f   vel;
 };
