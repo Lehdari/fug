@@ -40,6 +40,7 @@ private:
     PhysicsSystem   _physicsSystem;
 
     sf::Texture _blockTexture;
+    sf::Texture _ballTexture;
 
     void handleEvents(sf::Event& event);
     void runSystems(void);

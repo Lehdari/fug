@@ -15,6 +15,7 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(0, PhysicsComponent());
 
     _blockTexture.loadFromFile("../res/gfx/blocks.png");
+    _ballTexture.loadFromFile("../res/gfx/ball.png");
 }
 
 void Window::loop(void)
