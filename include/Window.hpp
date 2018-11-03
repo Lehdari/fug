@@ -7,6 +7,7 @@
 
 
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <Ecs.hpp>
 #include "PhysicsSystem.hpp"
@@ -33,8 +34,8 @@ public:
     void loop(void);
 
 private:
-    Settings        _settings;
-    sf::Window      _window;
+    Settings            _settings;
+    sf::RenderWindow    _window;
 
     Ecs             _ecs;
     PhysicsSystem   _physicsSystem;
