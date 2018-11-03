@@ -4,7 +4,6 @@ project(ECSTestGame)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add executable: SFML_Window
 add_subdirectory(include)
 add_subdirectory(src)
 
@@ -14,4 +13,4 @@ target_include_directories(ECSTestGame PUBLIC include)
 
 # Find and link SFML
 find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
-target_link_libraries(SFML_Window sfml-system sfml-window sfml-graphics)
+target_link_libraries(ECSTestGame sfml-system sfml-window sfml-graphics)
