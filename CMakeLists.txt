@@ -8,12 +8,14 @@ add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(ext)
 
+
 add_executable(ECSTestGame ${EXECUTABLE_HEADERS} ${EXECUTABLE_SOURCES})
 
 target_include_directories(ECSTestGame
     PUBLIC
         include
         ext/TemplateECS/src
+        ext/Mycelium/include
 )
 
 # Find and link SFML
@@ -24,3 +26,13 @@ target_link_libraries(ECSTestGame
         sfml-system
         sfml-window
         sfml-graphics)
+
+
+#Add Eigen include directory
+find_package(Eigen3 REQUIRED)
+
+if(NOT EIGEN3_INCLUDE_DIR)
+    set(EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}")
+endif()
+
+target_include_directories(ECSTestGame PUBLIC ${EIGEN3_INCLUDE_DIR})
