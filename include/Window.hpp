@@ -7,6 +7,7 @@
 
 
 #include <SFML/Window.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <Ecs.hpp>
 #include "PhysicsSystem.hpp"
 
@@ -37,6 +38,8 @@ private:
 
     Ecs             _ecs;
     PhysicsSystem   _physicsSystem;
+
+    sf::Texture _blockTexture;
 
     void handleEvents(sf::Event& event);
     void runSystems(void);

@@ -13,6 +13,8 @@ Window::Window(const Window::Settings &settings) :
     _window.setFramerateLimit(_settings.framerateLimit);
 
     _ecs.addComponent(0, PhysicsComponent());
+
+    _blockTexture.loadFromFile("../res/gfx/blocks.png");
 }
 
 void Window::loop(void)
