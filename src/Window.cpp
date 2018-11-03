@@ -32,6 +32,7 @@ void Window::loop(void)
         render();
 
         _window.display();
+        _window.clear();
     }
 }
 
