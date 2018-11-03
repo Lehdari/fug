@@ -48,6 +48,7 @@ private:
     sf::Texture _ballTexture;
 
     uint64_t _playerId;
+    uint64_t _ballId;
 
     void handleEvents(sf::Event& event);
     void runSystems(void);
