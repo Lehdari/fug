@@ -1,0 +1,3 @@
+[submodule "ext/TemplateECS"]
+	path = ext/TemplateECS
+	url = git@github.com:Lehdari/TemplateECS.git
