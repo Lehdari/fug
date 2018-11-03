@@ -10,7 +10,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <Ecs.hpp>
+
 #include "PhysicsSystem.hpp"
+#include "SpriteComponent.hpp"
+#include "SpriteRenderer.hpp"
 
 
 class Window {
@@ -39,6 +42,7 @@ private:
 
     Ecs             _ecs;
     PhysicsSystem   _physicsSystem;
+    SpriteRenderer  _spriteRenderer;
 
     sf::Texture _blockTexture;
     sf::Texture _ballTexture;

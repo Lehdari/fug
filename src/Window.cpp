@@ -7,16 +7,19 @@
 
 
 Window::Window(const Window::Settings &settings) :
-    _settings   (settings),
-    _window     (_settings.videoMode, _settings.windowName),
-    _playerId   (0)
+    _settings       (settings),
+    _window         (_settings.videoMode, _settings.windowName),
+    _playerId       (0),
+    _spriteRenderer (_window)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
-    _ecs.addComponent(_playerId, PhysicsComponent());
-
     _blockTexture.loadFromFile("../res/gfx/blocks.png");
     _ballTexture.loadFromFile("../res/gfx/ball.png");
+
+    _ecs.addComponent(_playerId, PhysicsComponent(mm::Vec2f(400, 300),
+                                                  mm::Vec2f(0.5, 0.5)));
+    _ecs.addComponent(_playerId, SpriteComponent(_blockTexture, 3, 64, 32));
 }
 
 void Window::loop(void)
