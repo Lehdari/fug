@@ -8,11 +8,12 @@
 
 Window::Window(const Window::Settings &settings) :
     _settings   (settings),
-    _window     (_settings.videoMode, _settings.windowName)
+    _window     (_settings.videoMode, _settings.windowName),
+    _playerId   (0)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
-    _ecs.addComponent(0, PhysicsComponent());
+    _ecs.addComponent(_playerId, PhysicsComponent());
 
     _blockTexture.loadFromFile("../res/gfx/blocks.png");
     _ballTexture.loadFromFile("../res/gfx/ball.png");
