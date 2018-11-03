@@ -28,6 +28,15 @@ Window::Window(const Window::Settings &settings) :
                                                 mm::Vec2f(0.7f, 0.7f)));
     _ecs.addComponent(_ballId, SpriteComponent(_ballTexture, 0, 32, 32));
 
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 5; ++j) {
+            uint64_t id = i * 8 + j + 2;
+            _ecs.addComponent(id, PhysicsComponent(mm::Vec2f(128 + i * 64, 64 + j * 32),
+                                                   mm::Vec2f(0.0f, 0.0f)));
+            _ecs.addComponent(id, SpriteComponent(_blockTexture, (i ^ j) % 4, 64, 32));
+
+        }
+    }
 }
 
 void Window::loop(void)
