@@ -7,6 +7,7 @@
 
 
 #include <SFML/Window.hpp>
+#include <Ecs.hpp>
 
 
 class Window {
@@ -32,6 +33,8 @@ public:
 private:
     Settings    _settings;
     sf::Window  _window;
+
+    Ecs         _ecs;
 
     void handleEvents(sf::Event& event);
     void render(void);
