@@ -3,6 +3,7 @@
 //
 
 #include "Window.hpp"
+#include "PhysicsComponent.hpp"
 
 
 Window::Window(const Window::Settings &settings) :
@@ -10,6 +11,8 @@ Window::Window(const Window::Settings &settings) :
     _window     (_settings.videoMode, _settings.windowName)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
+
+    _ecs.addComponent(0, PhysicsComponent());
 }
 
 void Window::loop(void)
@@ -22,6 +25,7 @@ void Window::loop(void)
         while (_window.pollEvent(event))
             handleEvents(event);
 
+        runSystems();
         render();
 
         _window.display();
@@ -46,6 +50,11 @@ void Window::handleEvents(sf::Event &event)
         default:
             break;
     }
+}
+
+void Window::runSystems(void)
+{
+    _ecs.runSystem(_physicsSystem);
 }
 
 void Window::render(void)

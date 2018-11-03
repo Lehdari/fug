@@ -8,7 +8,7 @@
 
 #include <SFML/Window.hpp>
 #include <Ecs.hpp>
-#include "PhysicsComponent.hpp"
+#include "PhysicsSystem.hpp"
 
 
 class Window {
@@ -32,12 +32,14 @@ public:
     void loop(void);
 
 private:
-    Settings    _settings;
-    sf::Window  _window;
+    Settings        _settings;
+    sf::Window      _window;
 
-    Ecs         _ecs;
+    Ecs             _ecs;
+    PhysicsSystem   _physicsSystem;
 
     void handleEvents(sf::Event& event);
+    void runSystems(void);
     void render(void);
 };
 
