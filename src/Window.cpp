@@ -63,6 +63,7 @@ void Window::handleEvents(sf::Event &event)
 void Window::runSystems(void)
 {
     _ecs.runSystem(_physicsSystem);
+    _ecs.runSystem(_spriteRenderer);
 }
 
 void Window::render(void)
