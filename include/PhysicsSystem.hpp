@@ -12,7 +12,7 @@
 
 TECS_SYSTEM(PhysicsSystem, PhysicsComponent) {
 public:
-    void operator()(PhysicsComponent& c);
+    void operator()(const EntityId& eId, PhysicsComponent& c);
 };
 
 

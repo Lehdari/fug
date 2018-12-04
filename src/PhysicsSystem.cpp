@@ -5,7 +5,7 @@
 #include "PhysicsSystem.hpp"
 
 
-void PhysicsSystem::operator()(PhysicsComponent& c)
+void PhysicsSystem::operator()(const EntityId& eId, PhysicsComponent& c)
 {
     c.pos += c.vel;
 }

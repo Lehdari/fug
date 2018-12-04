@@ -9,7 +9,7 @@
 
 TECS_SYSTEM(SpriteRenderer, PhysicsComponent, SpriteComponent) {
     SpriteRenderer(sf::RenderWindow& window) : window(window) { };
-    void operator()(PhysicsComponent& phys, SpriteComponent &sprite)
+    void operator()(const EntityId& eId, PhysicsComponent& phys, SpriteComponent &sprite)
     {
         sprite.sprite.setPosition(phys.pos(0), phys.pos(1));
         window.draw(sprite.sprite);
