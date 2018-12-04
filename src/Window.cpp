@@ -7,11 +7,12 @@
 
 
 Window::Window(const Window::Settings &settings) :
-    _settings       (settings),
-    _window         (_settings.videoMode, _settings.windowName),
-    _playerId       (0),
-    _ballId         (1),
-    _spriteRenderer (_window)
+    _settings           (settings),
+    _window             (_settings.videoMode, _settings.windowName),
+    _playerId           (0),
+    _ballId             (1),
+    _spriteRenderer     (_window),
+    _collisionSystem    (_ecs)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
@@ -81,6 +82,7 @@ void Window::runSystems(void)
 {
     _ecs.runSystem(_physicsSystem);
     _ecs.runSystem(_spriteRenderer);
+    _ecs.runSystem(_collisionSystem);
 }
 
 void Window::render(void)

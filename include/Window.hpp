@@ -14,6 +14,7 @@
 #include "PhysicsSystem.hpp"
 #include "SpriteComponent.hpp"
 #include "SpriteRenderer.hpp"
+#include "CollisionSystem.hpp"
 
 
 class Window {
@@ -43,6 +44,7 @@ private:
     Ecs             _ecs;
     PhysicsSystem   _physicsSystem;
     SpriteRenderer  _spriteRenderer;
+    CollisionSystem _collisionSystem;
 
     sf::Texture _blockTexture;
     sf::Texture _ballTexture;
