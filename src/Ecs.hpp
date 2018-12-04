@@ -128,7 +128,7 @@ void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
 
     for (auto eId : _entityIds) {
         if (increaseIterators<T_Components...>(eId, std::get<IteratorWrapper<T_Components>>(cIters)...))
-            system(std::get<IteratorWrapper<T_Components>>(cIters).it->component...);
+            system(eId, std::get<IteratorWrapper<T_Components>>(cIters).it->component...);
     }
 }
 
