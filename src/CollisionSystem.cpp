@@ -18,8 +18,10 @@ void CollisionSubSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
     if (!parentEId || eId >= *parentEId || !parentPhys)
         return;
 
-    //printf("CollisionSubSystem: %llu, %llu\n",
-    //    (long long unsigned)(*parentEId), (long long unsigned)eId);
+    if (parentPhys->colVol.checkCollision(phys.colVol)) {
+        printf("Collision: %llu and %llu\n",
+            (long long unsigned)(*parentEId), (long long unsigned)eId);
+    }
 }
 
 
