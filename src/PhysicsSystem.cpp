@@ -8,4 +8,5 @@
 void PhysicsSystem::operator()(const EntityId& eId, PhysicsComponent& c)
 {
     c.pos += c.vel;
+    c.colVol.setPosition(c.pos);
 }
