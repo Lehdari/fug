@@ -8,15 +8,21 @@
 
 #include <MathTypes.hpp>
 
+#include "CollisionVolume.hpp"
+
 
 struct PhysicsComponent {
-    PhysicsComponent(mm::Vec2f pos, mm::Vec2f vel) :
-        pos(pos),
-        vel(vel)
+    PhysicsComponent(mm::Vec2f pos, mm::Vec2f vel,
+                     const CollisionVolume& colVol = CollisionVolume()) :
+        pos     (pos),
+        vel     (vel),
+        colVol  (colVol)
     {
     }
-    mm::Vec2f   pos;
-    mm::Vec2f   vel;
+
+    mm::Vec2f       pos;
+    mm::Vec2f       vel;
+    CollisionVolume colVol;
 };
 
 
