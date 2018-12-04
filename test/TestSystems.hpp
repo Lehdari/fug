@@ -11,15 +11,15 @@
 
 
 TECS_SYSTEM(TestSystem1, TestComponent1) {
-    void operator()(TestComponent1& c1);
+    void operator()(const EntityId& eId, TestComponent1& c1);
 };
 
 TECS_SYSTEM(TestSystem2, TestComponent1, TestComponent2) {
-    void operator()(TestComponent1& c1, TestComponent2& c2);
+    void operator()(const EntityId& eId, TestComponent1& c1, TestComponent2& c2);
 };
 
 TECS_SYSTEM(TestSystem3, TestComponent1, TestComponent2, TestComponent3) {
-    void operator()(TestComponent1& c1, TestComponent2& c2, TestComponent3& c3);
+    void operator()(const EntityId& eId, TestComponent1& c1, TestComponent2& c2, TestComponent3& c3);
 };
 
 
