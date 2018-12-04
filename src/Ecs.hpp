@@ -6,15 +6,12 @@
 #define TEMPLATEECS_ECS_HPP
 
 
+#include "Types.hpp"
 #include "System.hpp"
 
-#include <cstdint>
 #include <vector>
 #include <functional>
 #include <tuple>
-
-
-using EntityId = uint64_t;
 
 
 class Ecs {
