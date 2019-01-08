@@ -145,7 +145,7 @@ Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 {
     auto tId = typeId<T_Component>();
     if (tId == _components.size()) {
-        _components.push_back(new std::vector<T_Component>);
+        _components.push_back(new ComponentVector<T_Component>);
         _componentDeleters.push_back(
             std::bind(&Ecs::deleteComponents<T_Component>,
                 this, (uint64_t)_components.size()-1));
