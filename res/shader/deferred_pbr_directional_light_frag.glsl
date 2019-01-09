@@ -10,11 +10,9 @@ uniform vec3 uLightAmb;
 
 // GBuffer
 uniform vec2 uViewportSize;
-uniform sampler2D depthMap;
-uniform sampler2D normalMap;
+uniform sampler2D normalDepthMap;
 uniform sampler2D albedoMap;
-uniform sampler2D roughnessMap;
-uniform sampler2D metalnessMap;
+uniform sampler2D roughnessMetalnessMap;
 
 // Output
 out vec4 fragColor;
@@ -104,11 +102,14 @@ void main()
 {
     vec2 uv = gl_FragCoord.xy / uViewportSize;
     // Extract deferred parameters
-    vec3 n = texture(normalMap, uv).rgb;
+    vec4 nd = texture(normalDepthMap, uv);
+    vec3 n = nd.rgb;
+    float posZ = nd.a;
     Material mat;
     mat.albedo = texture(albedoMap, uv).rgb;
-    mat.roughness = texture(roughnessMap, uv).r;
-    mat.metalness = texture(metalnessMap, uv).r;
+    vec4 rm = texture(roughnessMetalnessMap, uv);
+    mat.roughness = rm.r;
+    mat.metalness = rm.g;
 
     // Calculate view ray in camera space
     float tanHalfFovX = tan(uHalfFovX);

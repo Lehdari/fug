@@ -139,8 +139,8 @@ int main(void)
         Vector3Glf lAtten(0, 0, 1);
         float maxComp = fmax(fmax(lInt[0], lInt[1]), lInt[2]);
         lInt *= 0.7;
-        // TODO: is this really a good bound? should^tm limit at light values greater than 1/256
-        float d = (-lAtten[1] + sqrt(lAtten[1] * lAtten[1] - 4 * lAtten[2] * (lAtten[0] - 256 * maxComp))) / (2 * lAtten[2]);
+        // Limit for stencil at light values greater than 5/256
+        float d = (-lAtten[1] + sqrt(lAtten[1] * lAtten[1] - 4 * lAtten[2] * (lAtten[0] - (256.f / 5) * maxComp))) / (2 * lAtten[2]);
         TransformComponent pointTransform;
         pointTransform.position = Vector3Glf(randf(), 0.1 * randf(), randf());
         pointTransform.position *= 3;
@@ -173,8 +173,7 @@ int main(void)
 
     // Rendering control
     int currentMode = 0;
-    const char* renderModes[] = { "Shaded", "Depth", "Normals", "Albedo", "Roughness",
-                                  "Metalness" };
+    const char* renderModes[] = { "Shaded", "Normals + Depth", "Albedo", "Roughness + Metalness"};
 
 
     Renderer renderer(camPos, Vector3Glf(0.f, 0.f, 1.f), Vector3Glf(0.f, 1.f, 0.f),
@@ -183,8 +182,8 @@ int main(void)
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView, renderer._cam.getFovX(), { RES_X, RES_Y });
 
     auto gBuffer = std::shared_ptr<GBuffer>(new GBuffer(RES_X, RES_Y,
-                                                        { GL_R32F, GL_RGB32F, GL_RGBA16,  GL_R8,  GL_R8 },
-                                                        {  GL_RED,    GL_RGB,   GL_RGBA, GL_RED, GL_RED } ));
+                                                        {GL_RGBA32F, GL_RGBA16, GL_RG8},
+                                                        {   GL_RGBA,   GL_RGBA,  GL_RG} ));
 
     PointLightPass pointLightPass(renderer._cam, gBuffer, { RES_X, RES_Y }, stencilProgResPtr);
 
@@ -271,7 +270,7 @@ int main(void)
         // mousepos could be passed to imgui before event-handling and check this
         // to not pass mouse-events to program if hovering
         {
-            ImGui::ListBox("", &currentMode, renderModes, 6, 6);
+            ImGui::ListBox("", &currentMode, renderModes, 4, 4);
             ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         }
 

@@ -510,11 +510,9 @@
 			"initInfo": {
 				"type": "LightShaderBindingInitInfo",
 				"sampler2DUniforms": [
-					"depthMap",
-					"normalMap",
+					"normalDepthMap",
 					"albedoMap",
-					"roughnessMap",
-					"metalnessMap"
+					"roughnessMetalnessMap"
 				],
 				"parameterUniforms": {
 					"Position": "uLightPos",
@@ -533,11 +531,9 @@
 			"initInfo": {
 				"type": "LightShaderBindingInitInfo",
 				"sampler2DUniforms": [
-					"depthMap",
-					"normalMap",
+					"normalDepthMap",
 					"albedoMap",
-					"roughnessMap",
-					"metalnessMap"
+					"roughnessMetalnessMap"
 				],
 				"parameterUniforms": {
 					"Direction": "uLightDir",
