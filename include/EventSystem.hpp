@@ -17,6 +17,12 @@
 TECS_SYSTEM(EventSystem, EventComponent) {
 public:
     EventSystem(Ecs& ecs);
+
+    EventSystem(const EventSystem&) = delete;
+    EventSystem& operator=(const EventSystem&) = delete;
+    EventSystem(EventSystem&&) = delete;
+    EventSystem& operator=(EventSystem&&) = delete;
+
     ~EventSystem();
 
     void operator()(const EntityId& eId, EventComponent& ec);
