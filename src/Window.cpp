@@ -4,6 +4,7 @@
 
 #include "Window.hpp"
 #include "PhysicsComponent.hpp"
+#include "EventHandlers.hpp"
 
 
 Window::Window(const Window::Settings &settings) :
@@ -12,7 +13,8 @@ Window::Window(const Window::Settings &settings) :
     _playerId           (0),
     _ballId             (1),
     _spriteRenderer     (_window),
-    _collisionSystem    (_ecs)
+    _eventSystem        (_ecs),
+    _collisionSystem    (_ecs, _eventSystem)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
@@ -39,6 +41,9 @@ Window::Window(const Window::Settings &settings) :
                 CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
             _ecs.addComponent(id, SpriteComponent(_blockTexture, (i ^ j) % 4, 64, 32));
 
+            EventComponent ec;
+            ec.addHandler<EventHandler_Block_CollisionEvent>();
+            _ecs.addComponent(id, ec);
         }
     }
 }
@@ -86,6 +91,7 @@ void Window::runSystems(void)
     _ecs.runSystem(_physicsSystem);
     _ecs.runSystem(_spriteRenderer);
     _ecs.runSystem(_collisionSystem);
+    _ecs.runSystem(_eventSystem);
 }
 
 void Window::render(void)

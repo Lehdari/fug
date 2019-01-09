@@ -15,6 +15,7 @@
 #include "SpriteComponent.hpp"
 #include "SpriteRenderer.hpp"
 #include "CollisionSystem.hpp"
+#include "EventSystem.hpp"
 
 
 class Window {
@@ -42,6 +43,7 @@ private:
     sf::RenderWindow    _window;
 
     Ecs             _ecs;
+    EventSystem     _eventSystem;
     PhysicsSystem   _physicsSystem;
     SpriteRenderer  _spriteRenderer;
     CollisionSystem _collisionSystem;
