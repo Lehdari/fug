@@ -10,20 +10,23 @@
 #include <Types.hpp>
 
 
+class Ecs;
+
+
 #define EVENT_HANDLER(HANDLER_NAME, EVENT_TYPE) \
         struct HANDLER_NAME :\
         public EventHandler<HANDLER_NAME, EVENT_TYPE> {\
             using EventType = EVENT_TYPE;\
-            static void handleEvent(const EntityId& eId, const EVENT_TYPE& event);\
+            static void handleEvent(Ecs& ecs, const EntityId& eId, const EVENT_TYPE& event);\
         }
 
 
 template <typename T_Handler, typename T_Event>
 struct EventHandler {
-    static void handleEvents(const EntityId& eId, void* events) {
+    static void handleEvents(Ecs& ecs, const EntityId& eId, void* events) {
         auto* events2 = static_cast<std::vector<T_Event>*>(events);
         for (auto& event : *events2)
-            T_Handler::handleEvent(eId, event);
+            T_Handler::handleEvent(ecs, eId, event);
     }
 };
 

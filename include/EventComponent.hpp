@@ -13,6 +13,9 @@
 #include <vector>
 
 
+class Ecs;
+
+
 class EventComponent {
 public:
     friend class EventSystem;
@@ -21,7 +24,7 @@ public:
     void addHandler();
 
 private:
-    std::unordered_map<int64_t, void(*)(const EntityId&, void*)> _handlers;
+    std::unordered_map<int64_t, void(*)(Ecs& ecs, const EntityId&, void*)> _handlers;
 };
 
 
