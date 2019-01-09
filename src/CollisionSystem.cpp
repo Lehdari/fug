@@ -3,37 +3,42 @@
 //
 
 #include "CollisionSystem.hpp"
+#include "EventSystem.hpp"
+#include "CollisionEvent.hpp"
 
 #include <Ecs.hpp>
 
 
-CollisionSubSystem::CollisionSubSystem(void) :
-    parentEId   (nullptr),
-    parentPhys  (nullptr)
+CollisionSubSystem::CollisionSubSystem(EventSystem& eventSystem) :
+    _eventSystem(eventSystem),
+    _parentEId  (nullptr),
+    _parentPhys (nullptr)
 {
 }
 
 void CollisionSubSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
 {
-    if (!parentEId || eId >= *parentEId || !parentPhys)
+    if (!_parentEId || eId >= *_parentEId || !_parentPhys)
         return;
 
-    if (parentPhys->colVol.checkCollision(phys.colVol)) {
-        printf("Collision: %llu and %llu\n",
-            (long long unsigned)(*parentEId), (long long unsigned)eId);
+    if (_parentPhys->colVol.checkCollision(phys.colVol)) {
+        _eventSystem.sendEvent(*_parentEId, CollisionEvent(eId));
+//        printf("Collision: %llu and %llu\n",
+//            (long long unsigned)(*_parentEId), (long long unsigned)eId);
     }
 }
 
 
-CollisionSystem::CollisionSystem(Ecs& ecs) :
-    _ecs    (ecs)
+CollisionSystem::CollisionSystem(Ecs& ecs, EventSystem& eventSystem) :
+    _ecs        (ecs),
+    _subSystem  (eventSystem)
 {
 }
 
 void CollisionSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
 {
-    _subSystem.parentEId = &eId;
-    _subSystem.parentPhys = &phys;
+    _subSystem._parentEId = &eId;
+    _subSystem._parentPhys = &phys;
 
     _ecs.runSystem(_subSystem);
 }

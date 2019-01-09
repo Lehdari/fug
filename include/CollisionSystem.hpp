@@ -11,21 +11,29 @@
 
 
 class Ecs;
+class EventSystem;
 
 
 TECS_SYSTEM(CollisionSubSystem, PhysicsComponent) {
-    CollisionSubSystem(void);
+public:
+    friend class CollisionSystem;
+
+    CollisionSubSystem(EventSystem& eventSystem);
 
     void operator()(const EntityId& eId, PhysicsComponent& phys);
 
+private:
+    EventSystem&        _eventSystem;
+
     /// Pointers to references passed to parent CollisionSystem
-    const EntityId*     parentEId;
-    PhysicsComponent*   parentPhys;
+    const EntityId*     _parentEId;
+    PhysicsComponent*   _parentPhys;
 };
 
 
 TECS_SYSTEM(CollisionSystem, PhysicsComponent) {
-    CollisionSystem(Ecs& ecs);
+public:
+    CollisionSystem(Ecs& ecs, EventSystem& eventSystem);
 
     void operator()(const EntityId& eId, PhysicsComponent& phys);
 
