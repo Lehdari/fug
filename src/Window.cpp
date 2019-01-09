@@ -32,6 +32,11 @@ Window::Window(const Window::Settings &settings) :
         mm::Vec2f(400, 300), mm::Vec2f(0.7f, -0.7f),
         CollisionVolume(CollisionVolume::CIRCLE, 16.0f)));
     _ecs.addComponent(_ballId, SpriteComponent(_ballTexture, 0, 32, 32));
+    {
+        EventComponent ec;
+        ec.addHandler<EventHandler_Ball_CollisionEvent>();
+        _ecs.addComponent(_ballId, ec);
+    }
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 5; ++j) {
@@ -92,6 +97,8 @@ void Window::runSystems(void)
     _ecs.runSystem(_spriteRenderer);
     _ecs.runSystem(_collisionSystem);
     _ecs.runSystem(_eventSystem);
+
+    _eventSystem.clear();
 }
 
 void Window::render(void)

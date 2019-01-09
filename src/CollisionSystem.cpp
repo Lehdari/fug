@@ -23,8 +23,7 @@ void CollisionSubSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
 
     if (_parentPhys->colVol.checkCollision(phys.colVol)) {
         _eventSystem.sendEvent(*_parentEId, CollisionEvent(eId));
-//        printf("Collision: %llu and %llu\n",
-//            (long long unsigned)(*_parentEId), (long long unsigned)eId);
+        _eventSystem.sendEvent(eId, CollisionEvent(*_parentEId));
     }
 }
 
