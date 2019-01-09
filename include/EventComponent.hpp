@@ -21,7 +21,7 @@ public:
     void addHandler();
 
 private:
-    std::unordered_map<int64_t, void(*)(void*)> _handlers;
+    std::unordered_map<int64_t, void(*)(const EntityId&, void*)> _handlers;
 };
 
 

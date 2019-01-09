@@ -8,7 +8,8 @@
 #include <cstdio> // TEMP
 
 
-void EventHandler_Block_CollisionEvent::handleEvent(const CollisionEvent& e)
+void EventHandler_Block_CollisionEvent::handleEvent(
+    const EntityId& eId, const CollisionEvent& event)
 {
-    printf("Collision: %lld\n", e.entityId);
+    printf("Collision: %lld and %lld\n", eId, event.entityId);
 }

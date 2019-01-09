@@ -24,6 +24,6 @@ void EventSystem::operator()(const EntityId& eId, EventComponent& ec)
         if (events[etId] == nullptr || ec._handlers.find(etId) == ec._handlers.end())
             continue;
 
-        ec._handlers[etId](events[etId]);
+        ec._handlers[etId](eId, events[etId]);
     }
 }
