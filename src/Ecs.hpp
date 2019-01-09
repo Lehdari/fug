@@ -28,6 +28,10 @@ public:
     template <typename T_Component>
     void addComponent(const EntityId& eId, const T_Component& component);
 
+    /// Get component
+    template <typename T_Component>
+    T_Component* getComponent(const EntityId& eId);
+
     /// Remove component
     template <typename T_Component>
     void removeComponent(const EntityId& eId);
@@ -108,6 +112,17 @@ void Ecs::addComponent(const EntityId& eId, const T_Component& component)
         return;
     else
         v.emplace(it, eId, component);
+}
+
+template<typename T_Component>
+T_Component* Ecs::getComponent(const EntityId& eId)
+{
+    auto& v = accessComponents<T_Component>();
+    ComponentIterator<T_Component> it;
+    if (findComponent(v, it, eId))
+        return &(it->component);
+    else
+        return nullptr;
 }
 
 template<typename T_Component>
