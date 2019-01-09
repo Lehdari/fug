@@ -27,3 +27,9 @@ void EventSystem::operator()(const EntityId& eId, EventComponent& ec)
         ec._handlers[etId](eId, events[etId]);
     }
 }
+
+void EventSystem::clear()
+{
+    for (auto& ec : _entityEventClearers)
+        ec();
+}
