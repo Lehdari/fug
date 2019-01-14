@@ -23,15 +23,18 @@ bool PointLightPass::operator()(PointLightComponent& light, TransformComponent& 
 }
 
 bool PointLightPass::drawStencil(PointLightComponent& light, Matrix4Glf& modelToClip) {
-    // TODO: comments
     glUseProgram(_stencilProg->getId());
 
     _gBuffer->bindStencilPass();
 
+    // Generate a stencil by rendering light bound against the scene depth buffer.
+    // Fragments inside the light volume will end up with non-zero values.
     glEnable(GL_DEPTH_TEST);
+    // Don't cull faces so we can handle both front and back for stencil op
     glDisable(GL_CULL_FACE);
     glClear(GL_STENCIL_BUFFER_BIT);
 
+    // Perform stencil op on all faces, -1 for front and +1 for back
     glStencilFunc(GL_ALWAYS, 0, 0);
     glStencilOpSeparate(GL_BACK, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
     glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
@@ -52,7 +55,8 @@ bool PointLightPass::drawLight(PointLightComponent& light, Matrix4Glf& modelToVi
 
     _gBuffer->bindLightPass();
 
-    // TODO: explain these
+    // Apply light contribution by rendering light volume only on non-zero fragments
+    // in the stencil, ie. fragments inside the light volume.
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);

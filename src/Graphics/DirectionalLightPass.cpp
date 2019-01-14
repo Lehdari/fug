@@ -16,6 +16,7 @@ DirectionalLightPass::DirectionalLightPass(const ResourcePointer<Mesh>& quadMesh
 
 void DirectionalLightPass::initPass() const
 {
+    // Contribution of a directional light gets added to the entire scene
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);

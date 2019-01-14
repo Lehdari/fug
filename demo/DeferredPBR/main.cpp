@@ -175,12 +175,12 @@ int main(void)
     int currentMode = 0;
     const char* renderModes[] = { "Shaded", "Normals + Depth", "Albedo", "Roughness + Metalness"};
 
-
     Renderer renderer(camPos, Vector3Glf(0.f, 0.f, 1.f), Vector3Glf(0.f, 1.f, 0.f),
                       FOV, float(window->getSize().x) / window->getSize().y, Z_NEAR, Z_FAR);
     Matrix4Glf normalToView = renderer._cam.getView().transpose().inverse();
     DirectionalLightPass dirLightPass(quadMeshResPtr, normalToView, renderer._cam.getFovX(), { RES_X, RES_Y });
 
+    // Create gbuffer with normal+depth, albedo and roughness+metalness render targets
     auto gBuffer = std::shared_ptr<GBuffer>(new GBuffer(RES_X, RES_Y,
                                                         {GL_RGBA32F, GL_RGBA16, GL_RG8},
                                                         {   GL_RGBA,   GL_RGBA,  GL_RG} ));
