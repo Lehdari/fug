@@ -9,6 +9,9 @@
 #include <Ecs.hpp>
 
 
+using namespace mm;
+
+
 CollisionSubSystem::CollisionSubSystem(EventSystem& eventSystem) :
     _eventSystem(eventSystem),
     _parentEId  (nullptr),
@@ -18,12 +21,12 @@ CollisionSubSystem::CollisionSubSystem(EventSystem& eventSystem) :
 
 void CollisionSubSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
 {
-    if (!_parentEId || eId >= *_parentEId || !_parentPhys)
+    if (!_parentEId || eId == *_parentEId || !_parentPhys)
         return;
 
-    if (_parentPhys->colVol.checkCollision(phys.colVol)) {
-        _eventSystem.sendEvent(*_parentEId, CollisionEvent(eId));
-        _eventSystem.sendEvent(eId, CollisionEvent(*_parentEId));
+    Vec2f normal;
+    if (_parentPhys->colVol.checkCollision(phys.colVol, normal)) {
+        _eventSystem.sendEvent(*_parentEId, CollisionEvent(eId, normal));
     }
 }
 

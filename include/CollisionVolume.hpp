@@ -42,7 +42,7 @@ public:
 
     void setPosition(const mm::Vec2f& pos);
 
-    bool checkCollision(const CollisionVolume& other);
+    bool checkCollision(const CollisionVolume& other, mm::Vec2f& normal);
 
 private:
     Type        _type;
