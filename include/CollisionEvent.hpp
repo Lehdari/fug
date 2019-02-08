@@ -7,15 +7,15 @@
 
 
 #include <Types.hpp>
-#include <MathTypes.hpp>
+#include <vec2f.h>
 
 
 struct CollisionEvent {
     EntityId    entityId;
-    mm::Vec2f   normal;
+    vm::vec2f   normal;
 
     CollisionEvent(const EntityId& eId,
-                   const mm::Vec2f& normal = mm::Vec2f(0.0f, 0.0f)) :
+                   const vm::vec2f& normal = vm::vec2f(0.0f, 0.0f)) :
         entityId    (eId),
         normal      (normal)
     {}

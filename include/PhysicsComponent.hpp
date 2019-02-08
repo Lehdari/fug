@@ -6,13 +6,13 @@
 #define ECSTESTGAME_PHYSICSCOMPONENT_HPP
 
 
-#include <MathTypes.hpp>
+#include <vec2f.h>
 
 #include "CollisionVolume.hpp"
 
 
 struct PhysicsComponent {
-    PhysicsComponent(mm::Vec2f pos, mm::Vec2f vel,
+    PhysicsComponent(vm::vec2f pos, vm::vec2f vel,
                      const CollisionVolume& colVol = CollisionVolume()) :
         pos     (pos),
         vel     (vel),
@@ -20,8 +20,8 @@ struct PhysicsComponent {
     {
     }
 
-    mm::Vec2f       pos;
-    mm::Vec2f       vel;
+    vm::vec2f       pos;
+    vm::vec2f       vel;
     CollisionVolume colVol;
 };
 

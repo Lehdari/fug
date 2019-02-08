@@ -9,7 +9,7 @@
 #include <Ecs.hpp>
 
 
-using namespace mm;
+using namespace vm;
 
 
 CollisionSubSystem::CollisionSubSystem(EventSystem& eventSystem) :
@@ -24,7 +24,7 @@ void CollisionSubSystem::operator()(const EntityId& eId, PhysicsComponent& phys)
     if (!_parentEId || eId == *_parentEId || !_parentPhys)
         return;
 
-    Vec2f normal;
+    vec2f normal;
     if (_parentPhys->colVol.checkCollision(phys.colVol, normal)) {
         _eventSystem.sendEvent(*_parentEId, CollisionEvent(eId, normal));
     }

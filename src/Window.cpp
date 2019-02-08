@@ -23,14 +23,14 @@ Window::Window(const Window::Settings &settings) :
 
     /* Player */
     _ecs.addComponent(_playerId, PhysicsComponent(
-        mm::Vec2f(450, 550), mm::Vec2f(0.5, 0.0f),
+        vm::vec2f(450, 550), vm::vec2f(0.5, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
     _ecs.addComponent(_playerId, SpriteComponent(_blockTexture, 3, 64, 32));
     _ecs.getComponent<SpriteComponent>(_playerId)->sprite.setOrigin(32, 16);
 
     /* Ball */
     _ecs.addComponent(_ballId, PhysicsComponent(
-        mm::Vec2f(400, 400), mm::Vec2f(-0.5f, 2.0f),
+        vm::vec2f(400, 400), vm::vec2f(-0.5f, 2.0f),
         CollisionVolume(CollisionVolume::CIRCLE, 16.0f)));
     _ecs.addComponent(_ballId, SpriteComponent(_ballTexture, 0, 32, 32));
     _ecs.getComponent<SpriteComponent>(_ballId)->sprite.setOrigin(16, 16);
@@ -40,23 +40,23 @@ Window::Window(const Window::Settings &settings) :
 
     /* Walls */
     _ecs.addComponent(2, PhysicsComponent(
-        mm::Vec2f(-16, 300), mm::Vec2f(0.0f, 0.0f),
+        vm::vec2f(-16, 300), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
     _ecs.addComponent(3, PhysicsComponent(
-        mm::Vec2f(816, 300), mm::Vec2f(0.0f, 0.0f),
+        vm::vec2f(816, 300), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
     _ecs.addComponent(4, PhysicsComponent(
-        mm::Vec2f(400, -16), mm::Vec2f(0.0f, 0.0f),
+        vm::vec2f(400, -16), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
     _ecs.addComponent(5, PhysicsComponent(
-        mm::Vec2f(400, 616), mm::Vec2f(0.0f, 0.0f),
+        vm::vec2f(400, 616), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 5; ++j) {
             uint64_t id = i * 8 + j + 6;
             _ecs.addComponent(id, PhysicsComponent(
-                mm::Vec2f(176 + i * 64, 64 + j * 32), mm::Vec2f(0.0f, 0.0f),
+                vm::vec2f(176 + i * 64, 64 + j * 32), vm::vec2f(0.0f, 0.0f),
                 CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
             _ecs.addComponent(id, SpriteComponent(_blockTexture, (i ^ j) % 4, 64, 32));
             _ecs.getComponent<SpriteComponent>(id)->sprite.setOrigin(32, 16);

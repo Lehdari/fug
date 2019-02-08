@@ -5,7 +5,7 @@
 #include "CollisionVolume.hpp"
 
 
-using namespace mm;
+using namespace vm;
 
 
 CollisionVolume::CollisionVolume(void) :
@@ -21,8 +21,8 @@ CollisionVolume::CollisionVolume(const CollisionVolume::Type& type,
 {
     switch (_type) {
         case BOX:
-            _volume.box.min = Vec2f(p1, p2);
-            _volume.box.max = Vec2f(p3, p4);
+            _volume.box.min = vec2f(p1, p2);
+            _volume.box.max = vec2f(p3, p4);
             break;
         case CIRCLE:
             _volume.circle.r = p1;
@@ -69,52 +69,52 @@ CollisionVolume& CollisionVolume::operator=(const CollisionVolume& other)
     return *this;
 }
 
-void CollisionVolume::setPosition(const mm::Vec2f& pos)
+void CollisionVolume::setPosition(const vm::vec2f& pos)
 {
     _pos = pos;
 }
 
-bool CollisionVolume::checkCollision(const CollisionVolume& other, Vec2f& normal)
+bool CollisionVolume::checkCollision(const CollisionVolume& other, vec2f& normal)
 {
     if (_type == UNKNOWN || other._type == UNKNOWN)
         return false;
 
     switch (_type) {
         case BOX: {
-            Vec2f min1(_pos+_volume.box.min);
-            Vec2f max1(_pos+_volume.box.max);
+            vec2f min1(_pos+_volume.box.min);
+            vec2f max1(_pos+_volume.box.max);
 
             switch (other._type) {
                 case BOX: {
-                    Vec2f min2(other._pos+other._volume.box.min);
-                    Vec2f max2(other._pos+other._volume.box.max);
-                    if (min1(0) < max2(0) && max1(0) > min2(0) &&
-                        min1(1) < max2(1) && max1(1) > min2(1))
+                    vec2f min2(other._pos+other._volume.box.min);
+                    vec2f max2(other._pos+other._volume.box.max);
+                    if (min1.x < max2.x && max1.x > min2.x &&
+                        min1.y < max2.y && max1.y > min2.y)
                         return true;
                 }   break;
                 case CIRCLE: {
-                    Vec2f rx(other._volume.circle.r, 0.0f);
-                    Vec2f ry(0.0f, other._volume.circle.r);
-                    Vec2f p[] = { other._pos-rx,
+                    vec2f rx(other._volume.circle.r, 0.0f);
+                    vec2f ry(0.0f, other._volume.circle.r);
+                    vec2f p[] = { other._pos-rx,
                                   other._pos-ry,
                                   other._pos+rx,
                                   other._pos+ry };
-                    Vec2f n[] = { Vec2f(-1.0f, 0.0f),
-                                  Vec2f(0.0f, -1.0f),
-                                  Vec2f(1.0f, 0.0f),
-                                  Vec2f(0.0f, 1.0f) };
-                    Vec2f c[] = { min1,
-                                  Vec2f(min1(0), max1(1)),
-                                  Vec2f(max1(0), min1(1)),
+                    vec2f n[] = { vec2f(-1.0f, 0.0f),
+                                  vec2f(0.0f, -1.0f),
+                                  vec2f(1.0f, 0.0f),
+                                  vec2f(0.0f, 1.0f) };
+                    vec2f c[] = { min1,
+                                  vec2f(min1.x, max1.y),
+                                  vec2f(max1.x, min1.y),
                                   max1 };
                     for (int i=0; i<4; ++i) {
-                        if (p[i](0) > min1(0) && p[i](0) < max1(0) &&
-                            p[i](1) > min1(1) && p[i](1) < max1(1)) {
+                        if (p[i].x > min1.x && p[i].x < max1.x &&
+                            p[i].y > min1.y && p[i].y < max1.y) {
                             normal = n[i];
                             return true;
                         }
 
-                        if ((c[i]-other._pos).squaredNorm() <
+                        if ((c[i]-other._pos).norm2() <
                             other._volume.circle.r*other._volume.circle.r) {
                             normal = (c[i]-other._pos).normalized();
                             return true;
@@ -128,27 +128,27 @@ bool CollisionVolume::checkCollision(const CollisionVolume& other, Vec2f& normal
         case CIRCLE:
             switch (other._type) {
                 case BOX: {
-                    Vec2f min2(other._pos+other._volume.box.min);
-                    Vec2f max2(other._pos+other._volume.box.max);
-                    Vec2f rx(_volume.circle.r, 0.0f);
-                    Vec2f ry(0.0f, _volume.circle.r);
-                    Vec2f p[] = { _pos-rx, _pos-ry, _pos+rx, _pos+ry };
-                    Vec2f n[] = { Vec2f(1.0f, 0.0f),
-                                  Vec2f(0.0f, 1.0f),
-                                  Vec2f(-1.0f, 0.0f),
-                                  Vec2f(0.0f, -1.0f) };
-                    Vec2f c[] = { min2,
-                                  Vec2f(min2(0), max2(1)),
-                                  Vec2f(max2(0), min2(1)),
+                    vec2f min2(other._pos+other._volume.box.min);
+                    vec2f max2(other._pos+other._volume.box.max);
+                    vec2f rx(_volume.circle.r, 0.0f);
+                    vec2f ry(0.0f, _volume.circle.r);
+                    vec2f p[] = { _pos-rx, _pos-ry, _pos+rx, _pos+ry };
+                    vec2f n[] = { vec2f(1.0f, 0.0f),
+                                  vec2f(0.0f, 1.0f),
+                                  vec2f(-1.0f, 0.0f),
+                                  vec2f(0.0f, -1.0f) };
+                    vec2f c[] = { min2,
+                                  vec2f(min2.x, max2.y),
+                                  vec2f(max2.x, min2.y),
                                   max2 };
                     for (int i=0; i<4; ++i) {
-                        if (p[i](0) > min2(0) && p[i](0) < max2(0) &&
-                            p[i](1) > min2(1) && p[i](1) < max2(1)) {
+                        if (p[i].x > min2.x && p[i].x < max2.x &&
+                            p[i].y > min2.y && p[i].y < max2.y) {
                             normal = n[i];
                             return true;
                         }
 
-                        if ((_pos-c[i]).squaredNorm() <
+                        if ((_pos-c[i]).norm2() <
                             _volume.circle.r*_volume.circle.r) {
                             normal = (_pos-c[i]).normalized();
                             return true;

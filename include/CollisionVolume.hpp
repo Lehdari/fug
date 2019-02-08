@@ -6,7 +6,7 @@
 #define ECSTESTGAME_COLLISIONVOLUME_HPP
 
 
-#include <MathTypes.hpp>
+#include <vec2f.h>
 
 
 class CollisionVolume {
@@ -40,20 +40,20 @@ public:
 
     ~CollisionVolume() = default;
 
-    void setPosition(const mm::Vec2f& pos);
+    void setPosition(const vm::vec2f& pos);
 
-    bool checkCollision(const CollisionVolume& other, mm::Vec2f& normal);
+    bool checkCollision(const CollisionVolume& other, vm::vec2f& normal);
 
 private:
     Type        _type;
-    mm::Vec2f   _pos;
+    vm::vec2f   _pos;
 
     union Volume {
         struct Unknown {
         }   unknown;
         struct Box {
-            mm::Vec2f   min;
-            mm::Vec2f   max;
+            vm::vec2f   min;
+            vm::vec2f   max;
         }   box;
         struct Circle {
             float   r;
