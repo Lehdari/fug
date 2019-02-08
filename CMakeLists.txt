@@ -25,7 +25,8 @@ target_link_libraries(ECSTestGame
         TemplateECS
         sfml-system
         sfml-window
-        sfml-graphics)
+        sfml-graphics
+        vecmat)
 
 
 #Add Eigen include directory
