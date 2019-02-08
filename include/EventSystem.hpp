@@ -35,7 +35,15 @@ public:
      */
     template <typename T_Event>
     void sendEvent(const EntityId& eId, const T_Event& event);
-    
+
+    /** broadcastEvent
+     * @brief   Broadcast event to all entities
+     *
+     * @param   event Event to be sent
+     */
+    template <typename T_Event>
+    void broadcastEvent(const T_Event& event);
+
     /** clear
      *  @brief  Clear all events from EventSystem
      */
@@ -50,14 +58,22 @@ private:
     std::vector<std::function<void()>>                  _entityEventClearers;
     std::vector<std::function<void()>>                  _entityEventDeleters;
 
+    /// Event vectors of broadcasted events, accessed through accessBroadcastEvents
+    std::vector<void*>                  _broadcastEvents;
+    std::vector<std::function<void()>>  _broadcastEventClearers;
+    std::vector<std::function<void()>>  _broadcastEventDeleters;
+
     template <typename T_Event>
     std::vector<T_Event>& accessEntityEvents(const EntityId& eId);
 
     template <typename T_Event>
-    void clearEntityEvents(void* events);
+    std::vector<T_Event>& accessBroadcastEvents();
 
     template <typename T_Event>
-    void deleteEntityEvents(void* events);
+    void clearEvents(void* events);
+
+    template <typename T_Event>
+    void deleteEvents(void* events);
 };
 
 
@@ -68,6 +84,12 @@ void EventSystem::sendEvent(const EntityId& eId, const T_Event& event)
     events.push_back(event);
 }
 
+template<typename T_Event>
+void EventSystem::broadcastEvent(const T_Event& event)
+{
+    auto& events = accessBroadcastEvents<T_Event>();
+    events.push_back(event);
+}
 
 template<typename T_Event>
 std::vector<T_Event>& EventSystem::accessEntityEvents(const EntityId& eId)
@@ -81,22 +103,43 @@ std::vector<T_Event>& EventSystem::accessEntityEvents(const EntityId& eId)
         ev[typeId] = new std::vector<T_Event>();
 
         _entityEventClearers.push_back(std::bind(
-            &EventSystem::clearEntityEvents<T_Event>, this, ev[typeId]));
+            &EventSystem::clearEvents<T_Event>, this, ev[typeId]));
         _entityEventDeleters.push_back(std::bind(
-            &EventSystem::deleteEntityEvents<T_Event>, this, ev[typeId]));
+            &EventSystem::deleteEvents<T_Event>, this, ev[typeId]));
     }
 
     return *static_cast<std::vector<T_Event>*>(ev[typeId]);
 }
 
 template<typename T_Event>
-void EventSystem::clearEntityEvents(void *events)
+std::vector<T_Event>& EventSystem::accessBroadcastEvents()
+{
+    auto typeId = EventTypeId::typeId<T_Event>();
+    if (_broadcastEvents.size() <= typeId)
+        _broadcastEvents.resize((unsigned long long)typeId + 1, nullptr);
+
+    if (_broadcastEvents[typeId] == nullptr) {
+        _broadcastEvents[typeId] = new std::vector<T_Event>();
+
+        _broadcastEventClearers.push_back(std::bind(
+            &EventSystem::clearEvents<T_Event>,
+            this, _broadcastEvents[typeId]));
+        _broadcastEventDeleters.push_back(std::bind(
+            &EventSystem::deleteEvents<T_Event>,
+            this, _broadcastEvents[typeId]));
+    }
+
+    return *static_cast<std::vector<T_Event>*>(_broadcastEvents[typeId]);
+}
+
+template<typename T_Event>
+void EventSystem::clearEvents(void *events)
 {
     static_cast<std::vector<T_Event>*>(events)->clear();
 }
 
 template<typename T_Event>
-void EventSystem::deleteEntityEvents(void* events)
+void EventSystem::deleteEvents(void* events)
 {
     delete static_cast<std::vector<T_Event>*>(events);
 }
