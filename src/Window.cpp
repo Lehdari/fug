@@ -38,6 +38,19 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(_ballId, EventComponent());
     _ecs.getComponent<EventComponent>(_ballId)->addHandler<EventHandler_Ball_CollisionEvent>();
 
+    /* Walls */
+    _ecs.addComponent(2, PhysicsComponent(
+        mm::Vec2f(-16, 300), mm::Vec2f(0.0f, 0.0f),
+        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
+    _ecs.addComponent(3, PhysicsComponent(
+        mm::Vec2f(816, 300), mm::Vec2f(0.0f, 0.0f),
+        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
+    _ecs.addComponent(4, PhysicsComponent(
+        mm::Vec2f(400, -16), mm::Vec2f(0.0f, 0.0f),
+        CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
+    _ecs.addComponent(5, PhysicsComponent(
+        mm::Vec2f(400, 616), mm::Vec2f(0.0f, 0.0f),
+        CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 5; ++j) {
