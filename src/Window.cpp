@@ -26,12 +26,14 @@ Window::Window(const Window::Settings &settings) :
         mm::Vec2f(450, 550), mm::Vec2f(0.5, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
     _ecs.addComponent(_playerId, SpriteComponent(_blockTexture, 3, 64, 32));
+    _ecs.getComponent<SpriteComponent>(_playerId)->sprite.setOrigin(32, 16);
 
     /* Ball */
     _ecs.addComponent(_ballId, PhysicsComponent(
         mm::Vec2f(400, 300), mm::Vec2f(0.7f, -0.7f),
         CollisionVolume(CollisionVolume::CIRCLE, 16.0f)));
     _ecs.addComponent(_ballId, SpriteComponent(_ballTexture, 0, 32, 32));
+    _ecs.getComponent<SpriteComponent>(_ballId)->sprite.setOrigin(16, 16);
 
     _ecs.addComponent(_ballId, EventComponent());
     _ecs.getComponent<EventComponent>(_ballId)->addHandler<EventHandler_Ball_CollisionEvent>();
@@ -44,6 +46,7 @@ Window::Window(const Window::Settings &settings) :
                 mm::Vec2f(128 + i * 64, 64 + j * 32), mm::Vec2f(0.0f, 0.0f),
                 CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
             _ecs.addComponent(id, SpriteComponent(_blockTexture, (i ^ j) % 4, 64, 32));
+            _ecs.getComponent<SpriteComponent>(id)->sprite.setOrigin(32, 16);
 
             _ecs.addComponent(id, EventComponent());
             _ecs.getComponent<EventComponent>(id)->addHandler<EventHandler_Block_CollisionEvent>();
