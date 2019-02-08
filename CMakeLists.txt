@@ -15,7 +15,6 @@ target_include_directories(ECSTestGame
     PUBLIC
         include
         ext/TemplateECS/src
-        ext/Mycelium/include
 )
 
 # Find and link SFML
