@@ -4,3 +4,6 @@
 [submodule "ext/Mycelium"]
 	path = ext/Mycelium
 	url = git@github.com:Lehdari/Mycelium.git
+[submodule "ext/vecmat"]
+	path = ext/vecmat
+	url = https://github.com/tkln/vecmat
