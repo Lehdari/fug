@@ -27,9 +27,18 @@ public:
 
     void operator()(const EntityId& eId, EventComponent& ec);
 
+    /** sendEvent
+     * @brief   Send event to an entity
+     *
+     * @param   eId   Id of the entity the event is sent to
+     * @param   event Event to be sent
+     */
     template <typename T_Event>
     void sendEvent(const EntityId& eId, const T_Event& event);
-
+    
+    /** clear
+     *  @brief  Clear all events from EventSystem
+     */
     void clear();
 
 private:
