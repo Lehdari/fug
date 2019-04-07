@@ -17,5 +17,15 @@ LOGIC(TestLogic1) {
     double  _testValue;
 };
 
+LOGIC(TestLogic2) {
+    TestLogic2();
+
+    void operator()(Ecs& ecs, const EntityId& eId);
+
+    int  _testValue;
+};
+
+
 
 #endif //ECSTESTGAME_LOGICS_HPP
+
