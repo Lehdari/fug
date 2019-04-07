@@ -111,6 +111,7 @@ template <typename T_Component>
 void Ecs::addComponent(const EntityId& eId, const T_Component& component)
 {
     checkEntityId(eId);
+    auto tId = typeId<T_Component>(); // TEMP
     auto& v = accessComponents<T_Component>();
     ComponentIterator<T_Component> it;
     if (findComponent(v, it, eId))
@@ -167,11 +168,13 @@ template<typename T_Component>
 Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 {
     auto tId = typeId<T_Component>();
-    if (tId == _components.size()) {
-        _components.push_back(new ComponentVector<T_Component>);
+    if (_components.size() <= tId)
+        _components.resize(tId+1, nullptr);
+
+    if (_components[tId] == nullptr) {
+        _components[tId] = new ComponentVector<T_Component>;
         _componentDeleters.push_back(
-            std::bind(&Ecs::deleteComponents<T_Component>,
-                this, (uint64_t)_components.size()-1));
+            std::bind(&Ecs::deleteComponents<T_Component>, this, (uint64_t)tId));
     }
     return *static_cast<ComponentVector<T_Component>*>(_components[tId]);
 }
