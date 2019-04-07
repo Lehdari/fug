@@ -5,6 +5,8 @@
 #include "Window.hpp"
 #include "PhysicsComponent.hpp"
 #include "EventHandlers.hpp"
+#include "LogicComponent.hpp"
+#include "Logics.hpp"
 
 
 Window::Window(const Window::Settings &settings) :
@@ -14,7 +16,8 @@ Window::Window(const Window::Settings &settings) :
     _ballId             (1),
     _spriteRenderer     (_window),
     _eventSystem        (_ecs),
-    _collisionSystem    (_ecs, _eventSystem)
+    _collisionSystem    (_ecs, _eventSystem),
+    _logicSystem        (_ecs)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
@@ -65,6 +68,11 @@ Window::Window(const Window::Settings &settings) :
             _ecs.getComponent<EventComponent>(id)->addHandler<EventHandler_Block_CollisionEvent>();
         }
     }
+
+    _ecs.addComponent<LogicComponent>(500, LogicComponent());
+    _ecs.getComponent<LogicComponent>(500)->addLogic<TestLogic1>();
+    _ecs.addComponent<LogicComponent>(501, LogicComponent());
+    _ecs.getComponent<LogicComponent>(501)->addLogic<TestLogic2>();
 }
 
 void Window::loop(void)
@@ -111,6 +119,7 @@ void Window::runSystems(void)
     _ecs.runSystem(_spriteRenderer);
     _ecs.runSystem(_collisionSystem);
     _ecs.runSystem(_eventSystem);
+    _ecs.runSystem(_logicSystem);
 
     _eventSystem.clear();
 }
