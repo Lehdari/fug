@@ -5,7 +5,7 @@
 #ifndef TEMPLATEECS_TESTS_HPP
 #define TEMPLATEECS_TESTS_HPP
 
-
+void test0();
 void test1();
 void test2();
 

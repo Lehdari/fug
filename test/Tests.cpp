@@ -26,6 +26,24 @@ namespace
     }
 }
 
+void test0()
+{
+    printf("Test0\n");
+    printf("Running systems with some or no components\n");
+    {
+        Ecs ecs;
+        TestSystem1 sys1;
+        TestSystem2 sys2;
+        TestSystem2 sys3;
+
+        ecs.addComponent(0, TestComponent2());
+        ecs.addComponent(1, TestComponent3());
+
+        ecs.runSystem(sys1);
+        ecs.runSystem(sys2);
+        ecs.runSystem(sys3);
+    }
+}
 
 void test1()
 {

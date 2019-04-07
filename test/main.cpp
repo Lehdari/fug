@@ -8,6 +8,8 @@
 
 int main(void) {
 
+    test0();
+    test1();
     test2();
 /*
     Ecs ecs;
