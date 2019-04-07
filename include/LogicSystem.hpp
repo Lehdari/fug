@@ -13,7 +13,12 @@
 
 TECS_SYSTEM(LogicSystem, LogicComponent) {
 public:
+    LogicSystem(Ecs& ecs);
+
     void operator()(const EntityId& eId, LogicComponent& ec);
+
+private:
+    Ecs&    _ecs;
 };
 
 
