@@ -12,6 +12,7 @@
 #include <vector>
 #include <functional>
 #include <tuple>
+#include <iostream> // TEMP
 
 
 class Ecs {
@@ -73,6 +74,7 @@ private:
             it(it), end(end)
         {}
 
+        bool isValid();
         bool increase(const EntityId& eId);
     };
 
@@ -86,6 +88,9 @@ private:
 
     template <typename T_Component>
     void deleteComponents(uint64_t cVectorId);
+
+    template <typename... T_Components>
+    static bool checkIterators(IteratorWrapper<T_Components>&... itWrappers);
 
     template <typename... T_Components>
     static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
@@ -141,6 +146,9 @@ void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
         IteratorWrapper<T_Components>(accessComponents<T_Components>().begin(),
                                       accessComponents<T_Components>().end())...);
 
+    if (!checkIterators(std::get<IteratorWrapper<T_Components>>(cIters)...))
+        return;
+
     for (auto eId : _entityIds) {
         if (increaseIterators<T_Components...>(eId, std::get<IteratorWrapper<T_Components>>(cIters)...))
             system(eId, std::get<IteratorWrapper<T_Components>>(cIters).it->component...);
@@ -187,12 +195,24 @@ void Ecs::deleteComponents(uint64_t cVectorId) {
 }
 
 template<typename T_Component>
+bool Ecs::IteratorWrapper<T_Component>::isValid()
+{
+    return it != end;
+}
+
+template<typename T_Component>
 bool Ecs::IteratorWrapper<T_Component>::increase(const EntityId& eId)
 {
     while (it != end && it->eId < eId)
         ++it;
 
     return (it->eId > eId || it == end) ? false : true;
+}
+
+template<typename... T_Components>
+bool Ecs::checkIterators(IteratorWrapper<T_Components>&... itWrappers)
+{
+    return (itWrappers.isValid() && ...);
 }
 
 template<typename... T_Components>
