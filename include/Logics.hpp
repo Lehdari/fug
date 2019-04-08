@@ -9,22 +9,6 @@
 #include "Logic.hpp"
 
 
-LOGIC(TestLogic1) {
-    TestLogic1();
-
-    void operator()(Ecs& ecs, const EntityId& eId);
-
-    double  _testValue;
-};
-
-LOGIC(TestLogic2) {
-    TestLogic2();
-
-    void operator()(Ecs& ecs, const EntityId& eId);
-
-    int _testValue;
-};
-
 LOGIC(Logic_Ball) {
     Logic_Ball(const EntityId& paddleId);
 

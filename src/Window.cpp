@@ -68,11 +68,6 @@ Window::Window(const Window::Settings &settings) :
             _ecs.getComponent<EventComponent>(id)->addHandler<EventHandler_Block_CollisionEvent>();
         }
     }
-
-    _ecs.addComponent<LogicComponent>(500, LogicComponent());
-    _ecs.getComponent<LogicComponent>(500)->addLogic<TestLogic1>();
-    _ecs.addComponent<LogicComponent>(501, LogicComponent());
-    _ecs.getComponent<LogicComponent>(501)->addLogic<TestLogic2>();
 }
 
 void Window::loop(void)
