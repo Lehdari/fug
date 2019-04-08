@@ -3,6 +3,7 @@
 //
 
 #include "EventSystem.hpp"
+#include "LogicComponent.hpp"
 
 
 EventSystem::EventSystem(Ecs& ecs) :
@@ -20,14 +21,25 @@ void EventSystem::operator()(const EntityId& eId, EventComponent& ec)
 {
     auto& eEvents = _entityEvents[eId]; // entity-specific events
 
+    LogicComponent* lc = nullptr;
+    if (!ec._logicHandlers.empty())
+        lc = _ecs.getComponent<LogicComponent>(eId);
+
     // handle entity-specific events
     for (int64_t etId=0; etId<eEvents.size(); ++etId) {
         // skip event type if no such events has been sent
         // or if no handler for the type is found
-        if (eEvents[etId] == nullptr || ec._handlers.find(etId) == ec._handlers.end())
+        if (eEvents[etId] == nullptr)
             continue;
 
-        ec._handlers[etId](_ecs, eId, eEvents[etId]);
+        if (ec._handlers.find(etId) != ec._handlers.end())
+            ec._handlers[etId](_ecs, eId, eEvents[etId]);
+
+        if (lc == nullptr)
+            continue;
+
+        if (ec._logicHandlers.find(etId) != ec._logicHandlers.end())
+            ec._logicHandlers[etId](_ecs, eId, lc->_logic, eEvents[etId]);
     }
 
     // handle broadcasted events
@@ -36,7 +48,14 @@ void EventSystem::operator()(const EntityId& eId, EventComponent& ec)
             ec._handlers.find(etId) == ec._handlers.end())
             continue;
 
-        ec._handlers[etId](_ecs, eId, _broadcastEvents[etId]);
+        if (ec._handlers.find(etId) != ec._handlers.end())
+            ec._handlers[etId](_ecs, eId, _broadcastEvents[etId]);
+
+        if (lc == nullptr)
+            continue;
+
+        if (ec._logicHandlers.find(etId) != ec._logicHandlers.end())
+            ec._logicHandlers[etId](_ecs, eId, lc->_logic, _broadcastEvents[etId]);
     }
 }
 
