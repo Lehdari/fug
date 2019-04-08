@@ -14,6 +14,7 @@ class Ecs;
 
 struct LogicComponent {
     friend class LogicSystem;
+    friend class EventSystem;
 
     LogicComponent();
 
