@@ -6,6 +6,7 @@
 #define ECSTESTGAME_LOGICCOMPONENT_HPP
 
 
+#include <utility>
 #include <Types.hpp>
 
 
@@ -25,8 +26,8 @@ struct LogicComponent {
 
     ~LogicComponent();
 
-    template <typename T_Logic>
-    void addLogic();
+    template <typename T_Logic, typename... T_Args>
+    void addLogic(T_Args&&... args);
 
 private:
     void*   _logic;
@@ -45,10 +46,10 @@ private:
 };
 
 
-template <typename T_Logic>
-void LogicComponent::addLogic()
+template <typename T_Logic, typename... T_Args>
+void LogicComponent::addLogic(T_Args&&... args)
 {
-    _logic = new T_Logic();
+    _logic = new T_Logic(std::forward<T_Args>(args)...);
     _logicExecutor = &executeLogic<T_Logic>;
     _logicDeleter = &deleteLogic<T_Logic>;
     _logicCopier = &copyLogic<T_Logic>;
@@ -70,8 +71,7 @@ void LogicComponent::deleteLogic(void* logic)
 template <typename T_Logic>
 void LogicComponent::copyLogic(void* logic, LogicComponent& lc)
 {
-    lc.addLogic<T_Logic>();
-    *static_cast<T_Logic*>(lc._logic) = *static_cast<T_Logic*>(logic);
+    lc.addLogic<T_Logic>(*static_cast<T_Logic*>(logic));
 }
 
 
