@@ -30,3 +30,10 @@ void EventHandler_Ball_CollisionEvent::handleEvent(
     auto* phys = ecs.getComponent<PhysicsComponent>(eId);
     phys->vel = 2.0f*dot(event.normal, -phys->vel)*event.normal+phys->vel;
 }
+
+void EventHandler_Ball_LaunchEvent::handleEvent(
+    Ecs& ecs, const EntityId& eId, Logic_Ball& logic, const LaunchEvent& event)
+{
+    ecs.getComponent<PhysicsComponent>(eId)->vel = vm::vec2f(2.0f, -5.0f);
+    logic._followPaddle = false;
+}
