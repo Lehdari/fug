@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_subdirectory(src)
 add_subdirectory(test)
 
-add_library(TemplateECS ${LIBRARY_SOURCES})
+add_library(TemplateECS SHARED ${LIBRARY_SOURCES})
 add_executable(TemplateECS_Test ${TEST_SOURCES})
 
 target_link_libraries(TemplateECS_Test TemplateECS)
