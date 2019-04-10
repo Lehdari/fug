@@ -12,7 +12,6 @@
 #include <vector>
 #include <functional>
 #include <tuple>
-#include <iostream> // TEMP
 
 
 /// Use this in component header files
@@ -120,7 +119,6 @@ template <typename T_Component>
 void Ecs::addComponent(const EntityId& eId, const T_Component& component)
 {
     checkEntityId(eId);
-    auto tId = typeId<T_Component>(); // TEMP
     auto& v = accessComponents<T_Component>();
     ComponentIterator<T_Component> it;
     if (findComponent(v, it, eId))
