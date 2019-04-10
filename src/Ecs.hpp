@@ -15,6 +15,15 @@
 #include <iostream> // TEMP
 
 
+/// Use this in component header files
+#define DECLARE_COMPONENT_TEMPLATES(COMPONENT)\
+    extern template uint64_t Ecs::typeId<COMPONENT>();
+
+/// Use this in component source files
+#define DEFINE_COMPONENT_TEMPLATES(COMPONENT)\
+    template uint64_t Ecs::typeId<COMPONENT>();
+
+
 class Ecs {
 public:
     Ecs();
