@@ -26,13 +26,3 @@ target_link_libraries(ECSTestGame
         sfml-window
         sfml-graphics
         vecmat)
-
-
-#Add Eigen include directory
-find_package(Eigen3 REQUIRED)
-
-if(NOT EIGEN3_INCLUDE_DIR)
-    set(EIGEN3_INCLUDE_DIR "$ENV{EIGEN3_INCLUDE_DIR}")
-endif()
-
-target_include_directories(ECSTestGame PUBLIC ${EIGEN3_INCLUDE_DIR})
