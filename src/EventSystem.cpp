@@ -44,4 +44,6 @@ void EventSystem::clear()
 {
     for (auto& ec : _entityEventClearers)
         ec();
+    for (auto& bc : _broadcastEventClearers)
+        bc();
 }
