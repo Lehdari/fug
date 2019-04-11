@@ -13,9 +13,9 @@
 class Ecs;
 
 
-#define EVENT_HANDLER(HANDLER_NAME, EVENT_TYPE) \
-        struct HANDLER_NAME :\
-        public EventHandler<HANDLER_NAME, EVENT_TYPE> {\
+#define EVENT_HANDLER(HANDLER_TYPE, EVENT_TYPE) \
+        struct HANDLER_TYPE :\
+        public EventHandler<HANDLER_TYPE, EVENT_TYPE> {\
             using EventType = EVENT_TYPE;\
             static void handleEvent(Ecs& ecs, const EntityId& eId, const EVENT_TYPE& event);\
         }
