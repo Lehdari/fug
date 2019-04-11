@@ -3,7 +3,10 @@
 //
 
 #include "Logics.hpp"
+#include "PhysicsComponent.hpp"
 
+#include <Ecs.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <cstdio>
 
 
@@ -36,4 +39,30 @@ void TestLogic2::operator()(Ecs& ecs, const EntityId& eId)
     _testValue++;
     if (_testValue > 500)
         _testValue = 0;
+}
+
+
+Logic_Ball::Logic_Ball(const EntityId& paddleId) :
+    _paddleId       (paddleId),
+    _followPaddle   (true)
+{
+}
+
+void Logic_Ball::operator()(Ecs& ecs, const EntityId& eId)
+{
+    if (_followPaddle) {
+        auto* myPc = ecs.getComponent<PhysicsComponent>(eId);
+        auto* paddlePc = ecs.getComponent<PhysicsComponent>(_paddleId);
+        myPc->pos.x = paddlePc->pos.x;
+    }
+}
+
+
+void Logic_Paddle::operator()(Ecs& ecs, const EntityId& eId)
+{
+    auto* pc = ecs.getComponent<PhysicsComponent>(eId);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && pc->pos.x > 32.0f)
+        pc->pos.x -= 4.0f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && pc->pos.x < 800.0f-32.0f)
+        pc->pos.x += 4.0f;
 }

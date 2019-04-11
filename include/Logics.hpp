@@ -22,9 +22,21 @@ LOGIC(TestLogic2) {
 
     void operator()(Ecs& ecs, const EntityId& eId);
 
-    int  _testValue;
+    int _testValue;
 };
 
+LOGIC(Logic_Ball) {
+    Logic_Ball(const EntityId& paddleId);
+
+    void operator()(Ecs& ecs, const EntityId& eId);
+
+    EntityId    _paddleId;
+    bool        _followPaddle;
+};
+
+LOGIC(Logic_Paddle) {
+    void operator()(Ecs& ecs, const EntityId& eId);
+};
 
 
 #endif //ECSTESTGAME_LOGICS_HPP
