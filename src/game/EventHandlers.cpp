@@ -2,12 +2,12 @@
 // Created by Lehdari on 9.1.2019.
 //
 
-#include "EventHandlers.hpp"
-#include "Ecs.hpp"
-#include "CollisionEvent.hpp"
-#include "PhysicsComponent.hpp"
-#include "SpriteComponent.hpp"
-#include "EventComponent.hpp"
+#include <game/EventHandlers.hpp>
+#include <Ecs.hpp>
+#include <engine/EventComponent.hpp>
+#include <game/CollisionEvent.hpp>
+#include <game/PhysicsComponent.hpp>
+#include <game/SpriteComponent.hpp>
 
 #include <cstdio> // TEMP
 

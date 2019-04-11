@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include <game/Window.hpp>
 
 
 int main(void) {

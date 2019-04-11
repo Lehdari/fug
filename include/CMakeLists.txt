@@ -1,8 +1,10 @@
-# Add headers
-file(GLOB SUB_HEADERS "*.hpp")
+add_subdirectory(engine)
+add_subdirectory(game)
 
-set(EXECUTABLE_SOURCES
-    ${EXECUTABLE_SOURCES}
-    ${SUB_HEADERS}
+set(ENGINE_HEADERS
+    ${ENGINE_HEADERS}
     PARENT_SCOPE)
 
+set(GAME_HEADERS
+    ${GAME_HEADERS}
+    PARENT_SCOPE)

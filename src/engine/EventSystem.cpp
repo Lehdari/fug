@@ -2,8 +2,8 @@
 // Created by Lehdari on 8.1.2019.
 //
 
-#include "EventSystem.hpp"
-#include "LogicComponent.hpp"
+#include <engine/EventSystem.hpp>
+#include <engine/LogicComponent.hpp>
 
 
 EventSystem::EventSystem(Ecs& ecs) :

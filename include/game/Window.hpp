@@ -10,13 +10,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <Ecs.hpp>
+#include <engine/EventSystem.hpp>
+#include <engine/LogicSystem.hpp>
 
 #include "PhysicsSystem.hpp"
 #include "SpriteComponent.hpp"
 #include "SpriteRenderer.hpp"
 #include "CollisionSystem.hpp"
-#include "EventSystem.hpp"
-#include "LogicSystem.hpp"
 
 
 class Window {

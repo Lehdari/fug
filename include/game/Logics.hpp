@@ -6,7 +6,7 @@
 #define ECSTESTGAME_LOGICS_HPP
 
 
-#include "Logic.hpp"
+#include <engine/Logic.hpp>
 
 
 LOGIC(Logic_Ball) {

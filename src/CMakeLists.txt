@@ -1,8 +1,10 @@
-# Add sources
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} SUB_SOURCES)
+add_subdirectory(engine)
+add_subdirectory(game)
 
-set(EXECUTABLE_SOURCES
-    ${EXECUTABLE_SOURCES}
-    ${SUB_SOURCES}
+set(ENGINE_SOURCES
+    ${ENGINE_SOURCES}
     PARENT_SCOPE)
 
+set(GAME_SOURCES
+    ${GAME_SOURCES}
+    PARENT_SCOPE)

@@ -2,7 +2,7 @@
 // Created by Lehdari on 6.4.2019.
 //
 
-#include "LogicSystem.hpp"
+#include <engine/LogicSystem.hpp>
 
 
 LogicSystem::LogicSystem(Ecs& ecs) :

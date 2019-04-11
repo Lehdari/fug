@@ -2,7 +2,10 @@
 // Created by Lehdari on 6.4.2019.
 //
 
-#include "LogicComponent.hpp"
+#include <engine/LogicComponent.hpp>
+
+
+DEFINE_COMPONENT_TEMPLATES(LogicComponent);
 
 
 LogicComponent::LogicComponent() :
