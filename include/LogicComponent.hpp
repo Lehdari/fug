@@ -8,9 +8,7 @@
 
 #include <utility>
 #include <Types.hpp>
-
-
-class Ecs;
+#include <Ecs.hpp>
 
 
 struct LogicComponent {
@@ -44,6 +42,9 @@ private:
     template <typename T_Logic>
     static void copyLogic(void* logic, LogicComponent& lc);
 };
+
+
+DECLARE_COMPONENT_TEMPLATES(LogicComponent);
 
 
 template <typename T_Logic, typename... T_Args>

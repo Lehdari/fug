@@ -9,11 +9,9 @@
 #include "EventTypeId.hpp"
 #include "EventHandler.hpp"
 
+#include <Ecs.hpp>
 #include <unordered_map>
 #include <vector>
-
-
-class Ecs;
 
 
 class EventComponent {
@@ -30,6 +28,9 @@ private:
     std::unordered_map<int64_t, Handler>        _handlers;
     std::unordered_map<int64_t, LogicHandler>   _logicHandlers;
 };
+
+
+DECLARE_COMPONENT_TEMPLATES(EventComponent);
 
 
 template <typename T_Handler>

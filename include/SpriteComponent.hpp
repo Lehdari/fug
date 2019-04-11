@@ -1,7 +1,10 @@
 #ifndef SPRITECOMPONENT_HPP
 #define SPRITECOMPONENT_HPP
 
+
+#include <Ecs.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+
 
 struct SpriteComponent {
     SpriteComponent(sf::Texture &texture, int idx, int w, int h) :
@@ -13,5 +16,9 @@ struct SpriteComponent {
     int idx;
     sf::Sprite sprite;
 };
+
+
+DECLARE_COMPONENT_TEMPLATES(SpriteComponent);
+
 
 #endif
