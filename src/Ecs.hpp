@@ -216,7 +216,7 @@ bool Ecs::IteratorWrapper<T_Component>::increase(const EntityId& eId)
     while (it != end && it->eId < eId)
         ++it;
 
-    return (it->eId > eId || it == end) ? false : true;
+    return (it == end || it->eId > eId) ? false : true;
 }
 
 template<typename... T_Components>
