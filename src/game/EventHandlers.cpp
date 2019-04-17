@@ -10,8 +10,6 @@
 #include <game/SpriteComponent.hpp>
 #include <game/SystemComponent.hpp>
 
-#include <cstdio> // TEMP
-
 
 DEFINE_EVENT_TEMPLATES(LaunchEvent);
 DEFINE_EVENT_TEMPLATES(BreakEvent);
@@ -20,9 +18,6 @@ DEFINE_EVENT_TEMPLATES(BreakEvent);
 void EventHandler_Block_CollisionEvent::handleEvent(
     Ecs& ecs, const EntityId& eId, const CollisionEvent& event)
 {
-//    printf("Collision (Block): %lld and %lld\n", eId, event.entityId);
-//    printf("Normal: [ %5.3f %5.3f ]\n", event.normal(0), event.normal(1));
-
     auto* sc = ecs.getSingleton<SystemComponent>();
     sc->eventSystem->broadcastEvent(BreakEvent());
 
@@ -34,8 +29,6 @@ void EventHandler_Block_CollisionEvent::handleEvent(
 void EventHandler_Ball_CollisionEvent::handleEvent(
     Ecs& ecs, const EntityId& eId, const CollisionEvent& event)
 {
-//    printf("Collision (Ball): %lld and %lld\n", eId, event.entityId);
-//    printf("Normal: [ %5.3f %5.3f ]\n", event.normal(0), event.normal(1));
     auto* phys = ecs.getComponent<PhysicsComponent>(eId);
     phys->vel = 2.0f*dot(event.normal, -phys->vel)*event.normal+phys->vel;
 }
