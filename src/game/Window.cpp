@@ -8,15 +8,12 @@
 #include <game/EventHandlers.hpp>
 #include <game/Logics.hpp>
 #include <game/EntityIdComponent.hpp>
+#include <game/SystemComponent.hpp>
 
 
 Window::Window(const Window::Settings &settings) :
     _settings           (settings),
-    _window             (_settings.videoMode, _settings.windowName),
-    _spriteRenderer     (_window),
-    _eventSystem        (_ecs),
-    _collisionSystem    (_ecs, _eventSystem),
-    _logicSystem        (_ecs)
+    _window             (_settings.videoMode, _settings.windowName)
 {
     _window.setFramerateLimit(_settings.framerateLimit);
 
@@ -30,6 +27,13 @@ Window::Window(const Window::Settings &settings) :
     paddleId = 0;
     ballId = 1;
     gameManagerId = 2;
+
+    auto* sComp = _ecs.getSingleton<SystemComponent>();
+    sComp->physicsSystem = std::make_unique<PhysicsSystem>();
+    sComp->spriteRenderer = std::make_unique<SpriteRenderer>(_window);
+    sComp->eventSystem = std::make_unique<EventSystem>(_ecs);
+    sComp->logicSystem = std::make_unique<LogicSystem>(_ecs);
+    sComp->collisionSystem = std::make_unique<CollisionSystem>(_ecs, *sComp->eventSystem);
 
 
     /* Player */
@@ -109,6 +113,9 @@ void Window::handleEvents(sf::Event &event)
     static auto* eIdComp = _ecs.getSingleton<EntityIdComponent>();
     static auto& ballId = eIdComp->ballId;
 
+    static auto* sComp = _ecs.getSingleton<SystemComponent>();
+    static auto& eventSystem = *sComp->eventSystem;
+
     switch (event.type) {
         case sf::Event::Closed:
             _window.close();
@@ -121,7 +128,7 @@ void Window::handleEvents(sf::Event &event)
                     break;
 
                 case sf::Keyboard::Space:
-                    _eventSystem.sendEvent(ballId, LaunchEvent());
+                    eventSystem.sendEvent(ballId, LaunchEvent());
             }
             break;
 
@@ -132,13 +139,20 @@ void Window::handleEvents(sf::Event &event)
 
 void Window::runSystems(void)
 {
-    _ecs.runSystem(_physicsSystem);
-    _ecs.runSystem(_spriteRenderer);
-    _ecs.runSystem(_collisionSystem);
-    _ecs.runSystem(_eventSystem);
-    _ecs.runSystem(_logicSystem);
+    static auto* sComp = _ecs.getSingleton<SystemComponent>();
+    static auto& physicsSystem = *sComp->physicsSystem;
+    static auto& spriteRenderer = *sComp->spriteRenderer;
+    static auto& collisionSystem = *sComp->collisionSystem;
+    static auto& eventSystem = *sComp->eventSystem;
+    static auto& logicSystem = *sComp->logicSystem;
 
-    _eventSystem.clear();
+    _ecs.runSystem(physicsSystem);
+    _ecs.runSystem(spriteRenderer);
+    _ecs.runSystem(collisionSystem);
+    _ecs.runSystem(eventSystem);
+    _ecs.runSystem(logicSystem);
+
+    eventSystem.clear();
 }
 
 void Window::render(void)

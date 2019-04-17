@@ -44,11 +44,6 @@ private:
     sf::RenderWindow    _window;
 
     Ecs             _ecs;
-    EventSystem     _eventSystem;
-    PhysicsSystem   _physicsSystem;
-    SpriteRenderer  _spriteRenderer;
-    CollisionSystem _collisionSystem;
-    LogicSystem     _logicSystem;
 
     sf::Texture _blockTexture;
     sf::Texture _ballTexture;
