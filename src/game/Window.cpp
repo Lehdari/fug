@@ -7,13 +7,12 @@
 #include <game/PhysicsComponent.hpp>
 #include <game/EventHandlers.hpp>
 #include <game/Logics.hpp>
+#include <game/EntityIdComponent.hpp>
 
 
 Window::Window(const Window::Settings &settings) :
     _settings           (settings),
     _window             (_settings.videoMode, _settings.windowName),
-    _playerId           (0),
-    _ballId             (1),
     _spriteRenderer     (_window),
     _eventSystem        (_ecs),
     _collisionSystem    (_ecs, _eventSystem),
@@ -24,26 +23,32 @@ Window::Window(const Window::Settings &settings) :
     _blockTexture.loadFromFile("../res/gfx/blocks.png");
     _ballTexture.loadFromFile("../res/gfx/ball.png");
 
+    auto* eIdComp = _ecs.getSingleton<EntityIdComponent>();
+    auto& paddleId = eIdComp->paddleId;
+    auto& ballId = eIdComp->ballId;
+    paddleId = 0;
+    ballId = 1;
+
     /* Player */
-    _ecs.addComponent(_playerId, PhysicsComponent(
+    _ecs.addComponent(paddleId, PhysicsComponent(
         vm::vec2f(400, 550), vm::vec2f(0.0, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
-    _ecs.addComponent(_playerId, SpriteComponent(_blockTexture, 3, 64, 32));
-    _ecs.getComponent<SpriteComponent>(_playerId)->sprite.setOrigin(32, 16);
-    _ecs.addComponent(_playerId, LogicComponent());
-    _ecs.getComponent<LogicComponent>(_playerId)->addLogic<Logic_Paddle>();
+    _ecs.addComponent(paddleId, SpriteComponent(_blockTexture, 3, 64, 32));
+    _ecs.getComponent<SpriteComponent>(paddleId)->sprite.setOrigin(32, 16);
+    _ecs.addComponent(paddleId, LogicComponent());
+    _ecs.getComponent<LogicComponent>(paddleId)->addLogic<Logic_Paddle>();
 
     /* Ball */
-    _ecs.addComponent(_ballId, PhysicsComponent(
+    _ecs.addComponent(ballId, PhysicsComponent(
         vm::vec2f(400, 518), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::CIRCLE, 16.0f)));
-    _ecs.addComponent(_ballId, SpriteComponent(_ballTexture, 0, 32, 32));
-    _ecs.getComponent<SpriteComponent>(_ballId)->sprite.setOrigin(16, 16);
-    _ecs.addComponent(_ballId, EventComponent());
-    _ecs.getComponent<EventComponent>(_ballId)->addHandler<EventHandler_Ball_CollisionEvent>();
-    _ecs.getComponent<EventComponent>(_ballId)->addHandler<EventHandler_Ball_LaunchEvent>();
-    _ecs.addComponent(_ballId, LogicComponent());
-    _ecs.getComponent<LogicComponent>(_ballId)->addLogic<Logic_Ball>(_playerId);
+    _ecs.addComponent(ballId, SpriteComponent(_ballTexture, 0, 32, 32));
+    _ecs.getComponent<SpriteComponent>(ballId)->sprite.setOrigin(16, 16);
+    _ecs.addComponent(ballId, EventComponent());
+    _ecs.getComponent<EventComponent>(ballId)->addHandler<EventHandler_Ball_CollisionEvent>();
+    _ecs.getComponent<EventComponent>(ballId)->addHandler<EventHandler_Ball_LaunchEvent>();
+    _ecs.addComponent(ballId, LogicComponent());
+    _ecs.getComponent<LogicComponent>(ballId)->addLogic<Logic_Ball>(paddleId);
 
     /* Walls */
     _ecs.addComponent(2, PhysicsComponent(
@@ -94,6 +99,9 @@ void Window::loop(void)
 
 void Window::handleEvents(sf::Event &event)
 {
+    static auto* eIdComp = _ecs.getSingleton<EntityIdComponent>();
+    static auto& ballId = eIdComp->ballId;
+
     switch (event.type) {
         case sf::Event::Closed:
             _window.close();
@@ -106,7 +114,7 @@ void Window::handleEvents(sf::Event &event)
                     break;
 
                 case sf::Keyboard::Space:
-                    _eventSystem.sendEvent(_ballId, LaunchEvent());
+                    _eventSystem.sendEvent(ballId, LaunchEvent());
             }
             break;
 
