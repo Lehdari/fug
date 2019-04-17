@@ -9,7 +9,7 @@ set(LIBRARY_SOURCES
 
 #   add headers
 
-file(GLOB SUB_HEADERS "*.hpp")
+file(GLOB SUB_HEADERS "*.hpp" "*.inl")
 
 set(LIBRARY_SOURCES
     ${LIBRARY_SOURCES}
