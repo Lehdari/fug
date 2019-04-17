@@ -23,6 +23,7 @@ EVENT_LOGIC_HANDLER(EventHandler_Ball_LaunchEvent, LaunchEvent, Logic_Ball);
 
 struct BreakEvent {};
 DECLARE_EVENT_TEMPLATES(BreakEvent);
+EVENT_LOGIC_HANDLER(EventHandler_GameManager_BreakEvent, BreakEvent, Logic_GameManager);
 
 
 #endif //ECSTESTGAME_EVENTHANDLERS_HPP

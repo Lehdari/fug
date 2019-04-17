@@ -46,3 +46,10 @@ void EventHandler_Ball_LaunchEvent::handleEvent(
     ecs.getComponent<PhysicsComponent>(eId)->vel = vm::vec2f(2.0f, -5.0f);
     logic._followPaddle = false;
 }
+
+void EventHandler_GameManager_BreakEvent::handleEvent(
+    Ecs& ecs, const EntityId& eId, Logic_GameManager& logic,
+    const BreakEvent& event)
+{
+    ++logic._points;
+}

@@ -60,6 +60,9 @@ Window::Window(const Window::Settings &settings) :
     /* Game Manager */
     _ecs.addComponent(gameManagerId, LogicComponent());
     _ecs.getComponent<LogicComponent>(gameManagerId)->addLogic<Logic_GameManager>(_window);
+    _ecs.addComponent(gameManagerId, EventComponent());
+    _ecs.getComponent<EventComponent>(gameManagerId)->
+        addHandler<EventHandler_GameManager_BreakEvent>();
 
     /* Walls */
     _ecs.addComponent(3, PhysicsComponent(
