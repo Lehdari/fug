@@ -11,6 +11,7 @@ int main(void) {
     test0();
     test1();
     test2();
+    test3();
 /*
     Ecs ecs;
     ecs.addComponent(3, TestComponent1());
