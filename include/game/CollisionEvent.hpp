@@ -6,6 +6,7 @@
 #define ECSTESTGAME_COLLISIONEVENT_HPP
 
 
+#include <engine/EventTypeId.hpp>
 #include <Types.hpp>
 #include <vec2f.h>
 
@@ -20,6 +21,9 @@ struct CollisionEvent {
         normal      (normal)
     {}
 };
+
+
+DECLARE_EVENT_TEMPLATES(CollisionEvent);
 
 
 #endif //ECSTESTGAME_COLLISIONEVENT_HPP

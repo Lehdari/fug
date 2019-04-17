@@ -8,8 +8,12 @@
 #include <game/CollisionEvent.hpp>
 #include <game/PhysicsComponent.hpp>
 #include <game/SpriteComponent.hpp>
+#include <game/SystemComponent.hpp>
 
 #include <cstdio> // TEMP
+
+
+DEFINE_EVENT_TEMPLATES(LaunchEvent);
 
 
 void EventHandler_Block_CollisionEvent::handleEvent(
