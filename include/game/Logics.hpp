@@ -7,6 +7,7 @@
 
 
 #include <engine/Logic.hpp>
+#include <SFML/Graphics.hpp>
 
 
 LOGIC(Logic_Ball) {
@@ -20,6 +21,20 @@ LOGIC(Logic_Ball) {
 
 LOGIC(Logic_Paddle) {
     void operator()(Ecs& ecs, const EntityId& eId);
+};
+
+LOGIC(Logic_GameManager) {
+    Logic_GameManager(sf::RenderWindow& window);
+
+    void operator()(Ecs& ecs, const EntityId& eId);
+
+    static sf::Font     __font;
+    static sf::Font initFont();
+
+    sf::RenderWindow&   _window;
+    sf::Text            _text;
+
+    int64_t             _points;
 };
 
 
