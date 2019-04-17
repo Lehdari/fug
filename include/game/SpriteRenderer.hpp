@@ -4,7 +4,7 @@
 #include "PhysicsComponent.hpp"
 #include "SpriteComponent.hpp"
 
-#include <SFML/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 TECS_SYSTEM(SpriteRenderer, PhysicsComponent, SpriteComponent) {
