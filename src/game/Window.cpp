@@ -26,8 +26,11 @@ Window::Window(const Window::Settings &settings) :
     auto* eIdComp = _ecs.getSingleton<EntityIdComponent>();
     auto& paddleId = eIdComp->paddleId;
     auto& ballId = eIdComp->ballId;
+    auto& gameManagerId = eIdComp->gameManagerId;
     paddleId = 0;
     ballId = 1;
+    gameManagerId = 2;
+
 
     /* Player */
     _ecs.addComponent(paddleId, PhysicsComponent(
@@ -50,23 +53,27 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(ballId, LogicComponent());
     _ecs.getComponent<LogicComponent>(ballId)->addLogic<Logic_Ball>(paddleId);
 
+    /* Game Manager */
+    _ecs.addComponent(gameManagerId, LogicComponent());
+    _ecs.getComponent<LogicComponent>(gameManagerId)->addLogic<Logic_GameManager>(_window);
+
     /* Walls */
-    _ecs.addComponent(2, PhysicsComponent(
+    _ecs.addComponent(3, PhysicsComponent(
         vm::vec2f(-16, 300), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 332.0f)));
-    _ecs.addComponent(3, PhysicsComponent(
+    _ecs.addComponent(4, PhysicsComponent(
         vm::vec2f(816, 300), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 332.0f)));
-    _ecs.addComponent(4, PhysicsComponent(
+    _ecs.addComponent(5, PhysicsComponent(
         vm::vec2f(400, -16), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
-    _ecs.addComponent(5, PhysicsComponent(
+    _ecs.addComponent(6, PhysicsComponent(
         vm::vec2f(400, 648), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 5; ++j) {
-            uint64_t id = i * 8 + j + 6;
+            uint64_t id = i * 8 + j + 7;
             _ecs.addComponent(id, PhysicsComponent(
                 vm::vec2f(176 + i * 64, 64 + j * 32), vm::vec2f(0.0f, 0.0f),
                 CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
