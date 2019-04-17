@@ -12,6 +12,7 @@
 struct EntityIdComponent {
     uint64_t    paddleId;
     uint64_t    ballId;
+    uint64_t    gameManagerId;
 };
 
 
