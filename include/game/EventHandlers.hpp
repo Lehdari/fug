@@ -21,5 +21,8 @@ struct LaunchEvent {};
 DECLARE_EVENT_TEMPLATES(LaunchEvent);
 EVENT_LOGIC_HANDLER(EventHandler_Ball_LaunchEvent, LaunchEvent, Logic_Ball);
 
+struct BreakEvent {};
+DECLARE_EVENT_TEMPLATES(BreakEvent);
+
 
 #endif //ECSTESTGAME_EVENTHANDLERS_HPP

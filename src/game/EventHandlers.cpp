@@ -14,6 +14,7 @@
 
 
 DEFINE_EVENT_TEMPLATES(LaunchEvent);
+DEFINE_EVENT_TEMPLATES(BreakEvent);
 
 
 void EventHandler_Block_CollisionEvent::handleEvent(
@@ -21,6 +22,10 @@ void EventHandler_Block_CollisionEvent::handleEvent(
 {
 //    printf("Collision (Block): %lld and %lld\n", eId, event.entityId);
 //    printf("Normal: [ %5.3f %5.3f ]\n", event.normal(0), event.normal(1));
+
+    auto* sc = ecs.getSingleton<SystemComponent>();
+    sc->eventSystem->broadcastEvent(BreakEvent());
+
     ecs.removeComponent<PhysicsComponent>(eId);
     ecs.removeComponent<SpriteComponent>(eId);
     ecs.removeComponent<EventComponent>(eId);
