@@ -9,6 +9,15 @@
 #include <cstdint>
 
 
+/// Use this in component header files
+#define DECLARE_EVENT_TEMPLATES(EVENT_TYPE)\
+    extern template int64_t EventTypeId::typeId<EVENT_TYPE>();
+
+/// Use this in component source files
+#define DEFINE_EVENT_TEMPLATES(EVENT_TYPE)\
+    template int64_t EventTypeId::typeId<EVENT_TYPE>();
+
+
 class EventTypeId {
 public:
     template <typename T_EventType>
