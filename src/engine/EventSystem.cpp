@@ -20,6 +20,8 @@ EventSystem::~EventSystem()
 {
     for (auto& ed : _entityEventDeleters)
         ed();
+    for (auto& bd : _broadcastEventDeleters)
+        bd();
 }
 
 void EventSystem::operator()(const EntityId& eId, EventComponent& ec)
