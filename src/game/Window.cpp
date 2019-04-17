@@ -149,10 +149,9 @@ void Window::runSystems(void)
     _ecs.runSystem(physicsSystem);
     _ecs.runSystem(spriteRenderer);
     _ecs.runSystem(collisionSystem);
-    _ecs.runSystem(eventSystem);
     _ecs.runSystem(logicSystem);
-
-    eventSystem.clear();
+    while (eventSystem.swap())
+        _ecs.runSystem(eventSystem);
 }
 
 void Window::render(void)
