@@ -48,15 +48,15 @@ Window::Window(const Window::Settings &settings) :
     /* Walls */
     _ecs.addComponent(2, PhysicsComponent(
         vm::vec2f(-16, 300), vm::vec2f(0.0f, 0.0f),
-        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
+        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 332.0f)));
     _ecs.addComponent(3, PhysicsComponent(
         vm::vec2f(816, 300), vm::vec2f(0.0f, 0.0f),
-        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 300.0f)));
+        CollisionVolume(CollisionVolume::BOX, -16.0f, -300.0f, 16.0f, 332.0f)));
     _ecs.addComponent(4, PhysicsComponent(
         vm::vec2f(400, -16), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
     _ecs.addComponent(5, PhysicsComponent(
-        vm::vec2f(400, 616), vm::vec2f(0.0f, 0.0f),
+        vm::vec2f(400, 648), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
 
     for (int i = 0; i < 8; ++i) {
