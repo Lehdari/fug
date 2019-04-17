@@ -9,6 +9,7 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
+#include <cassert>
 
 
 namespace
@@ -204,4 +205,18 @@ void test2()
         dt = diff.count();
         printf("%0.2f ms (%0.4f us per component)\n", dt*1000, (dt*1000000)/nDel);
     }
+}
+
+void test3()
+{
+    Ecs ecs;
+    auto* tc1 = ecs.getSingleton<TestComponent1>();
+    auto* tc2 = ecs.getSingleton<TestComponent2>();
+    auto* tc3 = ecs.getSingleton<TestComponent1>();
+
+    assert((void*)tc1 != (void*)tc2);
+    assert(tc1 == tc3);
+
+    tc1->a = 3;
+    assert(ecs.getSingleton<TestComponent1>()->a == 3);
 }
