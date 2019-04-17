@@ -16,4 +16,7 @@ Ecs::~Ecs()
 {
     for (auto& cd : _componentDeleters)
         cd();
+
+    for (auto& sd : _singletonDeleters)
+        sd();
 }

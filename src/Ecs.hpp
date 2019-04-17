@@ -45,6 +45,10 @@ public:
     template <typename T_Component>
     void removeComponent(const EntityId& eId);
 
+    /// Get singleton component
+    template <typename T_Component>
+    T_Component* getSingleton();
+
     /// Run system
     template <typename T_DerivedSystem, typename... T_Components>
     void runSystem(System<T_DerivedSystem, T_Components...>& system);
@@ -103,12 +107,23 @@ private:
     template <typename... T_Components>
     static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
 
+    /// Singleton component handling stuff
+    template <typename T_Component>
+    T_Component& accessSingleton();
+
+    template <typename T_Component>
+    void deleteSingleton(uint64_t cId);
+
     /// Entity ID handling stuff
     inline void checkEntityId(const EntityId& eId);
 
     /// Component vector handling data structures
     std::vector<void*>                  _components;
     std::vector<std::function<void()>>  _componentDeleters;
+
+    /// Singleton component data structures
+    std::vector<void*>                  _singletons;
+    std::vector<std::function<void()>>  _singletonDeleters;
 
     /// Entity ID storage
     std::vector<EntityId>               _entityIds;

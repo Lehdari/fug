@@ -35,6 +35,12 @@ void Ecs::removeComponent(const EntityId& eId)
         v.erase(it);
 }
 
+template<typename T_Component>
+T_Component* Ecs::getSingleton()
+{
+    return &accessSingleton<T_Component>();
+}
+
 template <typename T_DerivedSystem, typename... T_Components>
 void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
 {
@@ -117,6 +123,28 @@ template<typename... T_Components>
 bool Ecs::increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers)
 {
     return (itWrappers.increase(eId) && ...);
+}
+
+template<typename T_Component>
+T_Component& Ecs::accessSingleton()
+{
+    auto tId = typeId<T_Component>();
+    if (_singletons.size() <= tId)
+        _singletons.resize(tId+1, nullptr);
+
+    if (_singletons[tId] == nullptr) {
+        _singletons[tId] = new T_Component;
+        _singletonDeleters.push_back(
+            std::bind(&Ecs::deleteSingleton<T_Component>, this, (uint64_t)tId));
+    }
+    return *static_cast<T_Component*>(_singletons[tId]);
+
+}
+
+template <typename T_Component>
+void Ecs::deleteSingleton(uint64_t cId)
+{
+    delete static_cast<T_Component*>(_singletons.at(cId));
 }
 
 void Ecs::checkEntityId(const EntityId& eId)
