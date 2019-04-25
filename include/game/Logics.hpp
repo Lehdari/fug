@@ -24,7 +24,7 @@ LOGIC(Logic_Paddle) {
 };
 
 LOGIC(Logic_GameManager) {
-    Logic_GameManager(sf::RenderWindow& window);
+    Logic_GameManager(sf::RenderWindow& window, sf::Texture& blockTexture);
 
     void operator()(Ecs& ecs, const EntityId& eId);
 
@@ -32,6 +32,8 @@ LOGIC(Logic_GameManager) {
     static sf::Font initFont();
 
     sf::RenderWindow&   _window;
+    sf::Texture&        _blockTexture;
+    
     sf::Text            _text;
 
     int64_t             _points;

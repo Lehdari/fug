@@ -37,10 +37,12 @@ void Logic_Paddle::operator()(Ecs& ecs, const EntityId& eId)
 
 sf::Font Logic_GameManager::__font = initFont();
 
-Logic_GameManager::Logic_GameManager(sf::RenderWindow& window) :
-    _window (window),
-    _points (0),
-    _lives  (3)
+Logic_GameManager::Logic_GameManager(
+    sf::RenderWindow& window, sf::Texture& blockTexture) :
+    _window         (window),
+    _blockTexture   (blockTexture),
+    _points         (0),
+    _lives          (3)
 {
     _text.setPosition(8.0f, 570.0f);
     _text.setFillColor(sf::Color::White);
