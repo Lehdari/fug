@@ -13,6 +13,7 @@
 
 DEFINE_EVENT_TEMPLATES(LaunchEvent);
 DEFINE_EVENT_TEMPLATES(BreakEvent);
+DEFINE_EVENT_TEMPLATES(LoseLifeEvent);
 
 
 void EventHandler_Block_CollisionEvent::handleEvent(
