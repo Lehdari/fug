@@ -59,8 +59,31 @@ void EventHandler_GameManager_LoseLifeEvent::handleEvent(
     Ecs& ecs, const EntityId& eId, Logic_GameManager& logic,
     const LoseLifeEvent& event)
 {
-    if (logic._lives > 0)
+    if (logic._lives > 0) {
         --logic._lives;
+    }
+    else {
+        logic._lives = 3;
+        logic._points = 0;
+
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 5; ++j) {
+                uint64_t id = i * 8 + j + 7;
+
+                if (ecs.getComponent<PhysicsComponent>(id))
+                    continue;
+
+                ecs.addComponent(id, PhysicsComponent(
+                    vm::vec2f(176 + i * 64, 64 + j * 32), vm::vec2f(0.0f, 0.0f),
+                    CollisionVolume(CollisionVolume::BOX, -32.0f, -16.0f, 32.0f, 16.0f)));
+                ecs.addComponent(id, SpriteComponent(logic._blockTexture, (i ^ j) % 4, 64, 32));
+                ecs.getComponent<SpriteComponent>(id)->sprite.setOrigin(32, 16);
+
+                ecs.addComponent(id, EventComponent());
+                ecs.getComponent<EventComponent>(id)->addHandler<EventHandler_Block_CollisionEvent>();
+            }
+        }
+    }
 }
 
 void EventHandler_Ball_LoseLifeEvent::handleEvent(
