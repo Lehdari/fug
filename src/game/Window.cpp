@@ -54,6 +54,7 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(ballId, EventComponent());
     _ecs.getComponent<EventComponent>(ballId)->addHandler<EventHandler_Ball_CollisionEvent>();
     _ecs.getComponent<EventComponent>(ballId)->addHandler<EventHandler_Ball_LaunchEvent>();
+    _ecs.getComponent<EventComponent>(ballId)->addHandler<EventHandler_Ball_LoseLifeEvent>();
     _ecs.addComponent(ballId, LogicComponent());
     _ecs.getComponent<LogicComponent>(ballId)->addLogic<Logic_Ball>(paddleId);
 
