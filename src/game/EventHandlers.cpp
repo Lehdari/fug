@@ -47,3 +47,11 @@ void EventHandler_GameManager_BreakEvent::handleEvent(
 {
     ++logic._points;
 }
+
+void EventHandler_GameManager_LoseLifeEvent::handleEvent(
+    Ecs& ecs, const EntityId& eId, Logic_GameManager& logic,
+    const LoseLifeEvent& event)
+{
+    if (logic._lives > 0)
+        --logic._lives;
+}

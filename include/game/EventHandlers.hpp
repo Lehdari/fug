@@ -27,6 +27,9 @@ EVENT_LOGIC_HANDLER(EventHandler_GameManager_BreakEvent, BreakEvent, Logic_GameM
 
 struct LoseLifeEvent {};
 DECLARE_EVENT_TEMPLATES(LoseLifeEvent);
+EVENT_LOGIC_HANDLER(
+    EventHandler_GameManager_LoseLifeEvent,
+    LoseLifeEvent, Logic_GameManager);
 
 
 #endif //ECSTESTGAME_EVENTHANDLERS_HPP
