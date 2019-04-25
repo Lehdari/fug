@@ -31,6 +31,9 @@ DECLARE_EVENT_TEMPLATES(LoseLifeEvent);
 EVENT_LOGIC_HANDLER(
     EventHandler_GameManager_LoseLifeEvent,
     LoseLifeEvent, Logic_GameManager);
+EVENT_LOGIC_HANDLER(
+    EventHandler_Ball_LoseLifeEvent,
+    LoseLifeEvent, Logic_Ball);
 
 
 #endif //ECSTESTGAME_EVENTHANDLERS_HPP

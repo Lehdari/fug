@@ -62,3 +62,14 @@ void EventHandler_GameManager_LoseLifeEvent::handleEvent(
     if (logic._lives > 0)
         --logic._lives;
 }
+
+void EventHandler_Ball_LoseLifeEvent::handleEvent(
+    Ecs& ecs, const EntityId& eId, Logic_Ball& logic,
+    const LoseLifeEvent& event)
+{
+    logic._followPaddle = true;
+    auto* pc = ecs.getComponent<PhysicsComponent>(eId);
+    pc->pos.x = ecs.getComponent<PhysicsComponent>(logic._paddleId)->pos.x;
+    pc->pos.y = 518;
+    pc->vel = vm::vec2f(0.0f, 0.0f);
+}
