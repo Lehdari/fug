@@ -77,6 +77,8 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(6, PhysicsComponent(
         vm::vec2f(400, 648), vm::vec2f(0.0f, 0.0f),
         CollisionVolume(CollisionVolume::BOX, -400.0f, -16.0f, 400.0f, 16.0f)));
+    _ecs.addComponent(6, EventComponent());
+        _ecs.getComponent<EventComponent>(6)->addHandler<EventHandler_BottomWall_CollisionEvent>();
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 5; ++j) {
