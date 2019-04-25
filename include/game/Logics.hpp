@@ -35,6 +35,7 @@ LOGIC(Logic_GameManager) {
     sf::Text            _text;
 
     int64_t             _points;
+    int64_t             _lives;
 };
 
 

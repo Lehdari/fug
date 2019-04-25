@@ -39,7 +39,8 @@ sf::Font Logic_GameManager::__font = initFont();
 
 Logic_GameManager::Logic_GameManager(sf::RenderWindow& window) :
     _window (window),
-    _points (0)
+    _points (0),
+    _lives  (3)
 {
     _text.setPosition(8.0f, 570.0f);
     _text.setFillColor(sf::Color::White);
@@ -50,7 +51,7 @@ Logic_GameManager::Logic_GameManager(sf::RenderWindow& window) :
 void Logic_GameManager::operator()(Ecs& ecs, const EntityId& eId)
 {
     std::stringstream text;
-    text << "Points: " << _points;
+    text << "Lives: " << _lives << "\tPoints: " << _points;
     _text.setString(text.str());
     _window.draw(_text);
 }
