@@ -63,6 +63,8 @@ Window::Window(const Window::Settings &settings) :
     _ecs.addComponent(gameManagerId, EventComponent());
     _ecs.getComponent<EventComponent>(gameManagerId)->
         addHandler<EventHandler_GameManager_BreakEvent>();
+    _ecs.getComponent<EventComponent>(gameManagerId)->
+        addHandler<EventHandler_GameManager_LoseLifeEvent>();
 
     /* Walls */
     _ecs.addComponent(3, PhysicsComponent(
