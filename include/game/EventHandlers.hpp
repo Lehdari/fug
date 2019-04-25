@@ -16,6 +16,7 @@
 
 EVENT_HANDLER(EventHandler_Block_CollisionEvent, CollisionEvent);
 EVENT_HANDLER(EventHandler_Ball_CollisionEvent, CollisionEvent);
+EVENT_HANDLER(EventHandler_BottomWall_CollisionEvent, CollisionEvent);
 
 struct LaunchEvent {};
 DECLARE_EVENT_TEMPLATES(LaunchEvent);

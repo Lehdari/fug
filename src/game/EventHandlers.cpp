@@ -34,6 +34,13 @@ void EventHandler_Ball_CollisionEvent::handleEvent(
     phys->vel = 2.0f*dot(event.normal, -phys->vel)*event.normal+phys->vel;
 }
 
+void EventHandler_BottomWall_CollisionEvent::handleEvent(
+    Ecs& ecs, const EntityId& eId, const CollisionEvent& event)
+{
+    auto* sc = ecs.getSingleton<SystemComponent>();
+    sc->eventSystem->broadcastEvent(LoseLifeEvent());
+}
+
 void EventHandler_Ball_LaunchEvent::handleEvent(
     Ecs& ecs, const EntityId& eId, Logic_Ball& logic, const LaunchEvent& event)
 {
