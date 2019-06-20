@@ -98,8 +98,13 @@ private:
                        ComponentIterator<T_Component>& it,
                        const EntityId& eId);
 
+    /// Delete component vectors
     template <typename T_Component>
     void deleteComponents(uint64_t cVectorId);
+
+    /// Remove all components marked to be removed
+    template <typename T_Component>
+    void removeComponents();
 
     template <typename... T_Components>
     static bool checkIterators(IteratorWrapper<T_Components>&... itWrappers);
@@ -119,6 +124,7 @@ private:
 
     /// Component vector handling data structures
     std::vector<void*>                  _components;
+    std::vector<void*>                  _componentsToRemove;
     std::vector<std::function<void()>>  _componentDeleters;
 
     /// Singleton component data structures
