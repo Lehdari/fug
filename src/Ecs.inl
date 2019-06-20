@@ -29,10 +29,12 @@ T_Component* Ecs::getComponent(const EntityId& eId)
 template<typename T_Component>
 void Ecs::removeComponent(const EntityId& eId)
 {
-    auto& v = accessComponents<T_Component>();
-    ComponentIterator<T_Component> it;
-    if (findComponent(v, it, eId))
-        v.erase(it);
+    // make sure that _componentsToRemove is up to date the first time the function is called
+    static auto& v = accessComponents<T_Component>();
+
+    auto& vr = *static_cast<std::vector<EntityId>*>(
+        _componentsToRemove.at(typeId<T_Component>()));
+    vr.push_back(eId);
 }
 
 template<typename T_Component>
@@ -55,6 +57,8 @@ void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
         if (increaseIterators<T_Components...>(eId, std::get<IteratorWrapper<T_Components>>(cIters)...))
         system(eId, std::get<IteratorWrapper<T_Components>>(cIters).it->component...);
     }
+
+    (removeComponents<T_Components>(),...);
 }
 
 /// Private member functions
@@ -69,14 +73,18 @@ template<typename T_Component>
 Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 {
     auto tId = typeId<T_Component>();
-    if (_components.size() <= tId)
+    if (_components.size() <= tId) {
         _components.resize(tId+1, nullptr);
+        _componentsToRemove.resize(tId+1, nullptr);
+    }
 
     if (_components[tId] == nullptr) {
         _components[tId] = new ComponentVector<T_Component>;
+        _componentsToRemove[tId] = new std::vector<EntityId>;
         _componentDeleters.push_back(
             std::bind(&Ecs::deleteComponents<T_Component>, this, (uint64_t)tId));
     }
+
     return *static_cast<ComponentVector<T_Component>*>(_components[tId]);
 }
 
@@ -96,6 +104,24 @@ bool Ecs::findComponent(Ecs::ComponentVector<T_Component>& cVector,
 template<typename T_Component>
 void Ecs::deleteComponents(uint64_t cVectorId) {
     delete static_cast<ComponentVector<T_Component>*>(_components.at(cVectorId));
+    delete static_cast<std::vector<EntityId>*>(_componentsToRemove.at(cVectorId));
+}
+
+template <typename T_Component>
+void Ecs::removeComponents()
+{
+    auto& vr = *static_cast<std::vector<EntityId>*>(
+        _componentsToRemove.at(typeId<T_Component>()));
+
+    for (auto& eId : vr) {
+        auto& v = accessComponents<T_Component>();
+        ComponentIterator<T_Component> it;
+        if (findComponent(v, it, eId)) {
+            v.erase(it);
+        }
+    }
+
+    vr.clear();
 }
 
 template<typename T_Component>
