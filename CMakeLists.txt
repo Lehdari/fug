@@ -11,3 +11,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_subdirectory(include)
 add_subdirectory(src)
+
+
+add_library(fug_ecs SHARED ${ECS_SOURCES})
+target_include_directories(fug_ecs
+    PUBLIC
+        include/
+        include/ecs/
+)
