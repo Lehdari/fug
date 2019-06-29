@@ -19,3 +19,13 @@ target_include_directories(fug_ecs
         include/
         include/ecs/
 )
+
+add_library(fug_engine SHARED ${ENGINE_SOURCES})
+target_include_directories(fug_engine
+    PUBLIC
+        include/
+        include/ecs/
+        )
+target_link_libraries(fug_engine
+    PUBLIC
+        fug_ecs)
