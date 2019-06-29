@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 8.1.2019.
+// Project: fug
+// File: EventTypeId.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef ECSTESTGAME_EVENTTYPEID_HPP
-#define ECSTESTGAME_EVENTTYPEID_HPP
+#ifndef FUG_ENGINE_EVENTTYPEID_HPP
+#define FUG_ENGINE_EVENTTYPEID_HPP
 
 
 #include <cstdint>
@@ -36,4 +42,4 @@ int64_t EventTypeId::typeId(void)
 }
 
 
-#endif //ECSTESTGAME_EVENTTYPEID_HPP
+#endif //FUG_ENGINE_EVENTTYPEID_HPP

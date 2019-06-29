@@ -2,8 +2,8 @@
 // Created by Lehdari on 6.4.2019.
 //
 
-#ifndef ECSTESTGAME_LOGICCOMPONENT_HPP
-#define ECSTESTGAME_LOGICCOMPONENT_HPP
+#ifndef FUG_ENGINE_LOGICCOMPONENT_HPP
+#define FUG_ENGINE_LOGICCOMPONENT_HPP
 
 
 #include <utility>
@@ -76,4 +76,4 @@ void LogicComponent::copyLogic(void* logic, LogicComponent& lc)
 }
 
 
-#endif //ECSTESTGAME_LOGICCOMPONENT_HPP
+#endif //FUG_ENGINE_LOGICCOMPONENT_HPP

@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 9.1.2019.
+// Project: fug
+// File: EventHandler.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef ECSTESTGAME_EVENTHANDLER_HPP
-#define ECSTESTGAME_EVENTHANDLER_HPP
+#ifndef FUG_ENGINE_EVENTHANDLER_HPP
+#define FUG_ENGINE_EVENTHANDLER_HPP
 
 
 #include <vector>
@@ -65,4 +71,4 @@ void EventLogicHandler<T_Handler, T_Event, T_Logic>::handleEvents(
 }
 
 
-#endif //ECSTESTGAME_EVENTHANDLER_HPP
+#endif //FUG_ENGINE_EVENTHANDLER_HPP

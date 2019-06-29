@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 2.4.2018.
+// Project: fug
+// File: Ecs.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef TEMPLATEECS_ECS_HPP
-#define TEMPLATEECS_ECS_HPP
+#ifndef FUG_ECS_ECS_HPP
+#define FUG_ECS_ECS_HPP
 
 
 #include "Types.hpp"
@@ -139,4 +145,4 @@ private:
 #include "Ecs.inl"
 
 
-#endif //TEMPLATEECS_ECS_HPP
+#endif //FUG_ECS_ECS_HPP

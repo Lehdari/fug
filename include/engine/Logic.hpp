@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 6.4.2019.
+// Project: fug
+// File: Logic.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef ECSTESTGAME_LOGIC_HPP
-#define ECSTESTGAME_LOGIC_HPP
+#ifndef FUG_ENGINE_LOGIC_HPP
+#define FUG_ENGINE_LOGIC_HPP
 
 
 #include <Types.hpp>
@@ -28,4 +34,4 @@ void Logic<T_Logic>::operator()(Ecs& ecs, const EntityId& eId, void* logic)
 }
 
 
-#endif //ECSTESTGAME_LOGIC_HPP
+#endif //FUG_ENGINE_LOGIC_HPP
