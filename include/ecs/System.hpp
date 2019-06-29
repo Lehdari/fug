@@ -16,19 +16,23 @@
 
 
 /// Macro for easier and correct CRTP usage
-#define TECS_SYSTEM(SYSTEM, ...) struct SYSTEM : public System<SYSTEM, __VA_ARGS__>
+#define FUG_SYSTEM(SYSTEM, ...) struct SYSTEM : public fug::System<SYSTEM, __VA_ARGS__>
 
 
-template <typename T_DerivedSystem, typename... Components>
-struct System {
-    void operator()(const EntityId& eId, Components&... components);
-};
+namespace fug {
 
-template <typename T_DerivedSystem, typename... Components>
-void System<T_DerivedSystem, Components...>::operator()(const EntityId& eId, Components&... components)
-{
-    (*static_cast<T_DerivedSystem*>(this))(eId, components...);
-}
+    template<typename T_DerivedSystem, typename... Components>
+    struct System {
+        void operator()(const EntityId& eId, Components& ... components);
+    };
+
+    template<typename T_DerivedSystem, typename... Components>
+    void System<T_DerivedSystem, Components...>::operator()(const EntityId& eId, Components& ... components)
+    {
+        (*static_cast<T_DerivedSystem *>(this))(eId, components...);
+    }
+
+} //namespace fug
 
 
 #endif //FUG_ECS_SYSTEM_HPP

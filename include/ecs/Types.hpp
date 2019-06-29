@@ -14,7 +14,12 @@
 
 #include <cstdint>
 
-using EntityId = uint64_t;
+
+namespace fug {
+
+    using EntityId = uint64_t;
+
+} //namespace fug
 
 
 #endif //FUG_ECS_TYPES_HPP

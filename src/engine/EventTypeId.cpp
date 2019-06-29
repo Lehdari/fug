@@ -11,4 +11,7 @@
 #include <engine/EventTypeId.hpp>
 
 
+using namespace fug;
+
+
 int64_t EventTypeId::__typeIdCounter = 0;

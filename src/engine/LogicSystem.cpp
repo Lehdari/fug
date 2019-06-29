@@ -11,6 +11,9 @@
 #include <engine/LogicSystem.hpp>
 
 
+using namespace fug;
+
+
 LogicSystem::LogicSystem(Ecs& ecs) :
     _ecs    (ecs)
 {

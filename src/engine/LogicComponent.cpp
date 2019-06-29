@@ -11,7 +11,10 @@
 #include <engine/LogicComponent.hpp>
 
 
-DEFINE_COMPONENT_TEMPLATES(LogicComponent);
+using namespace fug;
+
+
+FUG_DEFINE_COMPONENT_TEMPLATES(LogicComponent);
 
 
 LogicComponent::LogicComponent() :

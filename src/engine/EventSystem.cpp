@@ -12,6 +12,9 @@
 #include <engine/LogicComponent.hpp>
 
 
+using namespace fug;
+
+
 EventSystem::EventSystem(Ecs& ecs) :
     _ecs                        (ecs),
     _dirty                      (false),
