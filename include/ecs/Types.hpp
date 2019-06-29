@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 4.12.2018.
+// Project: fug
+// File: Types.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef TEMPLATEECS_TYPES_HPP
-#define TEMPLATEECS_TYPES_HPP
+#ifndef FUG_ECS_TYPES_HPP
+#define FUG_ECS_TYPES_HPP
 
 
 #include <cstdint>
@@ -11,4 +17,4 @@
 using EntityId = uint64_t;
 
 
-#endif //TEMPLATEECS_TYPES_HPP
+#endif //FUG_ECS_TYPES_HPP

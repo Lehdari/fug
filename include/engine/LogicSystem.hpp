@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 6.4.2019.
+// Project: fug
+// File: LogicSystem.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef ECSTESTGAME_LOGICSYSTEM_HPP
-#define ECSTESTGAME_LOGICSYSTEM_HPP
+#ifndef FUG_ENGINE_LOGICSYSTEM_HPP
+#define FUG_ENGINE_LOGICSYSTEM_HPP
 
 
 #include <System.hpp>
@@ -22,4 +28,4 @@ private:
 };
 
 
-#endif //ECSTESTGAME_LOGICSYSTEM_HPP
+#endif //FUG_ENGINE_LOGICSYSTEM_HPP

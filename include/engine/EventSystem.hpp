@@ -1,9 +1,15 @@
 //
-// Created by Lehdari on 8.1.2019.
+// Project: fug
+// File: EventSystem.hpp
+//
+// Copyright (c) 2019 Miika 'Lehdari' Lehtimäki
+// You may use, distribute and modify this code under the terms
+// of the licence specified in file LICENSE which is distributed
+// with this source code package.
 //
 
-#ifndef ECSTESTGAME_EVENTSYSTEM_HPP
-#define ECSTESTGAME_EVENTSYSTEM_HPP
+#ifndef FUG_ENGINE_EVENTSYSTEM_HPP
+#define FUG_ENGINE_EVENTSYSTEM_HPP
 
 
 #include <functional>
@@ -172,4 +178,4 @@ void EventSystem::deleteEvents(void* events)
 }
 
 
-#endif //ECSTESTGAME_EVENTSYSTEM_HPP
+#endif //FUG_ENGINE_EVENTSYSTEM_HPP
