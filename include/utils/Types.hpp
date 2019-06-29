@@ -19,7 +19,7 @@ namespace fug {
 
     using EntityId = int64_t;
 
-}
+} //namespace fug
 
 
 #endif //FUG_UTILS_TYPES_HPP

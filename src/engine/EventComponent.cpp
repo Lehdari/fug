@@ -11,4 +11,7 @@
 #include <engine/EventComponent.hpp>
 
 
-DEFINE_COMPONENT_TEMPLATES(EventComponent);
+using namespace fug;
+
+
+FUG_DEFINE_COMPONENT_TEMPLATES(EventComponent);

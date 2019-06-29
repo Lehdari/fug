@@ -11,6 +11,9 @@
 #include "Ecs.hpp"
 
 
+using namespace fug;
+
+
 uint64_t Ecs::typeIdCounter = 0;
 
 

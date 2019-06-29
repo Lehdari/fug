@@ -17,15 +17,19 @@
 #include "LogicComponent.hpp"
 
 
-TECS_SYSTEM(LogicSystem, LogicComponent) {
-public:
-    LogicSystem(Ecs& ecs);
+namespace fug {
 
-    void operator()(const EntityId& eId, LogicComponent& ec);
+    FUG_SYSTEM(LogicSystem, LogicComponent) {
+    public:
+        LogicSystem(Ecs& ecs);
 
-private:
-    Ecs&    _ecs;
-};
+        void operator()(const EntityId& eId, LogicComponent& ec);
+
+    private:
+        Ecs&    _ecs;
+    };
+
+} //namespace fug
 
 
 #endif //FUG_ENGINE_LOGICSYSTEM_HPP
