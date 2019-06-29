@@ -15,7 +15,7 @@
 #include "EventTypeId.hpp"
 #include "EventHandler.hpp"
 
-#include <Ecs.hpp>
+#include <ecs/Ecs.hpp>
 #include <unordered_map>
 #include <vector>
 

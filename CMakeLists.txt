@@ -17,6 +17,9 @@ add_library(fug_ecs SHARED ${ECS_SOURCES})
 target_include_directories(fug_ecs
     PUBLIC
         include/
+)
+target_include_directories(fug_ecs
+    PRIVATE
         include/ecs/
 )
 
@@ -24,8 +27,12 @@ add_library(fug_engine SHARED ${ENGINE_SOURCES})
 target_include_directories(fug_engine
     PUBLIC
         include/
-        include/ecs/
-        )
+)
+target_include_directories(fug_engine
+    PRIVATE
+        include/engine/
+)
 target_link_libraries(fug_engine
     PUBLIC
-        fug_ecs)
+        fug_ecs
+)

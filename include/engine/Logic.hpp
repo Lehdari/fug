@@ -12,7 +12,7 @@
 #define FUG_ENGINE_LOGIC_HPP
 
 
-#include <Types.hpp>
+#include <utils/Types.hpp>
 
 
 #define FUG_LOGIC(LOGIC_TYPE) \

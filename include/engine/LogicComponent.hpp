@@ -8,7 +8,7 @@
 
 #include <utility>
 #include <utils/Types.hpp>
-#include <Ecs.hpp>
+#include <ecs/Ecs.hpp>
 
 
 namespace fug {
