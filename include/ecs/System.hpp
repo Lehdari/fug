@@ -12,7 +12,7 @@
 #define FUG_ECS_SYSTEM_HPP
 
 
-#include "Types.hpp"
+#include <utils/Types.hpp>
 
 
 /// Macro for easier and correct CRTP usage
