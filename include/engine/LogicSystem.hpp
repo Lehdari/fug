@@ -12,7 +12,7 @@
 #define FUG_ENGINE_LOGICSYSTEM_HPP
 
 
-#include <System.hpp>
+#include <ecs/System.hpp>
 
 #include "LogicComponent.hpp"
 

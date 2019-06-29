@@ -14,8 +14,8 @@
 
 #include <functional>
 
-#include <System.hpp>
-#include <Ecs.hpp>
+#include <ecs/System.hpp>
+#include <ecs/Ecs.hpp>
 
 #include "EventComponent.hpp"
 
