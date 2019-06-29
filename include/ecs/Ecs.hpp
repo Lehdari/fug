@@ -12,7 +12,7 @@
 #define FUG_ECS_ECS_HPP
 
 
-#include "Types.hpp"
+#include <utils/Types.hpp>
 #include "System.hpp"
 
 #include <vector>
@@ -44,6 +44,7 @@ namespace fug {
         /// Add component
         template <typename T_Component>
         void addComponent(const EntityId& eId, const T_Component& component);
+
 
         /// Get component
         template <typename T_Component>
