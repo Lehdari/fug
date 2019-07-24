@@ -19,6 +19,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_subdirectory(include)
 add_subdirectory(src)
 set(FUG_HEADERS ${FUG_HEADERS}
+    ${UTILS_HEADERS}
     ${ECS_HEADERS}
     ${ENGINE_HEADERS}
 )
@@ -36,61 +37,98 @@ if(FUG_SCAN_COMPONENTS)
     set(FUG_COMPONENT_TYPE_ERROR_MESSAGE "Component auto-scan was unable to find the component type.\
  Please make sure that component types are defined individually in headers with *Component.hpp postfix.")
 
-    #Scan components
+    #Scan internal components
     set(FUG_COMPONENT_TYPES "${FUG_HEADERS}")
     string(REPLACE ";" " " FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
     string(REGEX MATCHALL "[a-zA-Z0-9]+Component.hpp" FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
     string(REPLACE ".hpp" " " FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
     string(REPLACE ";" "" FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
 
-    message(STATUS "Detected component types: ${FUG_COMPONENT_TYPES}")
+    #Scan application components
+    set(FUG_APP_COMPONENT_TYPES "${FUG_APP_HEADERS}")
+    string(REPLACE ";" " " FUG_APP_COMPONENT_TYPES "${FUG_APP_COMPONENT_TYPES}")
+    string(REGEX MATCHALL "[a-zA-Z0-9]+Component.hpp" FUG_APP_COMPONENT_TYPES "${FUG_APP_COMPONENT_TYPES}")
+    string(REPLACE ".hpp" " " FUG_APP_COMPONENT_TYPES "${FUG_APP_COMPONENT_TYPES}")
+    string(REPLACE ";" "" FUG_APP_COMPONENT_TYPES "${FUG_APP_COMPONENT_TYPES}")
+
+    message(STATUS "Detected fug component types: ${FUG_COMPONENT_TYPES}")
+    message(STATUS "Detected application component types: ${FUG_APP_COMPONENT_TYPES}")
 else()
     message(STATUS "Component types provided manually")
 
     #Set error message for failed type id query
     set(FUG_COMPONENT_TYPE_ERROR_MESSAGE "Component type not registered in CMakeLists.txt.\
- Please make sure that all components are listed in FUG_COMPONENT_TYPES variable.")
+ Please make sure that all components are listed in FUG_COMPONENT_TYPES or FUG_APP_COMPONENT_TYPES variable.")
 
     #List component types below
     #set(FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
 
-    message(STATUS "Provided component types: ${FUG_COMPONENT_TYPES}")
+    message(STATUS "Provided fug component types: ${FUG_COMPONENT_TYPES}")
+    message(STATUS "Provided application component types: ${FUG_APP_COMPONENT_TYPES}")
 endif()
 
 #Parse definitions for component types and forward declarations
+#Internal component types
 string(STRIP "${FUG_COMPONENT_TYPES}" FUG_COMPONENT_TYPES)
 if ("${FUG_COMPONENT_TYPES}" STREQUAL "")
-    message(FATAL_ERROR "No component types provided")
+    message(FATAL_ERROR "No fug component types provided")
 endif()
 string(REGEX REPLACE "([^ ]+)" "class \\1;" FUG_COMPONENT_FORWARD_DECLARATIONS "${FUG_COMPONENT_TYPES}")
-string(REPLACE ";" "\\\;" FUG_COMPONENT_FORWARD_DECLARATIONS "${FUG_COMPONENT_FORWARD_DECLARATIONS}")
+string(REPLACE ";" "\\\; " FUG_COMPONENT_FORWARD_DECLARATIONS "${FUG_COMPONENT_FORWARD_DECLARATIONS}")
+string(REGEX REPLACE "([^ ]+)" "fug::\\1" FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}")
 string(REPLACE " " ", " FUG_COMPONENT_TYPES ${FUG_COMPONENT_TYPES})
 
+#Application component types
+string(STRIP "${FUG_APP_COMPONENT_TYPES}" FUG_APP_COMPONENT_TYPES)
+if (NOT "${FUG_APP_COMPONENT_TYPES}" STREQUAL "")
+    string(REGEX REPLACE "([^ ]+)" "class \\1;"
+        FUG_APP_COMPONENT_FORWARD_DECLARATIONS "${FUG_APP_COMPONENT_TYPES}")
+    string(REPLACE ";" "\\\; " FUG_APP_COMPONENT_FORWARD_DECLARATIONS
+        "${FUG_APP_COMPONENT_FORWARD_DECLARATIONS}")
+    string(REPLACE " " ", " FUG_APP_COMPONENT_TYPES ${FUG_APP_COMPONENT_TYPES})
+    set(FUG_APP_COMPONENT_TYPES ", ${FUG_APP_COMPONENT_TYPES}")
+endif()
 
-#Ecs library target
-add_library(fug_ecs SHARED ${ECS_SOURCES})
-target_compile_definitions(fug_ecs
-    PUBLIC
+#Compile to single list
+set(FUG_COMPONENT_TYPES "${FUG_COMPONENT_TYPES}${FUG_APP_COMPONENT_TYPES}")
+set(FUG_COMPONENT_FORWARD_DECLARATIONS "namespace fug { \
+${FUG_COMPONENT_FORWARD_DECLARATIONS}} \
+${FUG_APP_COMPONENT_FORWARD_DECLARATIONS}")
+
+
+#Utils library target (utils is header-only library)
+add_library(fug_utils INTERFACE)
+target_include_directories(fug_utils
+    INTERFACE
+        include/
+)
+target_compile_definitions(fug_utils
+    INTERFACE
         FUG_COMPONENT_TYPES=${FUG_COMPONENT_TYPES}
         FUG_COMPONENT_FORWARD_DECLARATIONS=${FUG_COMPONENT_FORWARD_DECLARATIONS}
         FUG_COMPONENT_TYPE_ERROR_MESSAGE="${FUG_COMPONENT_TYPE_ERROR_MESSAGE}"
 )
+
+
+#Ecs library target
+add_library(fug_ecs SHARED ${ECS_SOURCES})
 target_include_directories(fug_ecs
     PUBLIC
         include/
-)
-target_include_directories(fug_ecs
     PRIVATE
         include/ecs/
 )
+target_link_libraries(fug_ecs
+    PUBLIC
+        fug_utils
+)
+
 
 #Engine library target
 add_library(fug_engine SHARED ${ENGINE_SOURCES})
 target_include_directories(fug_engine
     PUBLIC
         include/
-)
-target_include_directories(fug_engine
     PRIVATE
         include/engine/
 )
