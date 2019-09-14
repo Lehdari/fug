@@ -46,9 +46,6 @@ namespace fug {
     };
 
 
-    FUG_DECLARE_COMPONENT_TEMPLATES(LogicComponent);
-
-
     template <typename T_Logic, typename... T_Args>
     void LogicComponent::addLogic(T_Args&&... args)
     {

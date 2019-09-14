@@ -21,13 +21,6 @@
 #include <tuple>
 
 
-/// Use this in component header files
-#define FUG_DECLARE_COMPONENT_TEMPLATES(COMPONENT)
-
-/// Use this in component source files
-#define FUG_DEFINE_COMPONENT_TEMPLATES(COMPONENT)
-
-
 namespace fug {
 
     class Ecs {

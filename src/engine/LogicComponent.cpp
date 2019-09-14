@@ -14,9 +14,6 @@
 using namespace fug;
 
 
-FUG_DEFINE_COMPONENT_TEMPLATES(LogicComponent);
-
-
 LogicComponent::LogicComponent() :
     _logic          (nullptr),
     _logicExecutor  (nullptr),
