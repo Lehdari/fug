@@ -13,6 +13,7 @@
 
 
 #include <utils/Types.hpp>
+#include <utils/TypeId.hpp>
 #include "System.hpp"
 
 #include <vector>
@@ -21,12 +22,10 @@
 
 
 /// Use this in component header files
-#define FUG_DECLARE_COMPONENT_TEMPLATES(COMPONENT)\
-    extern template uint64_t fug::Ecs::typeId<COMPONENT>();
+#define FUG_DECLARE_COMPONENT_TEMPLATES(COMPONENT)
 
 /// Use this in component source files
-#define FUG_DEFINE_COMPONENT_TEMPLATES(COMPONENT)\
-    template uint64_t fug::Ecs::typeId<COMPONENT>();
+#define FUG_DEFINE_COMPONENT_TEMPLATES(COMPONENT)
 
 
 namespace fug {
@@ -55,8 +54,8 @@ namespace fug {
         void removeComponent(const EntityId& eId);
 
         /// Get singleton component
-        template <typename T_Component>
-        T_Component* getSingleton();
+        template <typename T_Singleton>
+        T_Singleton* getSingleton();
 
         /// Run system
         template <typename T_DerivedSystem, typename... T_Components>
@@ -72,11 +71,6 @@ namespace fug {
             ComponentWrapper(const EntityId& eId, const T_Component& c = T_Component()) :
                 eId(eId), component(c) {}
         };
-
-        /// TypeId system
-        static uint64_t typeIdCounter;
-        template <typename T_Component>
-        static uint64_t typeId();
 
         /// Component vector handling stuff
         template <typename T_Component>
@@ -122,10 +116,10 @@ namespace fug {
         static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
 
         /// Singleton component handling stuff
-        template <typename T_Component>
-        T_Component& accessSingleton();
+        template <typename T_Singleton>
+        T_Singleton& accessSingleton();
 
-        template <typename T_Component>
+        template <typename T_Singleton>
         void deleteSingleton(uint64_t cId);
 
         /// Entity ID handling stuff

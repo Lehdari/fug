@@ -16,25 +16,43 @@
 
 
 FUG_COMPONENT_FORWARD_DECLARATIONS
+FUG_SINGLETON_FORWARD_DECLARATIONS
 
 
 namespace fug {
 
+    /// TypeId is class for generating integer IDs for given types.
     class TypeId {
+    public:
+
+        /// Component type IDs
+        template<typename T_Type>
+        static constexpr int64_t component()
+        {
+            return typeIdPrivate<T_Type>(TypeId::componentTypeRegister);
+        }
+
+        /// Singleton type IDs
+        template<typename T_Type>
+        static constexpr int64_t singleton()
+        {
+            return typeIdPrivate<T_Type>(TypeId::singletonTypeRegister);
+        }
+
     private:
-        template<typename T_Component>
+        template<typename T_Types>
         struct IdRegistered {
             static constexpr bool value = false;
         };
 
-        template<typename... T_Components>
+        template<typename... T_Types>
         struct TypeRegister {
         };
 
-        template<typename T_Component>
+        template<typename T_Type>
         static constexpr int64_t typeIdPrivate(TypeRegister<>)
         {
-            static_assert(IdRegistered<T_Component>::value, FUG_COMPONENT_TYPE_ERROR_MESSAGE);
+            static_assert(IdRegistered<T_Type>::value, FUG_TYPE_ID_ERROR_MESSAGE);
             return -1;
         }
 
@@ -47,14 +65,10 @@ namespace fug {
                 return 1+typeIdPrivate<T_Component>(TypeRegister<T_RestComponents...>());
         }
 
-        static constexpr TypeRegister<FUG_COMPONENT_TYPES> typeRegister = TypeRegister<FUG_COMPONENT_TYPES>();
-
-    public:
-        template<typename T_Component>
-        static constexpr int64_t typeId()
-        {
-            return typeIdPrivate<T_Component>(TypeId::typeRegister);
-        }
+        static constexpr TypeRegister<FUG_COMPONENT_TYPES>
+            componentTypeRegister = TypeRegister<FUG_COMPONENT_TYPES>();
+        static constexpr TypeRegister<FUG_SINGLETON_TYPES>
+            singletonTypeRegister = TypeRegister<FUG_SINGLETON_TYPES>();
     };
 
 } //namespace fug
