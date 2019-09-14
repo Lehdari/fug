@@ -14,9 +14,6 @@
 using namespace fug;
 
 
-uint64_t Ecs::typeIdCounter = 0;
-
-
 Ecs::Ecs()
 {
 }

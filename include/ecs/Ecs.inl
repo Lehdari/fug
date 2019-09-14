@@ -39,14 +39,14 @@ void Ecs::removeComponent(const EntityId& eId)
     static auto& v = accessComponents<T_Component>();
 
     auto& vr = *static_cast<std::vector<EntityId>*>(
-        _componentsToRemove.at(typeId<T_Component>()));
+        _componentsToRemove.at(TypeId::component<T_Component>()));
     vr.push_back(eId);
 }
 
-template<typename T_Component>
-T_Component* Ecs::getSingleton()
+template<typename T_Singleton>
+T_Singleton* Ecs::getSingleton()
 {
-    return &accessSingleton<T_Component>();
+    return &accessSingleton<T_Singleton>();
 }
 
 template <typename T_DerivedSystem, typename... T_Components>
@@ -67,18 +67,10 @@ void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
     (removeComponents<T_Components>(),...);
 }
 
-/// Private member functions
-template <typename T_Component>
-uint64_t Ecs::typeId()
-{
-    static uint64_t tId = typeIdCounter++;
-    return tId;
-}
-
 template<typename T_Component>
 Ecs::ComponentVector<T_Component>& Ecs::accessComponents()
 {
-    auto tId = typeId<T_Component>();
+    auto tId = TypeId::component<T_Component>();
     if (_components.size() <= tId) {
         _components.resize(tId+1, nullptr);
         _componentsToRemove.resize(tId+1, nullptr);
@@ -117,7 +109,7 @@ template <typename T_Component>
 void Ecs::removeComponents()
 {
     auto& vr = *static_cast<std::vector<EntityId>*>(
-        _componentsToRemove.at(typeId<T_Component>()));
+        _componentsToRemove.at(TypeId::component<T_Component>()));
 
     for (auto& eId : vr) {
         auto& v = accessComponents<T_Component>();
@@ -157,26 +149,26 @@ bool Ecs::increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&.
     return (itWrappers.increase(eId) && ...);
 }
 
-template<typename T_Component>
-T_Component& Ecs::accessSingleton()
+template<typename T_Singleton>
+T_Singleton& Ecs::accessSingleton()
 {
-    auto tId = typeId<T_Component>();
+    auto tId = TypeId::singleton<T_Singleton>();
     if (_singletons.size() <= tId)
         _singletons.resize(tId+1, nullptr);
 
     if (_singletons[tId] == nullptr) {
-        _singletons[tId] = new T_Component;
+        _singletons[tId] = new T_Singleton;
         _singletonDeleters.push_back(
-            std::bind(&Ecs::deleteSingleton<T_Component>, this, (uint64_t)tId));
+            std::bind(&Ecs::deleteSingleton<T_Singleton>, this, (uint64_t)tId));
     }
-    return *static_cast<T_Component*>(_singletons[tId]);
+    return *static_cast<T_Singleton*>(_singletons[tId]);
 
 }
 
-template <typename T_Component>
+template <typename T_Singleton>
 void Ecs::deleteSingleton(uint64_t cId)
 {
-    delete static_cast<T_Component*>(_singletons.at(cId));
+    delete static_cast<T_Singleton*>(_singletons.at(cId));
 }
 
 void Ecs::checkEntityId(const EntityId& eId)
