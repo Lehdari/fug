@@ -38,9 +38,6 @@ namespace fug {
     };
 
 
-    FUG_DECLARE_COMPONENT_TEMPLATES(EventComponent);
-
-
     template <typename T_Handler>
     void EventComponent::addHandler()
     {
