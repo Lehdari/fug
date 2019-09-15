@@ -82,6 +82,10 @@ namespace fug {
 
         // Container for component masks
         std::vector<ComponentMask>  _componentMasks;
+
+        // Check that the number of components fit to the bitmask
+        static_assert(TypeId::nComponents <= 64,
+            "Number of components does not fit to the bitmask of 64 bits.");
     };
 
 
