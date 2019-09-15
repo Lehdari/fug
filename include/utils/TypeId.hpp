@@ -23,6 +23,12 @@ namespace fug {
 
     /// TypeId is class for generating integer IDs for given types.
     class TypeId {
+    private:
+        template <typename... T_Types>
+        struct NumTypes {
+            static constexpr int64_t value = sizeof...(T_Types);
+        };
+
     public:
 
         /// Component type IDs
@@ -38,6 +44,10 @@ namespace fug {
         {
             return typeIdPrivate<T_Type>(TypeId::singletonTypeRegister);
         }
+
+        /// Type counts
+        static constexpr int64_t nComponents = NumTypes<FUG_COMPONENT_TYPES>::value;
+        static constexpr int64_t nSingletons = NumTypes<FUG_SINGLETON_TYPES>::value;
 
     private:
         template<typename T_Types>
