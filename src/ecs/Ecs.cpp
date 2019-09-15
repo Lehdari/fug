@@ -14,15 +14,14 @@
 using namespace fug;
 
 
-Ecs::Ecs()
+EntityId Ecs::getEmptyEntityId()
 {
-}
+    // Search for an entity with all components disabled
+    for (EntityId eId = 0; eId < _componentMasks.size(); ++eId) {
+        if (_componentMasks[eId] == 0)
+            return eId;
+    }
 
-Ecs::~Ecs()
-{
-    for (auto& cd : _componentDeleters)
-        cd();
-
-    for (auto& sd : _singletonDeleters)
-        sd();
+    // No empty entity found
+    return _componentMasks.size();
 }

@@ -25,110 +25,63 @@ namespace fug {
 
     class Ecs {
     public:
-        Ecs();
+        Ecs() = default;
+
+        /// Ecs objects are uncopyable and immovable
         Ecs(const Ecs&) = delete;
         Ecs(Ecs&&) = delete;
-        ~Ecs();
 
         Ecs& operator=(const Ecs&) = delete;
         Ecs& operator=(Ecs&&) = delete;
 
-        /// Add component
-        template <typename T_Component>
-        void addComponent(const EntityId& eId, const T_Component& component);
+        /// Get ID of an entity with no components
+        EntityId getEmptyEntityId();
 
-
-        /// Get component
+        /// Get component - component is default constructed and handle returned
         template <typename T_Component>
         T_Component* getComponent(const EntityId& eId);
 
-        /// Remove component
+        /// Set component
         template <typename T_Component>
-        void removeComponent(const EntityId& eId);
+        void setComponent(const EntityId& eId, T_Component&& component);
 
         /// Get singleton component
         template <typename T_Singleton>
         T_Singleton* getSingleton();
 
         /// Run system
-        template <typename T_DerivedSystem, typename... T_Components>
-        void runSystem(System<T_DerivedSystem, T_Components...>& system);
+        template <typename T_System, typename... T_Components>
+        void runSystem(System<T_System, T_Components...>& system);
+
+        /// Remove component
+        template <typename T_Component>
+        void removeComponent(const EntityId& eId);
+
+        /// Remove entity
+        template <typename T_Component>
+        void removeEntity(const EntityId& eId);
 
     private:
-        /// Wrapper type for components
-        template <typename T_Component>
-        struct ComponentWrapper {
-            EntityId    eId;
-            T_Component component;
-
-            ComponentWrapper(const EntityId& eId, const T_Component& c = T_Component()) :
-                eId(eId), component(c) {}
-        };
-
-        /// Component vector handling stuff
-        template <typename T_Component>
-        using ComponentVector = typename std::vector<ComponentWrapper<T_Component>>;
-
-        template <typename T_Component>
-        using ComponentIterator = typename ComponentVector<T_Component>::iterator;
-
-        template <typename T_Component>
-        struct IteratorWrapper {
-            ComponentIterator<T_Component> it;
-            ComponentIterator<T_Component> end;
-
-            IteratorWrapper(const ComponentIterator<T_Component>& it,
-                            const ComponentIterator<T_Component>& end) :
-                it(it), end(end)
-            {}
-
-            bool isValid();
-            bool increase(const EntityId& eId);
-        };
-
-        template <typename T_Component>
-        ComponentVector<T_Component>& accessComponents();
-
-        template <typename T_Component>
-        bool findComponent(ComponentVector<T_Component>& cVector,
-                           ComponentIterator<T_Component>& it,
-                           const EntityId& eId);
-
-        /// Delete component vectors
-        template <typename T_Component>
-        void deleteComponents(uint64_t cVectorId);
-
-        /// Remove all components marked to be removed
-        template <typename T_Component>
-        void removeComponents();
-
+        // Typedef for component container tuple
         template <typename... T_Components>
-        static bool checkIterators(IteratorWrapper<T_Components>&... itWrappers);
+        using ComponentStorage = std::tuple<std::vector<T_Components>...>;
 
+        // Component container
+        ComponentStorage<FUG_COMPONENT_TYPES>   _components;
+
+        // Function for extracting components from container above
+        template <typename T_Component>
+        inline T_Component& accessComponent(EntityId eId);
+
+        // Bitmask indicating enabled components for an entity
+        using ComponentMask = uint64_t;
+
+        // Function for creating component masks for component combinations
         template <typename... T_Components>
-        static bool increaseIterators(const EntityId& eId, IteratorWrapper<T_Components>&... itWrappers);
+        constexpr ComponentMask componentMask();
 
-        /// Singleton component handling stuff
-        template <typename T_Singleton>
-        T_Singleton& accessSingleton();
-
-        template <typename T_Singleton>
-        void deleteSingleton(uint64_t cId);
-
-        /// Entity ID handling stuff
-        inline void checkEntityId(const EntityId& eId);
-
-        /// Component vector handling data structures
-        std::vector<void*>                  _components;
-        std::vector<void*>                  _componentsToRemove;
-        std::vector<std::function<void()>>  _componentDeleters;
-
-        /// Singleton component data structures
-        std::vector<void*>                  _singletons;
-        std::vector<std::function<void()>>  _singletonDeleters;
-
-        /// Entity ID storage
-        std::vector<EntityId>               _entityIds;
+        // Container for component masks
+        std::vector<ComponentMask>  _componentMasks;
     };
 
 
