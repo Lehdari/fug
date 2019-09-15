@@ -37,6 +37,9 @@ namespace fug {
         /// Get ID of an entity with no components
         EntityId getEmptyEntityId();
 
+        /// Check if an entity exists (has any components)
+        bool entityExists(const EntityId& eId);
+
         /// Get component - component is default constructed and handle returned
         template <typename T_Component>
         T_Component* getComponent(const EntityId& eId);
