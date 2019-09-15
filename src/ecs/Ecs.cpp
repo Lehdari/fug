@@ -25,3 +25,12 @@ EntityId Ecs::getEmptyEntityId()
     // No empty entity found
     return _componentMasks.size();
 }
+
+bool Ecs::entityExists(const EntityId& eId)
+{
+    if (_componentMasks.size() <= eId)
+        return false;
+
+    return _componentMasks[eId] != 0;
+}
+
