@@ -34,3 +34,11 @@ bool Ecs::entityExists(const EntityId& eId)
     return _componentMasks[eId] != 0;
 }
 
+void Ecs::removeEntity(const EntityId& eId)
+{
+    if (_componentMasks.size() <= eId)
+        return;
+
+    // Mark all components disabled for the entity
+    _componentMasks[eId] = 0;
+}
