@@ -61,7 +61,6 @@ namespace fug {
         void removeComponent(const EntityId& eId);
 
         /// Remove entity
-        template <typename T_Component>
         void removeEntity(const EntityId& eId);
 
     private:

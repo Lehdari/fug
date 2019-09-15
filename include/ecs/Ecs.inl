@@ -63,16 +63,6 @@ void Ecs::removeComponent(const EntityId& eId)
     _componentMasks[eId] &= ~componentMask<T_Component>();
 }
 
-template <typename T_Component>
-void Ecs::removeEntity(const EntityId& eId)
-{
-    if (_componentMasks.size() <= eId)
-        return;
-
-    // Mark all components disabled for the entity
-    _componentMasks[eId] = 0;
-}
-
 
 /// Private member functions
 
