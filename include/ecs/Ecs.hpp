@@ -19,6 +19,7 @@
 #include <vector>
 #include <functional>
 #include <tuple>
+#include <memory>
 
 
 namespace fug {
@@ -64,14 +65,17 @@ namespace fug {
         void removeEntity(const EntityId& eId);
 
     private:
-        // Typedef for component container tuple
+        // Typedef for component and singleton container tuples
         template <typename... T_Components>
         using ComponentStorage = std::tuple<std::vector<T_Components>...>;
+        template <typename... T_Singletons>
+        using SingletonStorage = std::tuple<std::unique_ptr<T_Singletons>...>;
 
-        // Component container
+        // Component and singleton containers
         ComponentStorage<FUG_COMPONENT_TYPES>   _components;
+        SingletonStorage<FUG_SINGLETON_TYPES>   _singletons;
 
-        // Function for extracting components from container above
+        // Function for extracting components from component container above
         template <typename T_Component>
         inline T_Component& accessComponent(EntityId eId);
 

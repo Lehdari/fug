@@ -13,7 +13,7 @@
 template <typename T_Component>
 T_Component* Ecs::getComponent(const EntityId& eId)
 {
-    static auto& v = std::get<std::vector<T_Component>>(_components);
+    auto& v = std::get<std::vector<T_Component>>(_components);
 
     // Resize the component and mask vectors to the required size
     if (v.size() <= eId)
@@ -36,8 +36,15 @@ void Ecs::setComponent(const EntityId& eId, T_Component&& component)
 template <typename T_Singleton>
 T_Singleton* Ecs::getSingleton()
 {
-    static T_Singleton singleton;
-    return &singleton;
+    auto* p = std::get<std::unique_ptr<T_Singleton>>(_singletons).get();
+
+    // Allocate and construct the singleton if it doesn't exist yet
+    if (p == nullptr) {
+        std::get<std::unique_ptr<T_Singleton>>(_singletons).reset(new T_Singleton);
+        p = std::get<std::unique_ptr<T_Singleton>>(_singletons).get();
+    }
+
+    return p;
 }
 
 template <typename T_DerivedSystem, typename... T_Components>
