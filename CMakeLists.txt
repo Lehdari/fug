@@ -77,6 +77,16 @@ target_link_libraries(fug_ecs
 )
 
 
+#Assets library target
+add_library(fug_assets SHARED ${ECS_SOURCES})
+target_include_directories(fug_assets
+    PUBLIC
+        include/
+    PRIVATE
+        ext/
+)
+
+
 #Engine library target
 add_library(fug_engine SHARED ${ENGINE_SOURCES})
 target_include_directories(fug_engine
