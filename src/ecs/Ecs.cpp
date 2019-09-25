@@ -14,6 +14,27 @@
 using namespace fug;
 
 
+Ecs::Ecs() :
+    _components(),
+    _singletons(),
+    _componentDeleters(),
+    _singletonDeleters()
+{
+}
+
+Ecs::~Ecs()
+{
+    // Delete components and singletons
+    for (int64_t i=0; i<TypeId::nComponents; ++i) {
+        if (_componentDeleters[i])
+            (_componentDeleters[i])(_components[i]);
+    }
+    for (int64_t i=0; i<TypeId::nSingletons; ++i) {
+        if (_singletonDeleters[i])
+            (_singletonDeleters[i])(_singletons[i]);
+    }
+}
+
 EntityId Ecs::getEmptyEntityId()
 {
     // Search for an entity with all components disabled

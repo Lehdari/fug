@@ -17,16 +17,14 @@
 #include "System.hpp"
 
 #include <vector>
-#include <functional>
-#include <tuple>
-#include <memory>
 
 
 namespace fug {
 
     class Ecs {
     public:
-        Ecs() = default;
+        Ecs();
+        ~Ecs();
 
         /// Ecs objects are uncopyable and immovable
         Ecs(const Ecs&) = delete;
@@ -65,15 +63,19 @@ namespace fug {
         void removeEntity(const EntityId& eId);
 
     private:
-        // Typedef for component and singleton container tuples
-        template <typename... T_Components>
-        using ComponentStorage = std::tuple<std::vector<T_Components>...>;
-        template <typename... T_Singletons>
-        using SingletonStorage = std::tuple<std::unique_ptr<T_Singletons>...>;
-
         // Component and singleton containers
-        ComponentStorage<FUG_COMPONENT_TYPES>   _components;
-        SingletonStorage<FUG_SINGLETON_TYPES>   _singletons;
+        void*   _components[TypeId::nComponents];
+        void*   _singletons[TypeId::nSingletons];
+
+        // Function pointers for deleting the components and singletons
+        void    (*_componentDeleters[TypeId::nComponents])(void*);
+        void    (*_singletonDeleters[TypeId::nSingletons])(void*);
+
+        // Deleter functions (pointers to these are stored in *Deleters arrays)
+        template <typename T_Component>
+        static void deleteComponents(void* componentVector);
+        template <typename T_Singleton>
+        static void deleteSingleton(void* singleton);
 
         // Function for extracting components from component container above
         template <typename T_Component>
