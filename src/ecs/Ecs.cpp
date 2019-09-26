@@ -15,10 +15,16 @@ using namespace fug;
 
 
 Ecs::Ecs() :
-    _components(),
-    _singletons(),
-    _componentDeleters(),
-    _singletonDeleters()
+    _componentInitialized       (),
+    _components                 (),
+    _singletons                 (),
+    _componentDeleters          (),
+    _singletonDeleters          (),
+    _componentsToAdd            (),
+    _componentsToRemove         (),
+    _componentDeferredAdders    (),
+    _componentDeferredRemovers  (),
+    _systemsRunning             (0)
 {
 }
 
@@ -27,7 +33,7 @@ Ecs::~Ecs()
     // Delete components and singletons
     for (int64_t i=0; i<TypeId::nComponents; ++i) {
         if (_componentDeleters[i])
-            (_componentDeleters[i])(_components[i]);
+            (_componentDeleters[i])(_components[i], _componentsToAdd[i]);
     }
     for (int64_t i=0; i<TypeId::nSingletons; ++i) {
         if (_singletonDeleters[i])
@@ -59,6 +65,16 @@ void Ecs::removeEntity(const EntityId& eId)
 {
     if (_componentMasks.size() <= eId)
         return;
+
+    if (_systemsRunning > 0) {
+        for (uint64_t tId = 0; tId < TypeId::nComponents; ++tId) {
+            if ((_componentMasks[eId] & ((uint64_t) 1 << tId)) > 0) {
+                auto *v = static_cast<std::vector<EntityId> *>(_componentsToRemove[tId]);
+                v->push_back(eId);
+            }
+        }
+        return;
+    }
 
     // Mark all components disabled for the entity
     _componentMasks[eId] = 0;
