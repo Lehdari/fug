@@ -39,9 +39,16 @@ namespace fug {
         /// Check if an entity exists (has any components)
         bool entityExists(const EntityId& eId);
 
-        /// Get component - component is default constructed and handle returned
+        /// Add component - component is default constructed and handle returned
+        /// In case the component exists, component remains unchanged and
+        /// handle to existing component is returned.
         /// In case the component does not exist and a system is running,
-        /// component construction is deferred and a null pointer returned.
+        /// component construction is deferred and a null pointer is returned.
+        template <typename T_Component>
+        T_Component* addComponent(const EntityId& eId);
+
+        /// Get component
+        /// In case the component does not exist, a null pointer is returned.
         template <typename T_Component>
         T_Component* getComponent(const EntityId& eId);
 
@@ -69,6 +76,38 @@ namespace fug {
         void removeEntity(const EntityId& eId);
 
     private:
+        // Struct for storing deferred operations
+        struct DeferredOperation {
+            enum Type {
+                COMPONENT_ADD,
+                COMPONENT_REMOVE,
+                ENTITY_REMOVE
+            }           type;
+            union {
+                void (Ecs::*componentAdd)(const EntityId&, size_t componentId);
+                void (Ecs::*componentRemove)(const EntityId&);
+            }           operation;
+            EntityId    entityId;
+            size_t      componentId; // component position in _deferredComponents vector
+
+            // constructor for operations not requiring component storage
+            DeferredOperation(
+                Type type,
+                EntityId entityId) :
+                type        (type),
+                entityId    (entityId),
+                componentId (0)
+            {}
+
+            // contructor for operations requiring component storage
+            template <typename T_Component>
+            DeferredOperation(
+                Type type,
+                EntityId entityId,
+                T_Component&& component,
+                Ecs* ecs);
+        };
+
         // Flag array indicating whether given component's containers are initialized
         bool    _componentInitialized[TypeId::nComponents];
 
@@ -80,13 +119,9 @@ namespace fug {
         void    (*_componentDeleters[TypeId::nComponents])(void*, void*);
         void    (*_singletonDeleters[TypeId::nSingletons])(void*);
 
-        // Container for deferred component add / remove
-        void*   _componentsToAdd[TypeId::nComponents];
-        void*   _componentsToRemove[TypeId::nComponents];
-
-        // Function pointers for executing the deferred component add
-        void    (Ecs::*_componentDeferredAdders[TypeId::nComponents])();
-        void    (Ecs::*_componentDeferredRemovers[TypeId::nComponents])();
+        // Containers for deferred component operations
+        std::vector<DeferredOperation>  _deferredOperations;
+        void*                           _deferredComponents[TypeId::nComponents];
 
         // Function for initializing the component containers
         template <typename T_Component>
@@ -96,22 +131,24 @@ namespace fug {
         template <typename T_Component>
         inline T_Component& accessComponent(EntityId eId);
 
-        // Functions for deferring component add / remove
+        // Functions for deferring operations
         template <typename T_Component>
         inline void deferComponentAdd(const EntityId& eId, T_Component&& component);
         template <typename T_Component>
         inline void deferComponentRemove(const EntityId& eId);
+        inline void deferEntityRemove(const EntityId& eId);
 
-        // Functions executing the deferred add / remove
-        // (pointers to these are stored in *Deferred* arrays)
+        // Functions executing the deferred operations
+        void executeDeferredOperations();
         template <typename T_Component>
-        void addDeferredComponents();
+        void deferredComponentAdd(const EntityId& eId, size_t componentId);
         template <typename T_Component>
-        void removeDeferredComponents();
+        void deferredComponentRemove(const EntityId& eId);
+
 
         // Deleter functions (pointers to these are stored in *Deleters arrays)
         template <typename T_Component>
-        static void deleteComponents(void* components, void* componentsToAdd);
+        static void deleteComponents(void* components, void* deferredOperations);
         template <typename T_Singleton>
         static void deleteSingleton(void* singleton);
 

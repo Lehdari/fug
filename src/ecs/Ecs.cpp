@@ -20,10 +20,7 @@ Ecs::Ecs() :
     _singletons                 (),
     _componentDeleters          (),
     _singletonDeleters          (),
-    _componentsToAdd            (),
-    _componentsToRemove         (),
-    _componentDeferredAdders    (),
-    _componentDeferredRemovers  (),
+    _deferredOperations         (),
     _systemsRunning             (0)
 {
 }
@@ -33,7 +30,7 @@ Ecs::~Ecs()
     // Delete components and singletons
     for (int64_t i=0; i<TypeId::nComponents; ++i) {
         if (_componentDeleters[i])
-            (_componentDeleters[i])(_components[i], _componentsToAdd[i]);
+            (_componentDeleters[i])(_components[i], _deferredComponents[i]);
     }
     for (int64_t i=0; i<TypeId::nSingletons; ++i) {
         if (_singletonDeleters[i])
@@ -66,16 +63,40 @@ void Ecs::removeEntity(const EntityId& eId)
     if (_componentMasks.size() <= eId)
         return;
 
-    if (_systemsRunning > 0) {
-        for (uint64_t tId = 0; tId < TypeId::nComponents; ++tId) {
-            if ((_componentMasks[eId] & ((uint64_t) 1 << tId)) > 0) {
-                auto *v = static_cast<std::vector<EntityId> *>(_componentsToRemove[tId]);
-                v->push_back(eId);
-            }
-        }
-        return;
-    }
+    if (_systemsRunning > 0)
+        deferEntityRemove(eId);
 
     // Mark all components disabled for the entity
     _componentMasks[eId] = 0;
+}
+
+
+inline void Ecs::deferEntityRemove(const EntityId& eId)
+{
+    _deferredOperations.emplace_back(DeferredOperation::ENTITY_REMOVE, eId);
+}
+
+void Ecs::executeDeferredOperations()
+{
+    for (auto& o : _deferredOperations) {
+        switch (o.type) {
+            case DeferredOperation::COMPONENT_ADD:
+                (this->*o.operation.componentAdd)(o.entityId, o.componentId);
+                break;
+
+            case DeferredOperation::COMPONENT_REMOVE:
+                (this->*o.operation.componentRemove)(o.entityId);
+                break;
+
+            case DeferredOperation::ENTITY_REMOVE:
+                if (_componentMasks.size() <= o.entityId)
+                    continue;
+
+                // Mark all components as disabled for the entity
+                _componentMasks[o.entityId] &= 0;
+                break;
+        }
+    }
+
+    _deferredOperations.clear();
 }
