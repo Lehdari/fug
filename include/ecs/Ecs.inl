@@ -11,7 +11,7 @@
 /// Public member functions
 
 template <typename T_Component>
-T_Component* Ecs::getComponent(const EntityId& eId)
+T_Component* Ecs::addComponent(const EntityId& eId)
 {
     constexpr auto tId = TypeId::component<T_Component>();
 
@@ -24,7 +24,7 @@ T_Component* Ecs::getComponent(const EntityId& eId)
     if (_systemsRunning > 0) {
         if (v->size() <= eId || _componentMasks.size() <= eId) {
             // Component needs to be added, defer it
-            deferComponentAdd(eId, T_Component());
+            deferComponentAdd<T_Component>(eId, T_Component());
             return nullptr;
         }
         else {
@@ -34,7 +34,7 @@ T_Component* Ecs::getComponent(const EntityId& eId)
             }
             else {
                 // Entity exists but the component doesn't, defer the add
-                deferComponentAdd(eId, T_Component());
+                deferComponentAdd<T_Component>(eId, T_Component());
                 return nullptr;
             }
         }
@@ -58,6 +58,20 @@ T_Component* Ecs::getComponent(const EntityId& eId)
 }
 
 template <typename T_Component>
+T_Component* Ecs::getComponent(const EntityId& eId)
+{
+    constexpr auto tId = TypeId::component<T_Component>();
+
+    // Check if the component exists
+    if ((_componentMasks[eId] & componentMask<T_Component>()) > 0) {
+        auto* v = static_cast<std::vector<T_Component>*>(_components[tId]);
+        return &(*v)[eId];
+    }
+
+    return nullptr;
+}
+
+template <typename T_Component>
 void Ecs::setComponent(const EntityId& eId, T_Component&& component)
 {
     // Initialize component containers
@@ -69,8 +83,8 @@ void Ecs::setComponent(const EntityId& eId, T_Component&& component)
         return;
     }
 
-    // getComponent is guaranteed not to return nullptr since no systems are running
-    *getComponent<T_Component>(eId) = component;
+    // addComponent is guaranteed not to return nullptr since no systems are running
+    *addComponent<T_Component>(eId) = component;
 }
 
 template <typename T_Singleton>
@@ -104,13 +118,9 @@ void Ecs::runSystem(System<T_DerivedSystem, T_Components...>& system)
 
     --_systemsRunning;
 
-    // Perform deferred component add / remove once all systems are finished
-    if (_systemsRunning == 0) {
-        for (auto& cda : _componentDeferredAdders)
-            if (cda) (this->*cda)();
-        for (auto& cdr : _componentDeferredRemovers)
-            if (cdr) (this->*cdr)();
-    }
+    // Execute deferred operations once all systems are finished
+    if (_systemsRunning == 0)
+        executeDeferredOperations();
 }
 
 template <typename T_Component>
@@ -137,17 +147,37 @@ void Ecs::removeComponent(const EntityId& eId)
 /// Private member functions
 
 template <typename T_Component>
+Ecs::DeferredOperation::DeferredOperation(
+    Type type,
+    EntityId entityId,
+    T_Component&& component,
+    Ecs* ecs
+    ) :
+    type        (type),
+    entityId    (entityId)
+{
+    constexpr auto tId = TypeId::component<T_Component>();
+    // add component to deferred components vector
+    auto* v = static_cast<std::vector<T_Component>*>(ecs->_deferredComponents[tId]);
+    v->emplace_back(std::move(component));
+    componentId = v->size()-1;
+
+    if (type == COMPONENT_ADD)
+        operation.componentAdd = &Ecs::deferredComponentAdd<T_Component>;
+    else if (type == COMPONENT_REMOVE)
+        operation.componentRemove = &Ecs::deferredComponentRemove<T_Component>;
+}
+
+template <typename T_Component>
 inline void Ecs::initializeComponent()
 {
     constexpr auto tId = TypeId::component<T_Component>();
 
     if (!_componentInitialized[tId]) {
+        // allocate containers and set deleter for the component type
         _components[tId] = new std::vector<T_Component>;
+        _deferredComponents[tId] = new std::vector<T_Component>;
         _componentDeleters[tId] = &deleteComponents<T_Component>;
-        _componentsToAdd[tId] = new std::vector<std::pair<EntityId, T_Component>>;
-        _componentDeferredAdders[tId] = &addDeferredComponents<T_Component>;
-        _componentsToRemove[tId] = new std::vector<EntityId>;
-        _componentDeferredRemovers[tId] = &removeDeferredComponents<T_Component>;
 
         _componentInitialized[tId] = true;
     }
@@ -163,75 +193,55 @@ inline T_Component& Ecs::accessComponent(EntityId eId)
 template <typename T_Component>
 inline void Ecs::deferComponentAdd(const EntityId& eId, T_Component&& component)
 {
-    constexpr auto tId = TypeId::component<T_Component>();
-
-    // Deferred component adding requires also the entity id, hence the std::pair
-    auto* v = static_cast<std::vector<std::pair<EntityId, T_Component>>*>
-        (_componentsToAdd[tId]);
-
-    v->emplace_back(eId, component);
+    _deferredOperations.emplace_back
+        (DeferredOperation::COMPONENT_ADD, eId, std::move(component), this);
 }
 
 template <typename T_Component>
 inline void Ecs::deferComponentRemove(const EntityId& eId)
 {
-    constexpr auto tId = TypeId::component<T_Component>();
-
-    auto* v = static_cast<std::vector<EntityId>*>(_componentsToRemove[tId]);
-
-    v->emplace_back(eId);
+    _deferredOperations.emplace_back(DeferredOperation::COMPONENT_REMOVE, eId);
 }
 
 template <typename T_Component>
-void Ecs::addDeferredComponents()
+void Ecs::deferredComponentAdd(const EntityId& eId, size_t componentId)
 {
     constexpr auto tId = TypeId::component<T_Component>();
-
-    auto* cav = static_cast<std::vector<std::pair<EntityId, T_Component>>*>
-        (_componentsToAdd[tId]);
     auto* v = static_cast<std::vector<T_Component>*>(_components[tId]);
+    auto* dv = static_cast<std::vector<T_Component>*>(_deferredComponents[tId]);
 
-    for (auto& c : *cav) {
-        // Resize the component and mask vectors to the required size
-        if (v->size() <= c.first)
-            v->resize(c.first+1);
-        if (_componentMasks.size() <= c.first)
-            _componentMasks.resize(c.first+1);
+    // Resize the component and mask vectors to the required size
+    if (v->size() <= eId)
+        v->resize(eId + 1);
+    if (_componentMasks.size() <= eId)
+        _componentMasks.resize(eId + 1);
 
-        // Set the component
-        (*v)[c.first] = std::move(c.second);
+    // Set the component
+    (*v)[eId] = std::move((*dv)[componentId]);
 
-        // Mark the component as enabled
-        _componentMasks[c.first] |= componentMask<T_Component>();
-    }
+    // Mark the component as enabled
+    _componentMasks[eId] |= componentMask<T_Component>();
 
-    cav->clear();
+    // Clear the deferred component vector once the last component is processed
+    if (componentId >= dv->size()-1)
+        dv->clear();
 }
 
 template <typename T_Component>
-void Ecs::removeDeferredComponents()
+void Ecs::deferredComponentRemove(const EntityId& eId)
 {
-    constexpr auto tId = TypeId::component<T_Component>();
+    if (_componentMasks.size() <= eId)
+        return;
 
-    auto* crv = static_cast<std::vector<EntityId>*>(_componentsToRemove[tId]);
-
-    for (auto& eId : *crv) {
-        if (_componentMasks.size() <= eId)
-            continue;
-
-        // Mark the component as disabled
-        _componentMasks[eId] &= ~componentMask<T_Component>();
-    }
-
-    crv->clear();
+    // Mark the component as disabled
+    _componentMasks[eId] &= ~componentMask<T_Component>();
 }
 
 template <typename T_Component>
-void Ecs::deleteComponents(void* components, void* componentsToAdd)
+void Ecs::deleteComponents(void* components, void* deferredComponents)
 {
     delete static_cast<std::vector<T_Component>*>(components);
-    delete static_cast<std::vector<std::pair<EntityId, T_Component>>*>
-        (componentsToAdd);
+    delete static_cast<std::vector<T_Component>*>(deferredComponents);
 }
 
 template <typename T_Singleton>
