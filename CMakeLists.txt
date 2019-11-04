@@ -14,6 +14,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+#Find dependencies of graphics
+find_package(OpenGL)
+find_package(GLEW)
+
+#Pull included dependencies
+add_subdirectory(ext)
 
 #Scan directories for header and source files
 add_subdirectory(include)
@@ -22,10 +28,12 @@ set(FUG_HEADERS ${FUG_HEADERS}
     ${UTILS_HEADERS}
     ${ECS_HEADERS}
     ${ENGINE_HEADERS}
+    ${GRAPHICS_HEADERS}
 )
 set(FUG_SOURCES ${FUG_SOURCES}
     ${ECS_SOURCES}
     ${ENGINE_SOURCES}
+    ${GRAPHICS_SOURCES}
 )
 
 
@@ -36,10 +44,10 @@ else()
     set(FUG_TYPE_ID_ERROR_MESSAGE "Queried type not registered in CMakeLists.txt.")
 
     #List fug internal component types below
-    set(FUG_COMPONENT_TYPES "EventComponent LogicComponent")
+    set(FUG_COMPONENT_TYPES "EventComponent LogicComponent SpriteComponent")
 
     #List fug internal singleton types below
-    set(FUG_SINGLETON_TYPES "")
+    set(FUG_SINGLETON_TYPES "SpriteDrawBufferSingleton")
 endif()
 
 #Process macros (see the files for more information)
@@ -88,4 +96,23 @@ target_include_directories(fug_engine
 target_link_libraries(fug_engine
     PUBLIC
         fug_ecs
+)
+
+
+#Graphics library target
+add_library(fug_graphics SHARED ${GRAPHICS_SOURCES})
+target_include_directories(fug_graphics
+    PUBLIC
+        include/
+    PRIVATE
+        include/graphics/
+)
+target_link_libraries(fug_graphics
+    PUBLIC
+        fug_ecs
+        ${OPENGL_LIBRARIES}
+        GLEW::GLEW
+        glsprite
+        vecmat
+        stb_image
 )
