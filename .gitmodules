@@ -4,3 +4,6 @@
 [submodule "ext/vecmat"]
 	path = ext/vecmat
 	url = https://github.com/tkln/vecmat
+[submodule "ext/glsprite"]
+	path = ext/glsprite
+	url = https://github.com/tkln/glsprite.git
