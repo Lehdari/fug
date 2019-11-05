@@ -7,3 +7,6 @@
 [submodule "ext/glsprite"]
 	path = ext/glsprite
 	url = https://github.com/tkln/glsprite.git
+[submodule "ext/libgl3w"]
+	path = ext/libgl3w
+	url = https://github.com/sndels/libgl3w.git
