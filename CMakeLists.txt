@@ -76,12 +76,12 @@ target_link_libraries(fug_ecs
         fug_utils
 )
 
-
 #Engine library target
-add_library(fug_engine SHARED ${ENGINE_SOURCES})
+add_library(fug_engine SHARED ${ENGINE_HEADERS} ${ENGINE_SOURCES})
 target_include_directories(fug_engine
     PUBLIC
         include/
+        ${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson/include/
     PRIVATE
         include/engine/
 )
