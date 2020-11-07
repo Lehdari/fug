@@ -84,7 +84,7 @@ void Ecs::setComponent(const EntityId& eId, T_Component&& component)
     }
 
     // addComponent is guaranteed not to return nullptr since no systems are running
-    *addComponent<T_Component>(eId) = component;
+    *addComponent<T_Component>(eId) = std::move(component);
 }
 
 template <typename T_Singleton>
