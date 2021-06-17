@@ -26,10 +26,12 @@ set(FUG_HEADERS ${FUG_HEADERS}
     ${UTILS_HEADERS}
     ${ECS_HEADERS}
     ${ENGINE_HEADERS}
+    ${GRAPHICS_HEADERS}
 )
 set(FUG_SOURCES ${FUG_SOURCES}
     ${ECS_SOURCES}
     ${ENGINE_SOURCES}
+    ${GRAPHICS_SOURCES}
 )
 
 
@@ -93,4 +95,18 @@ target_include_directories(fug_engine
 target_link_libraries(fug_engine
     PUBLIC
         fug_ecs
+)
+
+#Graphics library target
+add_library(fug_graphics SHARED ${GRAPHICS_HEADERS} ${GRAPHICS_SOURCES})
+target_include_directories(fug_graphics
+    PUBLIC
+        include/
+    PRIVATE
+        include/graphics/
+)
+target_link_libraries(fug_graphics
+    PUBLIC
+        fug_ecs
+        gut_opengl
 )
