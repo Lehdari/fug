@@ -15,6 +15,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 
+#External dependencies
+add_subdirectory(ext)
+
+
 #Scan directories for header and source files
 add_subdirectory(include)
 add_subdirectory(src)

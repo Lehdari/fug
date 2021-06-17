@@ -1,3 +1,6 @@
 [submodule "ext/rapidjson"]
 	path = ext/rapidjson
 	url = git@github.com:Tencent/rapidjson.git
+[submodule "ext/GraphicsUtils"]
+	path = ext/GraphicsUtils
+	url = git@github.com:Lehdari/GraphicsUtils.git
