@@ -23,14 +23,8 @@ namespace fug {
         SpriteComponent(SpriteSheetId sheetId = 0, int spriteId = -1);
 
         void setSpriteSheet(SpriteSheetId sheetId);
-
         void setSprite(int spriteId);
-
         void setOrigin(const Vec2f& origin);
-
-        void setRotation(float rotation);
-
-        void setScale(const Vec2f& scale);
 
         friend class SpriteSystem;
 
@@ -39,9 +33,7 @@ namespace fug {
         SpriteSheetId   _spriteSheetId;
         int             _spriteId;
         Vec2f           _origin;
-        float           _rotation;
-        Vec2f           _scale;
-        Vec2f           _positions[4];
+        Vec3f           _positions[4]; // homogeneous vector
         Vec2f           _texCoords[4];
     };
 
