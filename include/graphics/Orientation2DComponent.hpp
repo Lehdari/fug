@@ -17,10 +17,31 @@
 
 namespace fug {
 
-    struct Orientation2DComponent {
+    class Orientation2DComponent {
+    public:
+        Orientation2DComponent(
+            const Vec2f& position = Vec2f(0.0f, 0.0f),
+            float rotation = 0.0f,
+            float scale = 1.0f);
+
+        void setPosition(const Vec2f& position);
+        void setRotation(float rotation);
+        void setScale(float scale);
+
+        const Vec2f& getPosition() const;
+        float getRotation() const;
+        float getScale() const;
+        const Mat3f& getOrientation();
+
+    private:
+        Vec2f   _position;
+        float   _rotation;
+        float   _rotSin;
+        float   _rotCos;
+        float   _scale;
         Mat3f   _orientation;
 
-        Orientation2DComponent(const Vec2f& position = Vec2f(0.0f, 0.0f), float rotation = 0.0f);
+        void updateOrientation();
     };
 
 } // namespace fug

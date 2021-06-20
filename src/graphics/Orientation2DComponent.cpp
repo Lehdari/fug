@@ -11,12 +11,67 @@
 #include <graphics/Orientation2DComponent.hpp>
 
 
-fug::Orientation2DComponent::Orientation2DComponent(const Vec2f& position, float rotation)
+using namespace fug;
+
+
+Orientation2DComponent::Orientation2DComponent(
+    const Vec2f& position,
+    float rotation,
+    float scale
+    ) :
+    _position   (position),
+    _rotation   (rotation),
+    _rotSin     (std::sin(_rotation)),
+    _rotCos     (std::cos(_rotation)),
+    _scale      (1.0f)
 {
-    float rsin = std::sin(rotation);
-    float rcos = std::cos(rotation);
+    updateOrientation();
+}
+
+void Orientation2DComponent::setPosition(const Vec2f& position)
+{
+    _position = position;
+    updateOrientation();
+}
+
+void Orientation2DComponent::setRotation(float rotation)
+{
+    _rotation = rotation;
+    _rotSin = std::sin(_rotation);
+    _rotCos = std::cos(_rotation);
+    updateOrientation();
+}
+
+void Orientation2DComponent::setScale(float scale)
+{
+    _scale = scale;
+    updateOrientation();
+}
+
+const Vec2f& Orientation2DComponent::getPosition() const
+{
+    return _position;
+}
+
+float Orientation2DComponent::getRotation() const
+{
+    return _rotation;
+}
+
+float Orientation2DComponent::getScale() const
+{
+    return _scale;
+}
+
+const Mat3f& Orientation2DComponent::getOrientation()
+{
+    return _orientation;
+}
+
+void Orientation2DComponent::updateOrientation()
+{
     _orientation <<
-        rcos,   -rsin,  position(0),
-        rsin,   rcos,   position(1),
-        0.0f,   0.0f,   1.0f;
+        _rotCos*_scale, -_rotSin,       _position(0),
+        _rotSin,        _rotCos*_scale, _position(1),
+        0.0f,           0.0f,           1.0f;
 }
