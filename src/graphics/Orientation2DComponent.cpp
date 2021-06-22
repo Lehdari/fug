@@ -71,7 +71,7 @@ const Mat3f& Orientation2DComponent::getOrientation()
 void Orientation2DComponent::updateOrientation()
 {
     _orientation <<
-        _rotCos*_scale, -_rotSin,       _position(0),
-        _rotSin,        _rotCos*_scale, _position(1),
-        0.0f,           0.0f,           1.0f;
+        _rotCos*_scale, -_rotSin*_scale,    _position(0),
+        _rotSin*_scale, _rotCos*_scale,     _position(1),
+        0.0f,           0.0f,               1.0f;
 }
