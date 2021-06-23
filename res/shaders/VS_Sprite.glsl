@@ -20,9 +20,14 @@ out vec2 vTexCoord;
 uniform int windowWidth;
 uniform int windowHeight;
 
+uniform mat3 viewport;
+
 
 void main() {
-    vPosition = vec2(2.0*position.x/windowWidth - 1.0, 1.0 - 2.0*position.y/windowHeight);
+    vec3 p = viewport * vec3(position, 1.0);
+    vPosition = vec2(
+        2.0*p.x/windowWidth - 1.0,
+        1.0 - 2.0*p.y/windowHeight);
     vTexCoord = texCoord;
 
     gl_Position = vec4(vPosition, 0.0, 1.0);

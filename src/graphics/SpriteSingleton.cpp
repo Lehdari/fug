@@ -65,7 +65,7 @@ void SpriteSingleton::setWindowSize(int windowWidth, int windowHeight)
     _windowHeight = windowHeight;
 }
 
-void SpriteSingleton::render()
+void SpriteSingleton::render(const Mat3f& viewport)
 {
     for (int i = 0; i < _spriteSheets.size(); ++i) {
         auto& vertexPositions = _spriteVertexPositions[i];
@@ -88,6 +88,7 @@ void SpriteSingleton::render()
         _shader.use();
         _shader.setUniform("windowWidth", _windowWidth);
         _shader.setUniform("windowHeight", _windowHeight);
+        _shader.setUniform("viewport", viewport);
         _spriteSheets[i]._texture.bind();
         _shader.setUniform("tex", 0);
         glDrawArrays(GL_TRIANGLES, 0, vertexPositions.size());

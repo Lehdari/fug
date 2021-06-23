@@ -40,7 +40,7 @@ namespace fug {
 
         void setWindowSize(int windowWidth, int windowHeight);
 
-        void render();
+        void render(const Mat3f& viewport = Mat3f::Identity());
 
         friend class SpriteSystem;
 
