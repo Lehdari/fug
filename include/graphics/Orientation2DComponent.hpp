@@ -28,6 +28,10 @@ namespace fug {
         void setRotation(float rotation);
         void setScale(float scale);
 
+        void translate(const Vec2f& translation);
+        void rotate(float rotation);
+        void scale(float scale);
+
         const Vec2f& getPosition() const;
         float getRotation() const;
         float getScale() const;

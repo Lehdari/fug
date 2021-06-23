@@ -48,6 +48,24 @@ void Orientation2DComponent::setScale(float scale)
     updateOrientation();
 }
 
+void Orientation2DComponent::translate(const Vec2f& translation)
+{
+    _position += translation;
+    updateOrientation();
+}
+
+void Orientation2DComponent::rotate(float rotation)
+{
+    _rotation += rotation;
+    updateOrientation();
+}
+
+void Orientation2DComponent::scale(float scale)
+{
+    _scale *= scale;
+    updateOrientation();
+}
+
 const Vec2f& Orientation2DComponent::getPosition() const
 {
     return _position;
