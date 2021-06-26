@@ -20,7 +20,8 @@ SpriteSingleton::SpriteSingleton() :
     _windowHeight           (720),
     _vertexArrayObjectId    (0),
     _positionBufferId       (0),
-    _texCoordBufferId       (0)
+    _texCoordBufferId       (0),
+    _colorBufferId          (0)
 {}
 
 SpriteSingleton::~SpriteSingleton()
@@ -31,6 +32,8 @@ SpriteSingleton::~SpriteSingleton()
         glDeleteBuffers(1, &_positionBufferId);
     if (_texCoordBufferId != 0)
         glDeleteBuffers(1, &_texCoordBufferId);
+    if (_colorBufferId != 0)
+        glDeleteBuffers(1, &_colorBufferId);
 }
 
 void SpriteSingleton::init()
@@ -46,6 +49,7 @@ void SpriteSingleton::init()
     //  upload the vertex data to GPU and set up the vertex attribute arrays
     glGenBuffers(1, &_positionBufferId);
     glGenBuffers(1, &_texCoordBufferId);
+    glGenBuffers(1, &_colorBufferId);
 }
 
 SpriteSheetId SpriteSingleton::addSpriteSheetFromFile(
@@ -55,6 +59,7 @@ SpriteSheetId SpriteSingleton::addSpriteSheetFromFile(
 
     _spriteVertexPositions.resize(_spriteSheets.size());
     _spriteVertexTexCoords.resize(_spriteSheets.size());
+    _spriteVertexColors.resize(_spriteSheets.size());
 
     return _spriteSheets.size()-1;
 }
@@ -70,6 +75,7 @@ void SpriteSingleton::render(const Mat3f& viewport)
     for (int i = 0; i < _spriteSheets.size(); ++i) {
         auto& vertexPositions = _spriteVertexPositions[i];
         auto& vertexTexCoords = _spriteVertexTexCoords[i];
+        auto& vertexColors = _spriteVertexColors[i];
 
         glBindBuffer(GL_ARRAY_BUFFER, _positionBufferId);
         glBufferData(GL_ARRAY_BUFFER,
@@ -85,6 +91,13 @@ void SpriteSingleton::render(const Mat3f& viewport)
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *) 0);
 
+        glBindBuffer(GL_ARRAY_BUFFER, _colorBufferId);
+        glBufferData(GL_ARRAY_BUFFER,
+                     vertexColors.size() * sizeof(Vec3f),
+                     vertexColors.data(), GL_DYNAMIC_DRAW);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *) 0);
+
         _shader.use();
         _shader.setUniform("windowWidth", _windowWidth);
         _shader.setUniform("windowHeight", _windowHeight);
@@ -95,5 +108,6 @@ void SpriteSingleton::render(const Mat3f& viewport)
 
         vertexPositions.clear();
         vertexTexCoords.clear();
+        vertexColors.clear();
     }
 }

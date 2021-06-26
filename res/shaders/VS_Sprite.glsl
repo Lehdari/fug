@@ -13,9 +13,11 @@
 
 layout(location = 0) in vec2 position;
 layout(location = 1) in vec2 texCoord;
+layout(location = 2) in vec3 color;
 
 out vec2 vPosition;
 out vec2 vTexCoord;
+out vec3 vColor;
 
 uniform int windowWidth;
 uniform int windowHeight;
@@ -29,6 +31,7 @@ void main() {
         2.0*p.x/windowWidth - 1.0,
         1.0 - 2.0*p.y/windowHeight);
     vTexCoord = texCoord;
+    vColor = color;
 
     gl_Position = vec4(vPosition, 0.0, 1.0);
 }

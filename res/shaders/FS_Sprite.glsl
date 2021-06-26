@@ -13,14 +13,14 @@
 
 in vec2 vPosition;
 in vec2 vTexCoord;
+in vec3 vColor;
 
 out vec4 fragColor;
 
-uniform sampler2D tex;
+uniform sampler2D   tex;
 
 
 void main() {
     fragColor = texture(tex, vTexCoord).rgba;
-    //if (fragColor.a < 0.001)
-    //    discard;
+    fragColor.rgb *= vColor;
 }

@@ -25,6 +25,7 @@ namespace fug {
         void setSpriteSheet(SpriteSheetId sheetId);
         void setSprite(int spriteId);
         void setOrigin(const Vec2f& origin);
+        void setColor(const Vec3f& color);
 
         friend class SpriteSystem;
 
@@ -33,6 +34,7 @@ namespace fug {
         SpriteSheetId   _spriteSheetId;
         int             _spriteId;
         Vec2f           _origin;
+        Vec3f           _color;
         Vec3f           _positions[4]; // homogeneous vector
         Vec2f           _texCoords[4];
     };

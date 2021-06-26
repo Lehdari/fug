@@ -59,4 +59,12 @@ void SpriteSystem::operator()(const fug::EntityId& eId,
     vertexTexCoords.emplace_back(spriteComponent._texCoords[3]);
     vertexTexCoords.emplace_back(spriteComponent._texCoords[1]);
     vertexTexCoords.emplace_back(spriteComponent._texCoords[2]);
+
+    auto& vertexColors = _spriteSingleton->_spriteVertexColors[spriteComponent._spriteSheetId];
+    vertexColors.emplace_back(spriteComponent._color);
+    vertexColors.emplace_back(spriteComponent._color);
+    vertexColors.emplace_back(spriteComponent._color);
+    vertexColors.emplace_back(spriteComponent._color);
+    vertexColors.emplace_back(spriteComponent._color);
+    vertexColors.emplace_back(spriteComponent._color);
 }

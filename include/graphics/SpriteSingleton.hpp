@@ -54,9 +54,11 @@ namespace fug {
         GLuint                      _vertexArrayObjectId;
         GLuint                      _positionBufferId;
         GLuint                      _texCoordBufferId;
+        GLuint                      _colorBufferId;
 
         Vector<Vector<Vec2f>>       _spriteVertexPositions;
         Vector<Vector<Vec2f>>       _spriteVertexTexCoords;
+        Vector<Vector<Vec3f>>       _spriteVertexColors;
     };
 
 } // namespace fug
