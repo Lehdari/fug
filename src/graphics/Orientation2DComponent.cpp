@@ -23,7 +23,7 @@ Orientation2DComponent::Orientation2DComponent(
     _rotation   (rotation),
     _rotSin     (std::sin(_rotation)),
     _rotCos     (std::cos(_rotation)),
-    _scale      (1.0f)
+    _scale      (scale)
 {
     updateOrientation();
 }
