@@ -27,6 +27,11 @@ namespace fug {
         void setOrigin(const Vec2f& origin);
         void setColor(const Vec3f& color);
 
+        SpriteSheetId getSpriteSheet() const;
+        int getSprite() const;
+        const Vec2f& getOrigin() const;
+        const Vec3f& getColor() const;
+
         friend class SpriteSystem;
 
     private:

@@ -48,3 +48,23 @@ void SpriteComponent::setColor(const Vec3f& color)
     _color = color;
     _dirty = true;
 }
+
+SpriteSheetId SpriteComponent::getSpriteSheet() const
+{
+    return _spriteSheetId;
+}
+
+int SpriteComponent::getSprite() const
+{
+    return _spriteId;
+}
+
+const Vec2f& SpriteComponent::getOrigin() const
+{
+    return _origin;
+}
+
+const Vec3f& SpriteComponent::getColor() const
+{
+    return _color;
+}
