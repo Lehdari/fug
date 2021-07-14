@@ -195,12 +195,24 @@ inline void Ecs::deferComponentAdd(const EntityId& eId, T_Component&& component)
 {
     _deferredOperations.emplace_back
         (DeferredOperation::COMPONENT_ADD, eId, std::move(component), this);
+
+    if (eId < _componentMasks.size())
+        _componentMasks[eId] |= _deferredOperationMask;
+
+    if (eId > _maxDeferredEntityId)
+        _maxDeferredEntityId = eId;
 }
 
 template <typename T_Component>
 inline void Ecs::deferComponentRemove(const EntityId& eId)
 {
     _deferredOperations.emplace_back(DeferredOperation::COMPONENT_REMOVE, eId);
+
+    if (eId < _componentMasks.size())
+        _componentMasks[eId] |= _deferredOperationMask;
+
+    if (eId > _maxDeferredEntityId)
+        _maxDeferredEntityId = eId;
 }
 
 template <typename T_Component>
@@ -222,6 +234,9 @@ void Ecs::deferredComponentAdd(const EntityId& eId, size_t componentId)
     // Mark the component as enabled
     _componentMasks[eId] |= componentMask<T_Component>();
 
+    // Disable the deferred operation bit
+    _componentMasks[eId] &= ~_deferredOperationMask;
+
     // Clear the deferred component vector once the last component is processed
     if (componentId >= dv->size()-1)
         dv->clear();
@@ -235,6 +250,9 @@ void Ecs::deferredComponentRemove(const EntityId& eId)
 
     // Mark the component as disabled
     _componentMasks[eId] &= ~componentMask<T_Component>();
+
+    // Disable the deferred operation bit
+    _componentMasks[eId] &= ~_deferredOperationMask;
 }
 
 template <typename T_Component>

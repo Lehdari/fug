@@ -21,6 +21,7 @@ Ecs::Ecs() :
     _componentDeleters          (),
     _singletonDeleters          (),
     _deferredOperations         (),
+    _maxDeferredEntityId        (-1),
     _systemsRunning             (0)
 {
 }
@@ -47,7 +48,7 @@ EntityId Ecs::getEmptyEntityId()
     }
 
     // No empty entity found
-    return _componentMasks.size();
+    return std::max((EntityId)_componentMasks.size(), _maxDeferredEntityId+1);
 }
 
 bool Ecs::entityExists(const EntityId& eId)
@@ -99,4 +100,5 @@ void Ecs::executeDeferredOperations()
     }
 
     _deferredOperations.clear();
+    _maxDeferredEntityId = -1;
 }

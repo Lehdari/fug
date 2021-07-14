@@ -122,6 +122,7 @@ namespace fug {
         // Containers for deferred component operations
         std::vector<DeferredOperation>  _deferredOperations;
         void*                           _deferredComponents[TypeId::nComponents];
+        EntityId                        _maxDeferredEntityId;
 
         // Function for initializing the component containers
         template <typename T_Component>
@@ -160,13 +161,15 @@ namespace fug {
         constexpr ComponentMask componentMask();
 
         // Container for component masks
-        std::vector<ComponentMask>  _componentMasks;
+        std::vector<ComponentMask>      _componentMasks;
+        // Last bit is deserved for signifying a deferred operation on an entity
+        static constexpr ComponentMask  _deferredOperationMask = 0x08000000000000000;
 
         // Number of systems running
         int64_t _systemsRunning;
 
         // Check that the number of components fit to the bitmask
-        static_assert(TypeId::nComponents <= 64,
+        static_assert(TypeId::nComponents <= 63,
             "Number of components does not fit to the bitmask of 64 bits.");
     };
 
