@@ -64,8 +64,10 @@ void Ecs::removeEntity(const EntityId& eId)
     if (_componentMasks.size() <= eId)
         return;
 
-    if (_systemsRunning > 0)
+    if (_systemsRunning > 0) {
         deferEntityRemove(eId);
+        return;
+    }
 
     // Mark all components disabled for the entity
     _componentMasks[eId] = 0;
