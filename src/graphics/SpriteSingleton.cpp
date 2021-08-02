@@ -72,6 +72,8 @@ void SpriteSingleton::setWindowSize(int windowWidth, int windowHeight)
 
 void SpriteSingleton::render(const Mat3f& viewport)
 {
+    glBindVertexArray(_vertexArrayObjectId);
+
     for (int i = 0; i < _spriteSheets.size(); ++i) {
         auto& vertexPositions = _spriteVertexPositions[i];
         auto& vertexTexCoords = _spriteVertexTexCoords[i];
