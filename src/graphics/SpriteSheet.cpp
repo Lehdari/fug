@@ -30,6 +30,7 @@ SpriteSheet::SpriteSheet(
     _spriteHeight   (spriteHeight)
 {
     _texture.loadFromFile(fileName);
+    _texture.setFiltering(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     _nSpritesX = _texture.width() / _spriteWidth;
     _nSpritesY = _texture.height() / _spriteHeight;
 }
@@ -40,6 +41,7 @@ void SpriteSheet::loadFromFile(
     int spriteHeight)
 {
     _texture.loadFromFile(fileName);
+    _texture.setFiltering(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     _spriteWidth = spriteWidth;
     _spriteHeight = spriteHeight;
     _nSpritesX = _texture.width() / _spriteWidth;
