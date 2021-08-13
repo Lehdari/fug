@@ -113,3 +113,16 @@ void SpriteSingleton::render(const Mat3f& viewport)
         vertexColors.clear();
     }
 }
+
+void SpriteSingleton::clear()
+{
+    for (int i = 0; i < _spriteSheets.size(); ++i) {
+        auto& vertexPositions = _spriteVertexPositions[i];
+        auto& vertexTexCoords = _spriteVertexTexCoords[i];
+        auto& vertexColors = _spriteVertexColors[i];
+
+        vertexPositions.clear();
+        vertexTexCoords.clear();
+        vertexColors.clear();
+    }
+}

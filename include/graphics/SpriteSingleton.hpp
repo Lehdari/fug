@@ -42,6 +42,9 @@ namespace fug {
 
         void render(const Mat3f& viewport = Mat3f::Identity());
 
+        // Clear sprite memory without rendering;
+        void clear();
+
         friend class SpriteSystem;
 
     private:
