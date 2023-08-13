@@ -17,6 +17,7 @@
 #include "System.hpp"
 
 #include <vector>
+#include <cstddef>
 
 
 namespace fug {
